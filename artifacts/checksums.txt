@@ -1,0 +1,1 @@
+b41194b6e6a68dd52bb55006ec01c270e763ecfe8f78c199de1159506a2be61e  umee_cosmwasm.wasm
