@@ -87,6 +87,7 @@ the umee public [repository](https://github.com/umee-network/umee)
 as an `Option<QueryParams>` because it can be nil and a new function to instantiate
 the `StructUmeeQuery` struct inside `impl StructUmeeQuery` inside
 `./packages/umee-types/src/query.rs`
+- Expose the new query in `./packages/umee-types/src/lib.rs`
 
 ## Gitpod integration
 

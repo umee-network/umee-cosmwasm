@@ -1,7 +1,7 @@
 use cosmwasm_std::{Addr, QueryRequest};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use umee_types::{BorrowParams, StructUmeeQuery, UmeeQuery};
+use umee_types::{BorrowParams, ExchangeRateBaseParams, StructUmeeQuery, UmeeQuery};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {}
@@ -24,6 +24,7 @@ pub enum QueryMsg {
   Umee(UmeeQuery),
   // it can also call an specific enum directly
   GetBorrow(BorrowParams),
+  GetExchangeRateBase(ExchangeRateBaseParams),
 }
 
 // returns the current contract owner
