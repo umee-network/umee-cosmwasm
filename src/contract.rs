@@ -187,7 +187,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     //     "exchange_rate_base": "0.0000032"
     //   }
     // }
-    QueryMsg::GetExchangeRateBase(exchange_rate_base_params) => to_binary(&query_get_exchange_rate_base(deps, exchange_rate_base_params)?),
+    QueryMsg::GetExchangeRateBase(exchange_rate_base_params) => to_binary(
+      &query_get_exchange_rate_base(deps, exchange_rate_base_params)?,
+    ),
   }
 }
 
