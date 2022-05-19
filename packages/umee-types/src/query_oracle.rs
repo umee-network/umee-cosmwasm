@@ -1,6 +1,6 @@
+use cosmwasm_std::Decimal;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::{Decimal};
 
 // All the queries must have an assigned query
 pub const ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE: u16 = 2;
@@ -12,7 +12,7 @@ pub const ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE: u16 = 2;
 pub enum UmeeQueryOracle {
   // GetExchangeRateBase returns an sdk.Dec representing the exchange rate
   // of an denom. Expect to returns ExchangeRateBaseResponse.
-  GetExchangeRateBase(ExchangeRateBaseParams)
+  GetExchangeRateBase(ExchangeRateBaseParams),
 }
 
 // ExchangeRateBaseParams params to query GetExchangeRateBase

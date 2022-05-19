@@ -2,18 +2,15 @@ pub mod query;
 pub mod query_leverage;
 pub mod query_oracle;
 
-pub use query::{
-  UmeeQuery, StructUmeeQuery
-};
+pub use query::{StructUmeeQuery, UmeeQuery};
 
 pub use query_leverage::{
-  UmeeQueryLeverage,
-  ASSIGNED_QUERY_GET_BORROW, BorrowParams, BorrowResponse
+  BorrowParams, BorrowResponse, UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW,
 };
 
 pub use query_oracle::{
-  UmeeQueryOracle,
-  ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE, ExchangeRateBaseParams, ExchangeRateBaseResponse
+  ExchangeRateBaseParams, ExchangeRateBaseResponse, UmeeQueryOracle,
+  ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
 };
 
 // This is a signal, such that any contract that imports these helpers will only run on the

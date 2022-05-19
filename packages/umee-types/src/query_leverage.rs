@@ -1,6 +1,6 @@
+use cosmwasm_std::{Addr, Coin};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::{Coin, Addr};
 
 // All the queries must have an assigned query
 pub const ASSIGNED_QUERY_GET_BORROW: u16 = 1;
@@ -12,7 +12,7 @@ pub const ASSIGNED_QUERY_GET_BORROW: u16 = 1;
 pub enum UmeeQueryLeverage {
   // GetBorrow returns an sdk.Coin representing how much of a given denom a
   // borrower currently owes. Expect to returns BorrowResponse.
-  GetBorrow(BorrowParams)
+  GetBorrow(BorrowParams),
 }
 
 // BorrowParams params to query GetBorrow

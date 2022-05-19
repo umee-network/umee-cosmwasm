@@ -1,8 +1,10 @@
+use crate::query_leverage::{BorrowParams, UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW};
+use crate::query_oracle::{
+  ExchangeRateBaseParams, UmeeQueryOracle, ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
+};
+use cosmwasm_std::CustomQuery;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::{CustomQuery};
-use crate::query_leverage::{UmeeQueryLeverage, BorrowParams, ASSIGNED_QUERY_GET_BORROW};
-use crate::query_oracle::{UmeeQueryOracle, ExchangeRateBaseParams, ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE};
 
 // Define the implementation necessary for cosmwasm "custom" queries
 impl CustomQuery for StructUmeeQuery {}
@@ -34,20 +36,20 @@ pub struct StructUmeeQuery {
 impl StructUmeeQuery {
   // creates a new get_borrow query
   pub fn get_borrow(borrow_params: BorrowParams) -> StructUmeeQuery {
-    StructUmeeQuery{
+    StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_GET_BORROW,
       get_borrow: Some(borrow_params),
       get_exchange_rate_base: None,
     }
   }
   // creates a new get_exchange_rate_Base query
-  pub fn get_exchange_rate_base(exchange_rate_base_params: ExchangeRateBaseParams) -> StructUmeeQuery {
-    StructUmeeQuery{
+  pub fn get_exchange_rate_base(
+    exchange_rate_base_params: ExchangeRateBaseParams,
+  ) -> StructUmeeQuery {
+    StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
       get_borrow: None,
       get_exchange_rate_base: Some(exchange_rate_base_params),
     }
   }
 }
-
-
