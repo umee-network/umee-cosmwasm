@@ -40,6 +40,7 @@ optimize = """docker run --rm -v "$(pwd)":/code \
 """
 
 [dependencies]
+umee-types = { version = "0.1.0", path = "./packages/umee-types" }
 cosmwasm-std = { version = "1.0.0-beta6" }
 cosmwasm-storage = { version = "1.0.0-beta6" }
 cw-storage-plus = "0.13"

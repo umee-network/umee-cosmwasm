@@ -1,10 +1,14 @@
 #[cfg(not(feature = "library"))]
-use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Addr};
+use cosmwasm_std::{
+  QueryRequest, entry_point, to_binary, Binary, Deps, DepsMut,
+  Env, MessageInfo, Response, StdResult, Addr, Coin, Uint128,
+  to_vec, StdError, SystemResult, ContractResult
+};
 use cw2::set_contract_version;
+use umee_types::{UmeeQuery, BorrowResponse, StructUmeeQuery, BorrowParams, UmeeQueryLeverage};
 
 use crate::error::ContractError;
-use crate::msg::{OwnerResponse, ExecuteMsg, InstantiateMsg, QueryMsg, BorrowResponse};
+use crate::msg::{OwnerResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{State, STATE};
 
 // version info for migration info
@@ -56,7 +60,49 @@ pub fn try_change_owner(deps: DepsMut, info: MessageInfo, new_owner: Addr) -> Re
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
   match msg {
     QueryMsg::GetOwner {} => to_binary(&query_owner(deps)?),
-    QueryMsg::GetBorrow { borrower_addr, denom } => to_binary(&query_get_borrow(deps, borrower_addr, denom)?),
+    QueryMsg::Chain { request } => to_binary(&query_chain(deps, &request)?),
+    QueryMsg::ChainStruct { request } => to_binary(&query_chain_struct(deps, &request)?),
+    QueryMsg::Umee(UmeeQuery::Leverage(UmeeQueryLeverage::GetBorrow(borrow_params))) => to_binary(&query_get_borrow(deps, borrow_params)?),
+  }
+}
+
+fn query_chain(
+  deps: Deps,
+  request: &QueryRequest<UmeeQuery>,
+) -> StdResult<Binary> {
+  let raw = to_vec(request).map_err(|serialize_err| {
+    StdError::generic_err(format!("Serializing QueryRequest: {}", serialize_err))
+  })?;
+  match deps.querier.raw_query(&raw) {
+    SystemResult::Err(system_err) => Err(StdError::generic_err(format!(
+      "Querier system error: {}",
+      system_err
+    ))),
+    SystemResult::Ok(ContractResult::Err(contract_err)) => Err(StdError::generic_err(format!(
+      "Querier contract error: {}",
+      contract_err
+    ))),
+    SystemResult::Ok(ContractResult::Ok(value)) => Ok(value),
+  }
+}
+
+fn query_chain_struct(
+  deps: Deps,
+  request: &QueryRequest<StructUmeeQuery>,
+) -> StdResult<Binary> {
+  let raw = to_vec(request).map_err(|serialize_err| {
+      StdError::generic_err(format!("Serializing QueryRequest: {}", serialize_err))
+  })?;
+  match deps.querier.raw_query(&raw) {
+    SystemResult::Err(system_err) => Err(StdError::generic_err(format!(
+      "Querier system error: {}",
+      system_err
+    ))),
+    SystemResult::Ok(ContractResult::Err(contract_err)) => Err(StdError::generic_err(format!(
+      "Querier contract error: {}",
+      contract_err
+    ))),
+    SystemResult::Ok(ContractResult::Ok(value)) => Ok(value),
   }
 }
 
@@ -65,8 +111,26 @@ fn query_owner(deps: Deps) -> StdResult<OwnerResponse> {
   Ok(OwnerResponse { owner : state.owner })
 }
 
-fn query_get_borrow(_: Deps, _: Addr, _: String) -> StdResult<BorrowResponse> {
-  Ok(BorrowResponse {  borrowed_amount: 10 })
+fn query_get_borrow(_: Deps, borrow_params: BorrowParams) -> StdResult<BorrowResponse> {
+  // let request = UmeeQuery::GetBorrow{
+  //   borrower_addr: borrower_addr,
+  //   denom: denom,
+  // };
+
+  println!("request {}, {}", borrow_params.borrower_addr, borrow_params.denom);
+
+  // let request_chain = Chain{
+
+  // }
+
+  // query_chain(deps, QueryRequest::Custom{} request);
+
+  let coin = Coin{
+    amount: Uint128::new(123),
+    denom: String::from("umee"),
+  };
+
+  Ok(BorrowResponse {  borrowed_amount: coin })
 }
 
 #[cfg(test)]

@@ -1,0 +1,39 @@
+[package]
+name = "umee-types"
+version = "0.1.0"
+edition = "2021"
+description = "Types for CustomMsg and CustomQuery for the Umee blockchain"
+license = "Apache-2.0"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+incremental = false
+overflow-checks = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# for more explicit tests, cargo test --features=backtraces
+backtraces = ["cosmwasm-std/backtraces"]
+# use library feature to disable all instantiate/execute/query exports
+library = []
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+cosmwasm-std = { version = "1.0.0-beta6" }
+cosmwasm-storage = { version = "1.0.0-beta6" }
+cw-storage-plus = "0.13"
+cw2 = "0.13"
+schemars = "0.8"
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+thiserror = { version = "1.0" }
+
+[dev-dependencies]
+cosmwasm-schema = { version = "1.0.0-beta6" }
