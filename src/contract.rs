@@ -1,11 +1,13 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::{
-  QueryRequest, entry_point, to_binary, Binary, Deps, DepsMut,
-  Env, MessageInfo, Response, StdResult, Addr, Coin, Uint128,
+  QueryRequest, entry_point, to_binary, from_binary, Binary, Deps, DepsMut,
+  Env, MessageInfo, Response, StdResult, Addr,
   to_vec, StdError, SystemResult, ContractResult
 };
 use cw2::set_contract_version;
-use umee_types::{UmeeQuery, BorrowResponse, StructUmeeQuery, BorrowParams, UmeeQueryLeverage};
+use umee_types::{UmeeQuery, StructUmeeQuery, UmeeQueryLeverage,
+  BorrowParams, BorrowResponse,
+};
 
 use crate::error::ContractError;
 use crate::msg::{OwnerResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
@@ -62,7 +64,13 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::GetOwner {} => to_binary(&query_owner(deps)?),
     QueryMsg::Chain { request } => to_binary(&query_chain(deps, &request)?),
     QueryMsg::ChainStruct { request } => query_chain_struct(deps, &request),
-    QueryMsg::Umee(UmeeQuery::Leverage(UmeeQueryLeverage::GetBorrow(borrow_params))) => to_binary(&query_get_borrow(deps, borrow_params)?),
+    QueryMsg::Umee(UmeeQuery::Leverage(leverage)) => query_leverage(deps, _env, leverage),
+  }
+}
+
+pub fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Binary> {
+  match msg {
+    UmeeQueryLeverage::GetBorrow(borrow_params) => to_binary(&query_get_borrow(deps, borrow_params)?),
   }
 }
 
@@ -111,26 +119,25 @@ fn query_owner(deps: Deps) -> StdResult<OwnerResponse> {
   Ok(OwnerResponse { owner : state.owner })
 }
 
-fn query_get_borrow(_: Deps, borrow_params: BorrowParams) -> StdResult<BorrowResponse> {
-  // let request = UmeeQuery::GetBorrow{
-  //   borrower_addr: borrower_addr,
-  //   denom: denom,
-  // };
+fn query_get_borrow(deps: Deps, borrow_params: BorrowParams) -> StdResult<BorrowResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::get_borrow(borrow_params));
 
-  println!("request {}, {}", borrow_params.borrower_addr, borrow_params.denom);
+  let borrow_response: BorrowResponse;
+  match query_chain_struct(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    },
+    Ok(binary) => {
+      match from_binary::<BorrowResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        },
+        Ok(response) => borrow_response = response
+      };
+    },
+  }
 
-  // let request_chain = Chain{
-
-  // }
-
-  // query_chain(deps, QueryRequest::Custom{} request);
-
-  let coin = Coin{
-    amount: Uint128::new(123),
-    denom: String::from("umee"),
-  };
-
-  Ok(BorrowResponse {  borrowed_amount: coin })
+  Ok(borrow_response)
 }
 
 #[cfg(test)]
