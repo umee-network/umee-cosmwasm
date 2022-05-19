@@ -49,6 +49,18 @@
         }
       },
       "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "get_exchange_rate_base"
+      ],
+      "properties": {
+        "get_exchange_rate_base": {
+          "$ref": "#/definitions/ExchangeRateBaseParams"
+        }
+      },
+      "additionalProperties": false
     }
   ],
   "definitions": {
@@ -120,6 +132,17 @@
         "borrower_addr": {
           "$ref": "#/definitions/Addr"
         },
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "ExchangeRateBaseParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
         "denom": {
           "type": "string"
         }
@@ -295,6 +318,16 @@
               "type": "null"
             }
           ]
+        },
+        "get_exchange_rate_base": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExchangeRateBaseParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -311,6 +344,18 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "oracle"
+          ],
+          "properties": {
+            "oracle": {
+              "$ref": "#/definitions/UmeeQueryOracle"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
@@ -324,6 +369,22 @@
           "properties": {
             "get_borrow": {
               "$ref": "#/definitions/BorrowParams"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UmeeQueryOracle": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "get_exchange_rate_base"
+          ],
+          "properties": {
+            "get_exchange_rate_base": {
+              "$ref": "#/definitions/ExchangeRateBaseParams"
             }
           },
           "additionalProperties": false
