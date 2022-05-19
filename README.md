@@ -25,6 +25,28 @@ and is being used as an library inside `src` folder
 $~ cargo build
 ```
 
+### Generating .wasm
+
+- The `.wasm` file are the contract compiled used to deploy it in the blockchain
+- To test and generate an `.wasm` file form the `src` folder
+
+```shell
+$~ cargo wasm
+```
+
+- The generated wasm file will be inside `./target/wasm32-unknown-unknown/release/*.wasm`
+
+- To generate the `.wasm` file optimized to production run
+
+```shell
+$~ docker run --rm -v "$(pwd)":/code \
+  --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+  --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+  cosmwasm/rust-optimizer:0.12.4
+```
+
+- This will generate the optimized compiled contract inside the `artifact` folder
+
 ### Schemas
 
 - Schemas (`schema` folder) can be used to understand and communicate with the smartcontract
