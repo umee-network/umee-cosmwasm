@@ -7,6 +7,7 @@ use crate::query_leverage::{UmeeQueryLeverage, BorrowParams, ASSIGNED_QUERY_GET_
 impl CustomQuery for StructUmeeQuery {}
 impl CustomQuery for UmeeQuery {}
 
+// UmeeQuery combines all the native modules from umee as enum
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
 pub enum UmeeQuery {
@@ -15,6 +16,7 @@ pub enum UmeeQuery {
   Leverage(UmeeQueryLeverage),
 }
 
+// StructUmeeQuery expected structure to query umee native modules
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
 pub struct StructUmeeQuery {
@@ -22,7 +24,12 @@ pub struct StructUmeeQuery {
   get_borrow: Option<BorrowParams>,
 }
 
+// Defines all the implementation related to the StructUmeeQuery
+// like creating new query structs, it is needed because
+// the fields inside the struct are private, to avoid missmatching
+// the query property with the assigned_query field
 impl StructUmeeQuery {
+  // creates a new get_borrow query
   pub fn get_borrow(borrow_params: BorrowParams) -> StructUmeeQuery {
     StructUmeeQuery{
       assigned_query: ASSIGNED_QUERY_GET_BORROW,
