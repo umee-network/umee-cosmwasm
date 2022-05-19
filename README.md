@@ -65,6 +65,29 @@ $~ cargo schema
 
 - Tips on how to publish rust packages, look at [Publishing](./Publishing.md)
 
+### Add new modules
+
+- To add new modules inside the **umee-types** package, copy the leverage query file, like
+
+```shell
+$~ cp ./packages/umee-types/src/query_leverage.rs ./packages/umee-types/src/query_${MODULE_NAME}.rs
+```
+
+- Change everything from leverage to the new module name
+- Add the new enum module to the `pub enum UmeeQuery` inside `./packages/umee-types/src/query.rs`
+
+### Add new queries
+
+- Create the structs for params and response in the respective query module
+`./packages/umee-types/src/query_${MODULE_NAME}.rs` and also a new entry in
+the `pub enum UmeeQuery${MODULE_NAME}` and a new `pub const ASSIGNED_QUERY_${QUERY_NAME}`
+that correspond to the same value in the `umee-network/umee/app/wasm/query/types.go` from
+the umee public [repository](https://github.com/umee-network/umee)
+- Add a new property that represents the query in the `pub struct StructUmeeQuery`
+as an `Option<QueryParams>` because it can be nil and a new function to instantiate
+the `StructUmeeQuery` struct inside `impl StructUmeeQuery` inside
+`./packages/umee-types/src/query.rs`
+
 ## Gitpod integration
 
 [Gitpod](https://www.gitpod.io/) container-based development platform will be enabled on your project by default.
