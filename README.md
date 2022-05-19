@@ -41,6 +41,8 @@ $~ cargo schema
 
 ### Publish
 
+- Tips on how to publish rust packages, look at [Publishing](./Publishing.md)
+
 ## Gitpod integration
 
 [Gitpod](https://www.gitpod.io/) container-based development platform will be enabled on your project by default.
