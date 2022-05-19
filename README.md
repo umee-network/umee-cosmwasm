@@ -15,7 +15,31 @@ and is being used as an library inside `src` folder
 
 ## Developing
 
-- If you don't know that much about rust, take a look at [Rust Tips](./RustTips.md)
+- If you don't know that much about rust or cosmwasm, take a look at [Rust Tips](./RustTips.md)
+
+### Compile
+
+- To compile the local example and it's dependences packages
+
+```shell
+$~ cargo build
+```
+
+### Schemas
+
+- Schemas (`schema` folder) can be used to understand and communicate with the smartcontract
+they are basic the representation of the contract entrypoints messages and responses
+structures defined in json
+
+> tip: if you are used to solidity, it's almost the contract ABI
+
+- To generate the schemas based on the current files changes
+
+```shell
+$~ cargo schema
+```
+
+### Publish
 
 ## Gitpod integration
 
