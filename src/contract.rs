@@ -1,18 +1,13 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::{
-  QueryRequest, Binary, Deps, DepsMut,
-  entry_point, to_binary, from_binary, to_vec,
-  Env, MessageInfo, Response, StdResult, Addr,
-  StdError, SystemResult, ContractResult
+  entry_point, from_binary, to_binary, to_vec, Addr, Binary, ContractResult, Deps, DepsMut, Env,
+  MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
-use umee_types::{
-  UmeeQuery, StructUmeeQuery, UmeeQueryLeverage,
-  BorrowParams, BorrowResponse,
-};
+use umee_types::{BorrowParams, BorrowResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage};
 
 use crate::error::ContractError;
-use crate::msg::{OwnerResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::msg::{ExecuteMsg, InstantiateMsg, OwnerResponse, QueryMsg};
 use crate::state::{State, STATE};
 
 // version info for migration info
@@ -23,10 +18,10 @@ const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 // starts by setting the sender of the msg as the owner
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn instantiate(
-    deps: DepsMut,
-    _env: Env,
-    info: MessageInfo,
-    _: InstantiateMsg,
+  deps: DepsMut,
+  _env: Env,
+  info: MessageInfo,
+  _: InstantiateMsg,
 ) -> Result<Response, ContractError> {
   let state = State {
     owner: info.sender.clone(),
@@ -34,19 +29,21 @@ pub fn instantiate(
   set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
   STATE.save(deps.storage, &state)?;
 
-  Ok(Response::new()
-    .add_attribute("method", "instantiate")
-    .add_attribute("owner", info.sender))
+  Ok(
+    Response::new()
+      .add_attribute("method", "instantiate")
+      .add_attribute("owner", info.sender),
+  )
 }
 
 // executes changes to the state of the contract, it receives messages DepsMut
 // that contains the contract state with write permissions
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
-    deps: DepsMut,
-    _env: Env,
-    info: MessageInfo,
-    msg: ExecuteMsg,
+  deps: DepsMut,
+  _env: Env,
+  info: MessageInfo,
+  msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
   match msg {
     // receives the new owner and tries to change it in the contract state
@@ -55,7 +52,11 @@ pub fn execute(
 }
 
 // tries to change the owner, but it could fail and respond as Unauthorized
-pub fn try_change_owner(deps: DepsMut, info: MessageInfo, new_owner: Addr) -> Result<Response, ContractError> {
+pub fn try_change_owner(
+  deps: DepsMut,
+  info: MessageInfo,
+  new_owner: Addr,
+) -> Result<Response, ContractError> {
   STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
     if info.sender != state.owner {
       return Err(ContractError::Unauthorized {});
@@ -154,16 +155,13 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
 // returns the current owner of the contract from the state
 fn query_owner(deps: Deps) -> StdResult<OwnerResponse> {
   let state = STATE.load(deps.storage)?;
-  Ok(OwnerResponse { owner : state.owner })
+  Ok(OwnerResponse { owner: state.owner })
 }
 
 // query_chain queries for any availabe query in the chain native modules
-fn query_chain(
-  deps: Deps,
-  request: &QueryRequest<StructUmeeQuery>,
-) -> StdResult<Binary> {
+fn query_chain(deps: Deps, request: &QueryRequest<StructUmeeQuery>) -> StdResult<Binary> {
   let raw = to_vec(request).map_err(|serialize_err| {
-      StdError::generic_err(format!("Serializing QueryRequest: {}", serialize_err))
+    StdError::generic_err(format!("Serializing QueryRequest: {}", serialize_err))
   })?;
   match deps.querier.raw_query(&raw) {
     SystemResult::Err(system_err) => Err(StdError::generic_err(format!(
@@ -203,7 +201,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     //     }
     //   }
     // }
-    UmeeQueryLeverage::GetBorrow(borrow_params) => to_binary(&query_get_borrow(deps, borrow_params)?),
+    UmeeQueryLeverage::GetBorrow(borrow_params) => {
+      to_binary(&query_get_borrow(deps, borrow_params)?)
+    }
   }
 }
 
@@ -217,15 +217,15 @@ fn query_get_borrow(deps: Deps, borrow_params: BorrowParams) -> StdResult<Borrow
   match query_chain(deps, &request) {
     Err(err) => {
       return Err(err);
-    },
+    }
     Ok(binary) => {
       match from_binary::<BorrowResponse>(&binary) {
         Err(err) => {
           return Err(err);
-        },
-        Ok(response) => borrow_response = response
+        }
+        Ok(response) => borrow_response = response,
       };
-    },
+    }
   }
 
   Ok(borrow_response)
@@ -243,7 +243,7 @@ mod tests {
   fn proper_initialization() {
     let mut deps = mock_dependencies_with_balance(&coins(2, "token"));
 
-    let msg = InstantiateMsg { };
+    let msg = InstantiateMsg {};
     let info = mock_info("creator", &coins(1000, "earth"));
 
     // we can just call .unwrap() to assert this was a success
@@ -261,10 +261,9 @@ mod tests {
     let mut deps = mock_dependencies_with_balance(&coins(2, "token"));
 
     let first_owner = "creator";
-    let msg = InstantiateMsg { };
+    let msg = InstantiateMsg {};
     let info = mock_info(first_owner, &coins(2, "token"));
     let _res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
-
 
     let res = query(deps.as_ref(), mock_env(), QueryMsg::GetOwner {}).unwrap();
     let value: OwnerResponse = from_binary(&res).unwrap();
@@ -274,7 +273,9 @@ mod tests {
 
     // only the original creator can change the owner the counter
     let auth_info = mock_info(new_owner, &coins(2, "token"));
-    let msg = ExecuteMsg::ChangeOwner { new_owner: cosmwasm_std::Addr::unchecked(new_owner) };
+    let msg = ExecuteMsg::ChangeOwner {
+      new_owner: cosmwasm_std::Addr::unchecked(new_owner),
+    };
     let res = execute(deps.as_mut(), mock_env(), auth_info, msg);
     match res {
       Err(ContractError::Unauthorized {}) => {}
@@ -282,7 +283,9 @@ mod tests {
     }
 
     let auth_info = mock_info(first_owner, &coins(2, "token"));
-    let msg = ExecuteMsg::ChangeOwner { new_owner: cosmwasm_std::Addr::unchecked(new_owner) };
+    let msg = ExecuteMsg::ChangeOwner {
+      new_owner: cosmwasm_std::Addr::unchecked(new_owner),
+    };
     let _res = execute(deps.as_mut(), mock_env(), auth_info, msg).unwrap();
 
     let res = query(deps.as_ref(), mock_env(), QueryMsg::GetOwner {}).unwrap();

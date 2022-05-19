@@ -1,7 +1,7 @@
+use cosmwasm_std::{Addr, QueryRequest};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::{Addr, QueryRequest};
-use umee_types::{UmeeQuery, StructUmeeQuery, BorrowParams};
+use umee_types::{BorrowParams, StructUmeeQuery, UmeeQuery};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {}
