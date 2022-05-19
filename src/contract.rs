@@ -5,7 +5,8 @@ use cosmwasm_std::{
   to_vec, StdError, SystemResult, ContractResult
 };
 use cw2::set_contract_version;
-use umee_types::{UmeeQuery, StructUmeeQuery, UmeeQueryLeverage,
+use umee_types::{
+  UmeeQuery, StructUmeeQuery, UmeeQueryLeverage,
   BorrowParams, BorrowResponse,
 };
 
@@ -64,13 +65,13 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::GetOwner {} => to_binary(&query_owner(deps)?),
     QueryMsg::Chain { request } => query_chain(deps, &request),
     QueryMsg::Umee(UmeeQuery::Leverage(leverage)) => query_leverage(deps, _env, leverage),
+    QueryMsg::GetBorrow(borrow_params) => to_binary(&query_get_borrow(deps, borrow_params)?),
   }
 }
 
-pub fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Binary> {
-  match msg {
-    UmeeQueryLeverage::GetBorrow(borrow_params) => to_binary(&query_get_borrow(deps, borrow_params)?),
-  }
+fn query_owner(deps: Deps) -> StdResult<OwnerResponse> {
+  let state = STATE.load(deps.storage)?;
+  Ok(OwnerResponse { owner : state.owner })
 }
 
 fn query_chain(
@@ -93,9 +94,10 @@ fn query_chain(
   }
 }
 
-fn query_owner(deps: Deps) -> StdResult<OwnerResponse> {
-  let state = STATE.load(deps.storage)?;
-  Ok(OwnerResponse { owner : state.owner })
+fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Binary> {
+  match msg {
+    UmeeQueryLeverage::GetBorrow(borrow_params) => to_binary(&query_get_borrow(deps, borrow_params)?),
+  }
 }
 
 fn query_get_borrow(deps: Deps, borrow_params: BorrowParams) -> StdResult<BorrowResponse> {

@@ -1,1 +1,1 @@
-b7c2f348e5aee3aabe5beaaaaad9630b7b43390323fb9f4cffdd0ee6cf63b16d  umee_cosmwasm.wasm
+c220f6a9b2def0434d1bb992290a0e1bff3b71f3c7711f43f00c0ea989f27618  umee_cosmwasm.wasm

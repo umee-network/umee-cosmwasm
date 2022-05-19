@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmwasm_std::{Binary,Addr, QueryRequest};
-use umee_types::{ UmeeQuery, StructUmeeQuery };
+use cosmwasm_std::{Addr, QueryRequest};
+use umee_types::{UmeeQuery, StructUmeeQuery, BorrowParams};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {}
@@ -24,15 +24,10 @@ pub enum QueryMsg {
   // wraps to use the enums
   Umee(UmeeQuery),
   // it can also call an specific enum directly
+  GetBorrow(BorrowParams),
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct OwnerResponse {
   pub owner: Addr,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
-pub struct ChainResponse {
-  pub data: Binary,
 }
