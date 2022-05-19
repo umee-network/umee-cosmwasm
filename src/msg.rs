@@ -15,16 +15,15 @@ pub enum ExecuteMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
-  Umee(UmeeQuery),
-  // make requests directly to the blockchain
-  Chain {
-    request: QueryRequest<UmeeQuery>,
-  },
-  ChainStruct{
-    request: QueryRequest<StructUmeeQuery>,
-  },
   // GetOwner returns the current owner of the contract
   GetOwner {},
+  // make requests directly to the blockchain using the struct
+  Chain{
+    request: QueryRequest<StructUmeeQuery>,
+  },
+  // wraps to use the enums
+  Umee(UmeeQuery),
+  // it can also call an specific enum directly
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

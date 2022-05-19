@@ -62,8 +62,7 @@ pub fn try_change_owner(deps: DepsMut, info: MessageInfo, new_owner: Addr) -> Re
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
   match msg {
     QueryMsg::GetOwner {} => to_binary(&query_owner(deps)?),
-    QueryMsg::Chain { request } => to_binary(&query_chain(deps, &request)?),
-    QueryMsg::ChainStruct { request } => query_chain_struct(deps, &request),
+    QueryMsg::Chain { request } => query_chain(deps, &request),
     QueryMsg::Umee(UmeeQuery::Leverage(leverage)) => query_leverage(deps, _env, leverage),
   }
 }
@@ -75,26 +74,6 @@ pub fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResul
 }
 
 fn query_chain(
-  deps: Deps,
-  request: &QueryRequest<UmeeQuery>,
-) -> StdResult<Binary> {
-  let raw = to_vec(request).map_err(|serialize_err| {
-    StdError::generic_err(format!("Serializing QueryRequest: {}", serialize_err))
-  })?;
-  match deps.querier.raw_query(&raw) {
-    SystemResult::Err(system_err) => Err(StdError::generic_err(format!(
-      "Querier system error: {}",
-      system_err
-    ))),
-    SystemResult::Ok(ContractResult::Err(contract_err)) => Err(StdError::generic_err(format!(
-      "Querier contract error: {}",
-      contract_err
-    ))),
-    SystemResult::Ok(ContractResult::Ok(value)) => Ok(value),
-  }
-}
-
-fn query_chain_struct(
   deps: Deps,
   request: &QueryRequest<StructUmeeQuery>,
 ) -> StdResult<Binary> {
@@ -123,7 +102,7 @@ fn query_get_borrow(deps: Deps, borrow_params: BorrowParams) -> StdResult<Borrow
   let request = QueryRequest::Custom(StructUmeeQuery::get_borrow(borrow_params));
 
   let borrow_response: BorrowResponse;
-  match query_chain_struct(deps, &request) {
+  match query_chain(deps, &request) {
     Err(err) => {
       return Err(err);
     },
