@@ -61,7 +61,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
   match msg {
     QueryMsg::GetOwner {} => to_binary(&query_owner(deps)?),
     QueryMsg::Chain { request } => to_binary(&query_chain(deps, &request)?),
-    QueryMsg::ChainStruct { request } => to_binary(&query_chain_struct(deps, &request)?),
+    QueryMsg::ChainStruct { request } => query_chain_struct(deps, &request),
     QueryMsg::Umee(UmeeQuery::Leverage(UmeeQueryLeverage::GetBorrow(borrow_params))) => to_binary(&query_get_borrow(deps, borrow_params)?),
   }
 }
