@@ -5,7 +5,7 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  BorrowParams, BorrowResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse, StructUmeeQuery,
+  BorrowParams, BorrowResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse, RegisteredTokensParams, RegisteredTokensResponse, StructUmeeQuery,
   UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
@@ -245,6 +245,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::GetBorrow(borrow_params) => {
       to_binary(&query_get_borrow(deps, borrow_params)?)
     }
+    UmeeQueryLeverage::GetAllRegisteredTokens(registered_tokens_params) => {
+      to_binary(&query_get_all_registered_tokens(deps, registered_tokens_params)?)
+    }
   }
 }
 
@@ -297,6 +300,31 @@ fn query_get_borrow(deps: Deps, borrow_params: BorrowParams) -> StdResult<Borrow
   }
 
   Ok(borrow_response)
+}
+
+// query_get_all_registered_tokens receives the get all registered tokens
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// RegisteredTokensResponse struct
+fn query_get_all_registered_tokens(deps: Deps, registered_tokens_params: RegisteredTokensParams) -> StdResult<RegisteredTokensResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::get_all_registered_tokens(registered_tokens_params));
+
+  let registered_tokens_response: RegisteredTokensResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<RegisteredTokensResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => registered_tokens_response = response,
+      };
+    }
+  }
+
+  Ok(registered_tokens_response)
 }
 
 // query_get_exchange_rate_base receives the get exchange rate base
