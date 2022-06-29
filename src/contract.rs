@@ -5,8 +5,9 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  BorrowParams, BorrowResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse, RegisteredTokensParams, RegisteredTokensResponse, StructUmeeQuery,
-  UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  BorrowParams, BorrowResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage,
+  UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -190,6 +191,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::GetExchangeRateBase(exchange_rate_base_params) => to_binary(
       &query_get_exchange_rate_base(deps, exchange_rate_base_params)?,
     ),
+    QueryMsg::RegisteredTokens(exchange_rate_base_params) => {
+      to_binary(&query_registered_tokens(deps, exchange_rate_base_params)?)
+    }
   }
 }
 
@@ -245,8 +249,8 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::GetBorrow(borrow_params) => {
       to_binary(&query_get_borrow(deps, borrow_params)?)
     }
-    UmeeQueryLeverage::GetAllRegisteredTokens(registered_tokens_params) => {
-      to_binary(&query_get_all_registered_tokens(deps, registered_tokens_params)?)
+    UmeeQueryLeverage::RegisteredTokens(registered_tokens_params) => {
+      to_binary(&query_registered_tokens(deps, registered_tokens_params)?)
     }
   }
 }
@@ -302,12 +306,15 @@ fn query_get_borrow(deps: Deps, borrow_params: BorrowParams) -> StdResult<Borrow
   Ok(borrow_response)
 }
 
-// query_get_all_registered_tokens receives the get all registered tokens
+// query_registered_tokens receives the get all registered tokens
 // query params and creates an query request to the native modules
 // with query_chain wrapping the response to the actual
 // RegisteredTokensResponse struct
-fn query_get_all_registered_tokens(deps: Deps, registered_tokens_params: RegisteredTokensParams) -> StdResult<RegisteredTokensResponse> {
-  let request = QueryRequest::Custom(StructUmeeQuery::get_all_registered_tokens(registered_tokens_params));
+fn query_registered_tokens(
+  deps: Deps,
+  registered_tokens_params: RegisteredTokensParams,
+) -> StdResult<RegisteredTokensResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::registered_tokens(registered_tokens_params));
 
   let registered_tokens_response: RegisteredTokensResponse;
   match query_chain(deps, &request) {

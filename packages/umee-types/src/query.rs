@@ -1,4 +1,7 @@
-use crate::query_leverage::{BorrowParams, RegisteredTokensParams, UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW, ASSIGNED_QUERY_GET_ALL_REGISTERED_TOKENS};
+use crate::query_leverage::{
+  BorrowParams, RegisteredTokensParams, UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW,
+  ASSIGNED_QUERY_REGISTERED_TOKENS,
+};
 use crate::query_oracle::{
   ExchangeRateBaseParams, UmeeQueryOracle, ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
 };
@@ -27,7 +30,8 @@ pub struct StructUmeeQuery {
   assigned_query: u16,
   get_borrow: Option<BorrowParams>,
   get_exchange_rate_base: Option<ExchangeRateBaseParams>,
-  get_all_registered_tokens: Option<RegisteredTokensParams>,
+  // get_all_registered_tokens: Option<RegisteredTokensParams>,
+  registered_tokens: Option<RegisteredTokensParams>,
 }
 
 // Defines all the implementation related to the StructUmeeQuery
@@ -41,7 +45,8 @@ impl StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_GET_BORROW,
       get_borrow: Some(borrow_params),
       get_exchange_rate_base: None,
-      get_all_registered_tokens: None,
+      // get_all_registered_tokens: None,
+      registered_tokens: None,
     }
   }
   // creates a new get_exchange_rate_Base query.
@@ -52,18 +57,18 @@ impl StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
       get_borrow: None,
       get_exchange_rate_base: Some(exchange_rate_base_params),
-      get_all_registered_tokens: None,
+      // get_all_registered_tokens: None,
+      registered_tokens: None,
     }
   }
-  // creates a new get_all_registered_tokens query.
-  pub fn get_all_registered_tokens(
-    registered_tokens_params: RegisteredTokensParams,
-  ) -> StructUmeeQuery {
+  // creates a new registered_tokens query.
+  pub fn registered_tokens(registered_tokens_params: RegisteredTokensParams) -> StructUmeeQuery {
     StructUmeeQuery {
-      assigned_query: ASSIGNED_QUERY_GET_ALL_REGISTERED_TOKENS,
+      assigned_query: ASSIGNED_QUERY_REGISTERED_TOKENS,
       get_borrow: None,
       get_exchange_rate_base: None,
-      get_all_registered_tokens: Some(registered_tokens_params),
+      // get_all_registered_tokens: None,
+      registered_tokens: Some(registered_tokens_params),
     }
   }
 }
