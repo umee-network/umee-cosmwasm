@@ -1,15 +1,18 @@
+pub mod leverage_parameters;
 pub mod query;
 pub mod query_leverage;
 pub mod query_oracle;
 pub mod token;
 
+pub use leverage_parameters::LeverageParameters;
 pub use token::Token;
 
 pub use query::{StructUmeeQuery, UmeeQuery};
 
 pub use query_leverage::{
-  BorrowParams, BorrowResponse, RegisteredTokensParams, RegisteredTokensResponse,
-  UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW, ASSIGNED_QUERY_REGISTERED_TOKENS,
+  BorrowParams, BorrowResponse, LeverageParametersParams, LeverageParametersResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW,
+  ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS,
 };
 
 pub use query_oracle::{

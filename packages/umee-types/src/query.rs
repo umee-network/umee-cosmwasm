@@ -1,6 +1,6 @@
 use crate::query_leverage::{
-  BorrowParams, RegisteredTokensParams, UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW,
-  ASSIGNED_QUERY_REGISTERED_TOKENS,
+  BorrowParams, LeverageParametersParams, RegisteredTokensParams, UmeeQueryLeverage,
+  ASSIGNED_QUERY_GET_BORROW, ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS,
 };
 use crate::query_oracle::{
   ExchangeRateBaseParams, UmeeQueryOracle, ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
@@ -30,8 +30,8 @@ pub struct StructUmeeQuery {
   assigned_query: u16,
   get_borrow: Option<BorrowParams>,
   get_exchange_rate_base: Option<ExchangeRateBaseParams>,
-  // get_all_registered_tokens: Option<RegisteredTokensParams>,
   registered_tokens: Option<RegisteredTokensParams>,
+  leverage_parameters: Option<LeverageParametersParams>,
 }
 
 // Defines all the implementation related to the StructUmeeQuery
@@ -45,8 +45,8 @@ impl StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_GET_BORROW,
       get_borrow: Some(borrow_params),
       get_exchange_rate_base: None,
-      // get_all_registered_tokens: None,
       registered_tokens: None,
+      leverage_parameters: None,
     }
   }
   // creates a new get_exchange_rate_Base query.
@@ -57,8 +57,8 @@ impl StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
       get_borrow: None,
       get_exchange_rate_base: Some(exchange_rate_base_params),
-      // get_all_registered_tokens: None,
       registered_tokens: None,
+      leverage_parameters: None,
     }
   }
   // creates a new registered_tokens query.
@@ -67,8 +67,20 @@ impl StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_REGISTERED_TOKENS,
       get_borrow: None,
       get_exchange_rate_base: None,
-      // get_all_registered_tokens: None,
       registered_tokens: Some(registered_tokens_params),
+      leverage_parameters: None,
+    }
+  }
+  // creates a new leverage_parameters query.
+  pub fn leverage_parameters(
+    leverage_parameters_params: LeverageParametersParams,
+  ) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_LEVERAGE_PARAMS,
+      get_borrow: None,
+      get_exchange_rate_base: None,
+      registered_tokens: None,
+      leverage_parameters: Some(leverage_parameters_params),
     }
   }
 }

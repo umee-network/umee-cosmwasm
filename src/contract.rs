@@ -6,8 +6,8 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 use umee_types::{
   BorrowParams, BorrowResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage,
-  UmeeQueryOracle,
+  LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -191,9 +191,12 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::GetExchangeRateBase(exchange_rate_base_params) => to_binary(
       &query_get_exchange_rate_base(deps, exchange_rate_base_params)?,
     ),
-    QueryMsg::RegisteredTokens(exchange_rate_base_params) => {
-      to_binary(&query_registered_tokens(deps, exchange_rate_base_params)?)
+    QueryMsg::RegisteredTokens(registered_tokens_params) => {
+      to_binary(&query_registered_tokens(deps, registered_tokens_params)?)
     }
+    QueryMsg::LeverageParameters(leverage_parameters_params) => to_binary(
+      &query_leverage_parameters(deps, leverage_parameters_params)?,
+    ),
   }
 }
 
@@ -252,6 +255,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::RegisteredTokens(registered_tokens_params) => {
       to_binary(&query_registered_tokens(deps, registered_tokens_params)?)
     }
+    UmeeQueryLeverage::LeverageParameters(leverage_parameters_params) => to_binary(
+      &query_leverage_parameters(deps, leverage_parameters_params)?,
+    ),
   }
 }
 
@@ -332,6 +338,35 @@ fn query_registered_tokens(
   }
 
   Ok(registered_tokens_response)
+}
+
+// query_leverage_parameters creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// LeverageParametersResponse struct
+fn query_leverage_parameters(
+  deps: Deps,
+  leverage_parameters_params: LeverageParametersParams,
+) -> StdResult<LeverageParametersResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::leverage_parameters(
+    leverage_parameters_params,
+  ));
+
+  let leverage_parameters_response: LeverageParametersResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<LeverageParametersResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => leverage_parameters_response = response,
+      };
+    }
+  }
+
+  Ok(leverage_parameters_response)
 }
 
 // query_get_exchange_rate_base receives the get exchange rate base

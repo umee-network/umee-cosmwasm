@@ -1,3 +1,4 @@
+use crate::leverage_parameters::LeverageParameters;
 use crate::token::Token;
 use cosmwasm_std::{Addr, Coin};
 use schemars::JsonSchema;
@@ -6,6 +7,7 @@ use serde::{Deserialize, Serialize};
 // All the queries must have an assigned query.
 pub const ASSIGNED_QUERY_GET_BORROW: u16 = 1;
 pub const ASSIGNED_QUERY_REGISTERED_TOKENS: u16 = 3;
+pub const ASSIGNED_QUERY_LEVERAGE_PARAMS: u16 = 4;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -18,6 +20,9 @@ pub enum UmeeQueryLeverage {
   // RegisteredTokens returns all the registered tokens from the x/leverage
   // module's KVStore. Expect to returns RegisteredTokensResponse.
   RegisteredTokens(RegisteredTokensParams),
+  // LeverageParameters returns all the parameters from the x/leverage.
+  // Expect to returns LeverageParametersResponse.
+  LeverageParameters(LeverageParametersParams),
 }
 
 // BorrowParams params to query GetBorrow.
@@ -41,4 +46,14 @@ pub struct RegisteredTokensParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct RegisteredTokensResponse {
   pub registry: Vec<Token>,
+}
+
+// LeverageParametersParams params to query LeverageParameters.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct LeverageParametersParams {}
+
+// LeverageParamsResponse response struct of LeverageParameters query.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct LeverageParametersResponse {
+  pub params: LeverageParameters,
 }
