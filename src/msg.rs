@@ -2,7 +2,7 @@ use cosmwasm_std::{Addr, QueryRequest};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use umee_types::{
-  BorrowParams, ExchangeRateBaseParams, LeverageParametersParams, RegisteredTokensParams,
+  BorrowedParams, ExchangeRateBaseParams, LeverageParametersParams, RegisteredTokensParams,
   StructUmeeQuery, UmeeQuery,
 };
 
@@ -26,7 +26,7 @@ pub enum QueryMsg {
   // wraps to use the enums
   Umee(UmeeQuery),
   // it can also call an specific enum directly
-  GetBorrow(BorrowParams),
+  Borrowed(BorrowedParams),
   GetExchangeRateBase(ExchangeRateBaseParams),
   RegisteredTokens(RegisteredTokensParams),
   LeverageParameters(LeverageParametersParams),

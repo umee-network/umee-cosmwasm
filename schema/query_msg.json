@@ -41,11 +41,11 @@
     {
       "type": "object",
       "required": [
-        "get_borrow"
+        "borrowed"
       ],
       "properties": {
-        "get_borrow": {
-          "$ref": "#/definitions/BorrowParams"
+        "borrowed": {
+          "$ref": "#/definitions/BorrowedParams"
         }
       },
       "additionalProperties": false
@@ -58,6 +58,30 @@
       "properties": {
         "get_exchange_rate_base": {
           "$ref": "#/definitions/ExchangeRateBaseParams"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "registered_tokens"
+      ],
+      "properties": {
+        "registered_tokens": {
+          "$ref": "#/definitions/RegisteredTokensParams"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "leverage_parameters"
+      ],
+      "properties": {
+        "leverage_parameters": {
+          "$ref": "#/definitions/LeverageParametersParams"
         }
       },
       "additionalProperties": false
@@ -122,18 +146,20 @@
       "description": "Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>",
       "type": "string"
     },
-    "BorrowParams": {
+    "BorrowedParams": {
       "type": "object",
       "required": [
-        "borrower_addr",
-        "denom"
+        "address"
       ],
       "properties": {
-        "borrower_addr": {
+        "address": {
           "$ref": "#/definitions/Addr"
         },
         "denom": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -147,6 +173,9 @@
           "type": "string"
         }
       }
+    },
+    "LeverageParametersParams": {
+      "type": "object"
     },
     "QueryRequest_for_StructUmeeQuery": {
       "anyOf": [
@@ -199,6 +228,9 @@
           "additionalProperties": false
         }
       ]
+    },
+    "RegisteredTokensParams": {
+      "type": "object"
     },
     "StakingQuery": {
       "anyOf": [
@@ -309,10 +341,10 @@
           "format": "uint16",
           "minimum": 0.0
         },
-        "get_borrow": {
+        "borrowed": {
           "anyOf": [
             {
-              "$ref": "#/definitions/BorrowParams"
+              "$ref": "#/definitions/BorrowedParams"
             },
             {
               "type": "null"
@@ -323,6 +355,26 @@
           "anyOf": [
             {
               "$ref": "#/definitions/ExchangeRateBaseParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "leverage_parameters": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LeverageParametersParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "registered_tokens": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RegisteredTokensParams"
             },
             {
               "type": "null"
@@ -364,11 +416,35 @@
         {
           "type": "object",
           "required": [
-            "get_borrow"
+            "borrowed"
           ],
           "properties": {
-            "get_borrow": {
-              "$ref": "#/definitions/BorrowParams"
+            "borrowed": {
+              "$ref": "#/definitions/BorrowedParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "registered_tokens"
+          ],
+          "properties": {
+            "registered_tokens": {
+              "$ref": "#/definitions/RegisteredTokensParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "leverage_parameters"
+          ],
+          "properties": {
+            "leverage_parameters": {
+              "$ref": "#/definitions/LeverageParametersParams"
             }
           },
           "additionalProperties": false

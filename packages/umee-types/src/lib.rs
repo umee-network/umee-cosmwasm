@@ -10,8 +10,8 @@ pub use token::Token;
 pub use query::{StructUmeeQuery, UmeeQuery};
 
 pub use query_leverage::{
-  BorrowParams, BorrowResponse, LeverageParametersParams, LeverageParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, UmeeQueryLeverage, ASSIGNED_QUERY_GET_BORROW,
+  BorrowedParams, BorrowedResponse, LeverageParametersParams, LeverageParametersResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, UmeeQueryLeverage, ASSIGNED_QUERY_BORROWED,
   ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS,
 };
 

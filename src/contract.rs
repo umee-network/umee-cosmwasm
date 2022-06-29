@@ -5,7 +5,7 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  BorrowParams, BorrowResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse,
+  BorrowedParams, BorrowedResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse,
   LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
   RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
@@ -155,11 +155,11 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::Umee(UmeeQuery::Oracle(oracle)) => query_oracle(deps, _env, oracle),
 
     // consumes the query_chain wrapping the JSON to call directly
-    // the GetBorrow query from the leverage umee native module
+    // the Borrowed query from the leverage umee native module
     // expected json input:
     // {
-    //   "get_borrow": {
-    //     "borrower_addr": "umee1y6xz2ggfc0pcsmyjlekh0j9pxh6hk87ymc9due",
+    //   "borrowed": {
+    //     "address": "umee1y6xz2ggfc0pcsmyjlekh0j9pxh6hk87ymc9due",
     //     "denom": "uumee"
     //   }
     // }
@@ -172,7 +172,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     //     }
     //   }
     // }
-    QueryMsg::GetBorrow(borrow_params) => to_binary(&query_get_borrow(deps, borrow_params)?),
+    QueryMsg::Borrowed(borrowed_params) => to_binary(&query_borrowed(deps, borrowed_params)?),
 
     // consumes the query_chain wrapping the JSON to call directly
     // the GetExchangeRateBase query from the oracle umee native module
@@ -185,7 +185,12 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     // successful json output:
     // {
     //   "data": {
-    //     "exchange_rate_base": "0.0000032"
+    //     "borrowed": [
+    //       {
+    //         "denom": "uumee",
+    //         "amount": "50001"
+    //       }
+    //     ]
     //   }
     // }
     QueryMsg::GetExchangeRateBase(exchange_rate_base_params) => to_binary(
@@ -233,8 +238,8 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     // {
     //   "umee": {
     //     "leverage": {
-    //       "get_borrow": {
-    //         "borrower_addr": "umee1y6xz2ggfc0pcsmyjlekh0j9pxh6hk87ymc9due",
+    //       "borrowed": {
+    //         "address": "umee1y6xz2ggfc0pcsmyjlekh0j9pxh6hk87ymc9due",
     //         "denom": "uumee"
     //       }
     //     }
@@ -243,14 +248,16 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     // successful json output:
     // {
     //   "data": {
-    //     "borrowed_amount": {
-    //       "denom": "uumee",
-    //       "amount": "50001"
-    //     }
+    //     "borrowed": [
+    //       {
+    //         "denom": "uumee",
+    //         "amount": "50001"
+    //       }
+    //     ]
     //   }
     // }
-    UmeeQueryLeverage::GetBorrow(borrow_params) => {
-      to_binary(&query_get_borrow(deps, borrow_params)?)
+    UmeeQueryLeverage::Borrowed(borrowed_params) => {
+      to_binary(&query_borrowed(deps, borrowed_params)?)
     }
     UmeeQueryLeverage::RegisteredTokens(registered_tokens_params) => {
       to_binary(&query_registered_tokens(deps, registered_tokens_params)?)
@@ -288,28 +295,28 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
   }
 }
 
-// query_get_borrow receives the get borrow query params and creates
+// query_borrowed receives the get borrow query params and creates
 // an query request to the native modules with query_chain wrapping
-// the response to the actual BorrowResponse struct
-fn query_get_borrow(deps: Deps, borrow_params: BorrowParams) -> StdResult<BorrowResponse> {
-  let request = QueryRequest::Custom(StructUmeeQuery::get_borrow(borrow_params));
+// the response to the actual BorrowedResponse struct
+fn query_borrowed(deps: Deps, borrowed_params: BorrowedParams) -> StdResult<BorrowedResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::borrowed(borrowed_params));
 
-  let borrow_response: BorrowResponse;
+  let borrowed_response: BorrowedResponse;
   match query_chain(deps, &request) {
     Err(err) => {
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<BorrowResponse>(&binary) {
+      match from_binary::<BorrowedResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
-        Ok(response) => borrow_response = response,
+        Ok(response) => borrowed_response = response,
       };
     }
   }
 
-  Ok(borrow_response)
+  Ok(borrowed_response)
 }
 
 // query_registered_tokens receives the get all registered tokens
