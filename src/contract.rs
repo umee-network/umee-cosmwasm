@@ -5,9 +5,10 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  BorrowedParams, BorrowedResponse, ExchangeRateBaseParams, ExchangeRateBaseResponse,
-  LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
-  RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  BorrowedParams, BorrowedResponse, BorrowedValueResponse, ExchangeRateBaseParams,
+  ExchangeRateBaseResponse, LeverageParametersParams, LeverageParametersResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage,
+  UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -202,6 +203,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::LeverageParameters(leverage_parameters_params) => to_binary(
       &query_leverage_parameters(deps, leverage_parameters_params)?,
     ),
+    QueryMsg::BorrowedValue(borrowed_params) => {
+      to_binary(&query_borrowed_value(deps, borrowed_params)?)
+    }
   }
 }
 
@@ -265,6 +269,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::LeverageParameters(leverage_parameters_params) => to_binary(
       &query_leverage_parameters(deps, leverage_parameters_params)?,
     ),
+    UmeeQueryLeverage::BorrowedValue(borrowed_params) => {
+      to_binary(&query_borrowed_value(deps, borrowed_params)?)
+    }
   }
 }
 
@@ -374,6 +381,33 @@ fn query_leverage_parameters(
   }
 
   Ok(leverage_parameters_response)
+}
+
+// query_borrowed_value creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// BorrowedValueResponse struct
+fn query_borrowed_value(
+  deps: Deps,
+  borrowed_params: BorrowedParams,
+) -> StdResult<BorrowedValueResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::borrowed_value(borrowed_params));
+
+  let borrowed_value_response: BorrowedValueResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<BorrowedValueResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => borrowed_value_response = response,
+      };
+    }
+  }
+
+  Ok(borrowed_value_response)
 }
 
 // query_get_exchange_rate_base receives the get exchange rate base

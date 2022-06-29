@@ -30,6 +30,7 @@ pub enum QueryMsg {
   GetExchangeRateBase(ExchangeRateBaseParams),
   RegisteredTokens(RegisteredTokensParams),
   LeverageParameters(LeverageParametersParams),
+  BorrowedValue(BorrowedParams),
 }
 
 // returns the current contract owner

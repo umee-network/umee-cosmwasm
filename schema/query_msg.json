@@ -85,6 +85,18 @@
         }
       },
       "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "borrowed_value"
+      ],
+      "properties": {
+        "borrowed_value": {
+          "$ref": "#/definitions/BorrowedParams"
+        }
+      },
+      "additionalProperties": false
     }
   ],
   "definitions": {
@@ -351,6 +363,16 @@
             }
           ]
         },
+        "borrowed_value": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BorrowedParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "get_exchange_rate_base": {
           "anyOf": [
             {
@@ -445,6 +467,18 @@
           "properties": {
             "leverage_parameters": {
               "$ref": "#/definitions/LeverageParametersParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "borrowed_value"
+          ],
+          "properties": {
+            "borrowed_value": {
+              "$ref": "#/definitions/BorrowedParams"
             }
           },
           "additionalProperties": false

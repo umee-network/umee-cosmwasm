@@ -1,6 +1,7 @@
 use crate::query_leverage::{
   BorrowedParams, LeverageParametersParams, RegisteredTokensParams, UmeeQueryLeverage,
-  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS,
+  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
+  ASSIGNED_QUERY_REGISTERED_TOKENS,
 };
 use crate::query_oracle::{
   ExchangeRateBaseParams, UmeeQueryOracle, ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
@@ -32,6 +33,7 @@ pub struct StructUmeeQuery {
   get_exchange_rate_base: Option<ExchangeRateBaseParams>,
   registered_tokens: Option<RegisteredTokensParams>,
   leverage_parameters: Option<LeverageParametersParams>,
+  borrowed_value: Option<BorrowedParams>,
 }
 
 // Defines all the implementation related to the StructUmeeQuery
@@ -47,6 +49,7 @@ impl StructUmeeQuery {
       get_exchange_rate_base: None,
       registered_tokens: None,
       leverage_parameters: None,
+      borrowed_value: None,
     }
   }
   // creates a new get_exchange_rate_Base query.
@@ -59,6 +62,7 @@ impl StructUmeeQuery {
       get_exchange_rate_base: Some(exchange_rate_base_params),
       registered_tokens: None,
       leverage_parameters: None,
+      borrowed_value: None,
     }
   }
   // creates a new registered_tokens query.
@@ -69,6 +73,7 @@ impl StructUmeeQuery {
       get_exchange_rate_base: None,
       registered_tokens: Some(registered_tokens_params),
       leverage_parameters: None,
+      borrowed_value: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -81,6 +86,18 @@ impl StructUmeeQuery {
       get_exchange_rate_base: None,
       registered_tokens: None,
       leverage_parameters: Some(leverage_parameters_params),
+      borrowed_value: None,
+    }
+  }
+  // creates a new borrowed_value query.
+  pub fn borrowed_value(borrowed_params: BorrowedParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_BORROWED_VALUE,
+      borrowed: None,
+      get_exchange_rate_base: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: Some(borrowed_params),
     }
   }
 }
