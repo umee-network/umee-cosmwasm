@@ -1,14 +1,14 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::{
   entry_point, from_binary, to_binary, to_vec, Addr, Binary, ContractResult, Deps, DepsMut, Env,
-  MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
+  MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult, CosmosMsg,
 };
 use cw2::set_contract_version;
 use umee_types::{
   BorrowedParams, BorrowedResponse, BorrowedValueResponse, ExchangeRateBaseParams,
   ExchangeRateBaseResponse, LeverageParametersParams, LeverageParametersResponse,
   RegisteredTokensParams, RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage,
-  UmeeQueryOracle,
+  UmeeQueryOracle, UmeeMsg, StructUmeeMsg,
 };
 
 use crate::error::ContractError;
@@ -53,6 +53,7 @@ pub fn execute(
   match msg {
     // receives the new owner and tries to change it in the contract state
     ExecuteMsg::ChangeOwner { new_owner } => try_change_owner(deps, info, new_owner),
+    ExecuteMsg::Chain(cosmos_umee_msg) => msg_chain(cosmos_umee_msg),
   }
 }
 
@@ -70,6 +71,19 @@ pub fn try_change_owner(
     Ok(state)
   })?;
   Ok(Response::new().add_attribute("method", "change_owner"))
+}
+
+// msg_chain sends any message in the chain native modules
+fn msg_chain(umee_msg: StructUmeeMsg) -> Result<Response<StructUmeeMsg>, ContractError> {
+  if !umee_msg.valid() {
+    return Err(ContractError::CustomError{val:String::from("invalid umee msg")});
+  }
+
+  let res = Response::new()
+    .add_attribute("method", umee_msg.assigned_str())
+    .add_message(umee_msg);
+
+  Ok(res)
 }
 
 // queries doesn't change the state, but it open the state with read permissions

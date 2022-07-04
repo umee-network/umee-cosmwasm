@@ -1,4 +1,6 @@
 pub mod leverage_parameters;
+pub mod msg;
+pub mod msg_leverage;
 pub mod query;
 pub mod query_leverage;
 pub mod query_oracle;
@@ -19,6 +21,14 @@ pub use query_leverage::{
 pub use query_oracle::{
   ExchangeRateBaseParams, ExchangeRateBaseResponse, UmeeQueryOracle,
   ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
+};
+
+pub use msg_leverage::{
+  LendAssetParams, UmeeMsgLeverage, ASSIGNED_MSG_LEND, ASSIGNED_MSG_WITHDRAW,
+};
+
+pub use msg::{
+  UmeeMsg, StructUmeeMsg,
 };
 
 // This is a signal, such that any contract that imports these helpers will only run on the
