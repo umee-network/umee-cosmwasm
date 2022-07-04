@@ -27,9 +27,7 @@ pub use msg_leverage::{
   LendAssetParams, UmeeMsgLeverage, ASSIGNED_MSG_LEND, ASSIGNED_MSG_WITHDRAW,
 };
 
-pub use msg::{
-  UmeeMsg, StructUmeeMsg,
-};
+pub use msg::{StructUmeeMsg, UmeeMsg};
 
 // This is a signal, such that any contract that imports these helpers will only run on the
 // umee blockchain, it makes mandatory that the blockchain have the "umee" inside

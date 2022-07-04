@@ -1,14 +1,14 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::{
   entry_point, from_binary, to_binary, to_vec, Addr, Binary, ContractResult, Deps, DepsMut, Env,
-  MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult, CosmosMsg,
+  MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
 use umee_types::{
   BorrowedParams, BorrowedResponse, BorrowedValueResponse, ExchangeRateBaseParams,
-  ExchangeRateBaseResponse, LeverageParametersParams, LeverageParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, StructUmeeQuery, UmeeQuery, UmeeQueryLeverage,
-  UmeeQueryOracle, UmeeMsg, StructUmeeMsg,
+  ExchangeRateBaseResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg, StructUmeeQuery, UmeeMsg,
+  UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -49,11 +49,14 @@ pub fn execute(
   _env: Env,
   info: MessageInfo,
   msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
+) -> Result<Response<StructUmeeMsg>, ContractError> {
   match msg {
     // receives the new owner and tries to change it in the contract state
     ExecuteMsg::ChangeOwner { new_owner } => try_change_owner(deps, info, new_owner),
     ExecuteMsg::Chain(cosmos_umee_msg) => msg_chain(cosmos_umee_msg),
+    ExecuteMsg::Umee(UmeeMsg::Leverage(execute_leverage_msg)) => {
+      execute_leverage(execute_leverage_msg)
+    }
   }
 }
 
@@ -62,7 +65,7 @@ pub fn try_change_owner(
   deps: DepsMut,
   info: MessageInfo,
   new_owner: Addr,
-) -> Result<Response, ContractError> {
+) -> Result<Response<StructUmeeMsg>, ContractError> {
   STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
     if info.sender != state.owner {
       return Err(ContractError::Unauthorized {});
@@ -70,13 +73,15 @@ pub fn try_change_owner(
     state.owner = new_owner;
     Ok(state)
   })?;
-  Ok(Response::new().add_attribute("method", "change_owner"))
+  Ok(Response::<StructUmeeMsg>::new().add_attribute("method", "change_owner"))
 }
 
 // msg_chain sends any message in the chain native modules
 fn msg_chain(umee_msg: StructUmeeMsg) -> Result<Response<StructUmeeMsg>, ContractError> {
   if !umee_msg.valid() {
-    return Err(ContractError::CustomError{val:String::from("invalid umee msg")});
+    return Err(ContractError::CustomError {
+      val: String::from("invalid umee msg"),
+    });
   }
 
   let res = Response::new()
@@ -84,6 +89,40 @@ fn msg_chain(umee_msg: StructUmeeMsg) -> Result<Response<StructUmeeMsg>, Contrac
     .add_message(umee_msg);
 
   Ok(res)
+}
+
+// execute_leverage handles the execution of every msg of leverage umee native modules
+fn execute_leverage(
+  execute_leverage_msg: UmeeMsgLeverage,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  match execute_leverage_msg {
+    UmeeMsgLeverage::LendAsset(lend_asset_params) => execute_lend(lend_asset_params),
+    UmeeMsgLeverage::WithdrawAsset(withdraw_asset_params) => {
+      execute_withdraw(withdraw_asset_params)
+    }
+  }
+}
+
+// execute_lend sends umee leverage module an message of LendAsset
+fn execute_lend(
+  lend_asset_params: LendAssetParams,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  Ok(
+    Response::new()
+      .add_attribute("method", "lend_asset")
+      .add_message(StructUmeeMsg::lend_asset(lend_asset_params)),
+  )
+}
+
+// execute_withdraw sends umee leverage module an message of WithdrawAsset
+fn execute_withdraw(
+  withdraw_asset_params: LendAssetParams,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  Ok(
+    Response::new()
+      .add_attribute("method", "lend_asset")
+      .add_message(StructUmeeMsg::withdraw_asset(withdraw_asset_params)),
+  )
 }
 
 // queries doesn't change the state, but it open the state with read permissions

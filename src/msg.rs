@@ -1,9 +1,9 @@
-use cosmwasm_std::{Addr, QueryRequest, CosmosMsg};
+use cosmwasm_std::{Addr, QueryRequest};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use umee_types::{
   BorrowedParams, ExchangeRateBaseParams, LeverageParametersParams, RegisteredTokensParams,
-  StructUmeeQuery, UmeeQuery, StructUmeeMsg,
+  StructUmeeMsg, StructUmeeQuery, UmeeMsg, UmeeQuery,
 };
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -14,8 +14,8 @@ pub struct InstantiateMsg {}
 pub enum ExecuteMsg {
   // updates the state owner
   ChangeOwner { new_owner: Addr },
-  // sends msg directly to the blockchain using the struct
   Chain(StructUmeeMsg),
+  Umee(UmeeMsg),
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

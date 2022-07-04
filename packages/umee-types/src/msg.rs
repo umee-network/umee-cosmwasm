@@ -4,7 +4,7 @@ use crate::msg_leverage::{
 // use crate::query_oracle::{
 //   ExchangeRateBaseParams, UmeeMsgOracle, ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
 // };
-use cosmwasm_std::{CustomMsg, CosmosMsg, Response, StdError};
+use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -67,7 +67,13 @@ impl StructUmeeMsg {
 }
 
 impl From<StructUmeeMsg> for CosmosMsg<StructUmeeMsg> {
-  fn from(msg: StructUmeeMsg) -> CosmosMsg<StructUmeeMsg> {
-      CosmosMsg::Custom(msg)
+  fn from(msg: StructUmeeMsg) -> Self {
+    CosmosMsg::Custom(msg)
+  }
+}
+
+impl From<UmeeMsg> for CosmosMsg<UmeeMsg> {
+  fn from(msg: UmeeMsg) -> Self {
+    CosmosMsg::Custom(msg)
   }
 }
