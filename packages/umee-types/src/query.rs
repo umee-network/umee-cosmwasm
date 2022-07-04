@@ -34,6 +34,27 @@ pub struct StructUmeeQuery {
   registered_tokens: Option<RegisteredTokensParams>,
   leverage_parameters: Option<LeverageParametersParams>,
   borrowed_value: Option<BorrowedParams>,
+  // loaned,
+  // loaned_value,
+  // avalable_borrow,
+  // borrow_apy,
+  // lend_apy,
+  // market_size,1
+  // token_market_size,
+  // reserve_amount,
+  // exchange_rate,
+  // borrow_limit,
+  // liquidation_threshold
+  // liquidation_targets
+  // market_summary
+  // active_exchange_rates
+  // feeder_delegation
+  // miss_counter,
+  // aggregate_prevote
+  // aggregate_prevotes
+  // aggregate_vote
+  // aggregate_votes
+  // oracle_params
 }
 
 // Defines all the implementation related to the StructUmeeQuery
