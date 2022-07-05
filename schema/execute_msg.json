@@ -90,7 +90,7 @@
           "$ref": "#/definitions/Coin"
         },
         "lender": {
-          "type": "string"
+          "$ref": "#/definitions/Addr"
         }
       }
     },
