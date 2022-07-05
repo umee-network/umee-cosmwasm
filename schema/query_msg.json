@@ -53,11 +53,11 @@
     {
       "type": "object",
       "required": [
-        "get_exchange_rate_base"
+        "exchange_rates"
       ],
       "properties": {
-        "get_exchange_rate_base": {
-          "$ref": "#/definitions/ExchangeRateBaseParams"
+        "exchange_rates": {
+          "$ref": "#/definitions/ExchangeRatesParams"
         }
       },
       "additionalProperties": false
@@ -175,7 +175,7 @@
         }
       }
     },
-    "ExchangeRateBaseParams": {
+    "ExchangeRatesParams": {
       "type": "object",
       "required": [
         "denom"
@@ -373,10 +373,10 @@
             }
           ]
         },
-        "get_exchange_rate_base": {
+        "exchange_rates": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ExchangeRateBaseParams"
+              "$ref": "#/definitions/ExchangeRatesParams"
             },
             {
               "type": "null"
@@ -490,11 +490,11 @@
         {
           "type": "object",
           "required": [
-            "get_exchange_rate_base"
+            "exchange_rates"
           ],
           "properties": {
-            "get_exchange_rate_base": {
-              "$ref": "#/definitions/ExchangeRateBaseParams"
+            "exchange_rates": {
+              "$ref": "#/definitions/ExchangeRatesParams"
             }
           },
           "additionalProperties": false

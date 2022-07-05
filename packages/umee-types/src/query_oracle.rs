@@ -3,26 +3,36 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query
-pub const ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE: u16 = 2;
+pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 2;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
 pub enum UmeeQueryOracle {
-  // GetExchangeRateBase returns an sdk.Dec representing the exchange rate
-  // of an denom. Expect to returns ExchangeRateBaseResponse.
-  GetExchangeRateBase(ExchangeRateBaseParams),
+  // ExchangeRates returns an sdk.Dec representing the exchange rate
+  // of an denom. Expect to returns ExchangeRatesResponse.
+  ExchangeRates(ExchangeRatesParams),
 }
 
-// ExchangeRateBaseParams params to query GetExchangeRateBase
+// ExchangeRatesParams params to query ExchangeRates
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct ExchangeRateBaseParams {
+pub struct ExchangeRatesParams {
   pub denom: String,
 }
 
-// ExchangeRateBaseResponse response struct of GetExchangeRateBase query
+// ExchangeRatesResponse response struct of ExchangeRates query
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct ExchangeRateBaseResponse {
-  pub exchange_rate_base: Decimal,
+pub struct ExchangeRatesResponse {
+  pub exchange_rates: Vec<DecCoin>,
+}
+
+// DecCoin defines a token with a denomination and a decimal amount.
+//
+// NOTE: The amount field is an Dec which implements the custom method
+// signatures required by gogoproto.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct DecCoin {
+  pub denom: String,
+  pub amount: Decimal,
 }

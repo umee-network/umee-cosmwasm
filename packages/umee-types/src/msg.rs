@@ -2,7 +2,7 @@ use crate::msg_leverage::{
   LendAssetParams, UmeeMsgLeverage, ASSIGNED_MSG_LEND, ASSIGNED_MSG_WITHDRAW,
 };
 // use crate::query_oracle::{
-//   ExchangeRateBaseParams, UmeeMsgOracle, ASSIGNED_QUERY_GET_EXCHANGE_RATE_BASE,
+//   ExchangeRateBaseParams, UmeeMsgOracle, ASSIGNED_QUERY_EXCHANGE_RATES,
 // };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;

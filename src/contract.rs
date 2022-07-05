@@ -5,8 +5,8 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  BorrowedParams, BorrowedResponse, BorrowedValueResponse, ExchangeRateBaseParams,
-  ExchangeRateBaseResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
+  BorrowedParams, BorrowedResponse, BorrowedValueResponse, ExchangeRatesParams,
+  ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
   RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg, StructUmeeQuery, UmeeMsg,
   UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
@@ -229,7 +229,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::Borrowed(borrowed_params) => to_binary(&query_borrowed(deps, borrowed_params)?),
 
     // consumes the query_chain wrapping the JSON to call directly
-    // the GetExchangeRateBase query from the oracle umee native module
+    // the ExchangeRates query from the oracle umee native module
     // expected json input:
     // {
     //   "get_exchange_rate_base": {
@@ -247,9 +247,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     //     ]
     //   }
     // }
-    QueryMsg::GetExchangeRateBase(exchange_rate_base_params) => to_binary(
-      &query_get_exchange_rate_base(deps, exchange_rate_base_params)?,
-    ),
+    QueryMsg::ExchangeRates(exchange_rates_params) => {
+      to_binary(&query_exchange_rates(deps, exchange_rates_params)?)
+    }
     QueryMsg::RegisteredTokens(registered_tokens_params) => {
       to_binary(&query_registered_tokens(deps, registered_tokens_params)?)
     }
@@ -337,7 +337,7 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     // {
     //   "umee": {
     //     "oracle": {
-    //       "get_exchange_rate_base": {
+    //       "exchange_rates": {
     //         "denom": "uumee"
     //       }
     //     }
@@ -349,9 +349,9 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     //     "exchange_rate_base": "0.0000032"
     //   }
     // }
-    UmeeQueryOracle::GetExchangeRateBase(exchange_rate_base_params) => to_binary(
-      &query_get_exchange_rate_base(deps, exchange_rate_base_params)?,
-    ),
+    UmeeQueryOracle::ExchangeRates(exchange_rates_params) => {
+      to_binary(&query_exchange_rates(deps, exchange_rates_params)?)
+    }
   }
 }
 
@@ -463,34 +463,32 @@ fn query_borrowed_value(
   Ok(borrowed_value_response)
 }
 
-// query_get_exchange_rate_base receives the get exchange rate base
+// query_exchange_rates receives the get exchange rate base
 // query params and creates an query request to the native modules
 // with query_chain wrapping the response to the actual
-// ExchangeRateBaseResponse struct
-fn query_get_exchange_rate_base(
+// ExchangeRatesResponse struct
+fn query_exchange_rates(
   deps: Deps,
-  exchange_rate_base_params: ExchangeRateBaseParams,
-) -> StdResult<ExchangeRateBaseResponse> {
-  let request = QueryRequest::Custom(StructUmeeQuery::get_exchange_rate_base(
-    exchange_rate_base_params,
-  ));
+  exchange_rates_params: ExchangeRatesParams,
+) -> StdResult<ExchangeRatesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::exchange_rates(exchange_rates_params));
 
-  let exchange_rate_base_resp: ExchangeRateBaseResponse;
+  let exchange_rates_resp: ExchangeRatesResponse;
   match query_chain(deps, &request) {
     Err(err) => {
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<ExchangeRateBaseResponse>(&binary) {
+      match from_binary::<ExchangeRatesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
-        Ok(response) => exchange_rate_base_resp = response,
+        Ok(response) => exchange_rates_resp = response,
       };
     }
   }
 
-  Ok(exchange_rate_base_resp)
+  Ok(exchange_rates_resp)
 }
 
 // -----------------------------------TESTS---------------------------------------
