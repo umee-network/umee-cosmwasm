@@ -57,6 +57,7 @@ pub fn execute(
     ExecuteMsg::Umee(UmeeMsg::Leverage(execute_leverage_msg)) => {
       execute_leverage(execute_leverage_msg)
     }
+    ExecuteMsg::LendAsset(lend_asset_params) => execute_lend(lend_asset_params),
   }
 }
 

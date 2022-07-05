@@ -45,6 +45,18 @@
         }
       },
       "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "lend_asset"
+      ],
+      "properties": {
+        "lend_asset": {
+          "$ref": "#/definitions/LendAssetParams"
+        }
+      },
+      "additionalProperties": false
     }
   ],
   "definitions": {
@@ -78,7 +90,7 @@
           "$ref": "#/definitions/Coin"
         },
         "lender": {
-          "$ref": "#/definitions/Addr"
+          "type": "string"
         }
       }
     },

@@ -48,7 +48,7 @@ impl StructUmeeMsg {
       _ => String::from("unrecognized_msg"),
     }
   }
-  // creates a new lend message.
+  // creates a new lend asset message.
   pub fn lend_asset(lend_asset_params: LendAssetParams) -> StructUmeeMsg {
     StructUmeeMsg {
       assigned_msg: ASSIGNED_MSG_LEND,
