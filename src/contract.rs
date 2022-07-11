@@ -8,8 +8,8 @@ use umee_types::{
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
   ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
   LeverageParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg,
-  StructUmeeQuery, SuppliedParams, SuppliedResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
+  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -330,6 +330,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::Supplied(supplied_params) => {
       to_binary(&query_supplied(deps, supplied_params)?)
     }
+    UmeeQueryLeverage::SuppliedValue(supplied_value_params) => {
+      to_binary(&query_supplied_value(deps, supplied_value_params)?)
+    }
   }
 }
 
@@ -490,6 +493,33 @@ fn query_supplied(deps: Deps, supplied_params: SuppliedParams) -> StdResult<Supp
   }
 
   Ok(supplied_response)
+}
+
+// query_supplied_value creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// SuppliedValueResponse struct.
+fn query_supplied_value(
+  deps: Deps,
+  supplied_value_params: SuppliedValueParams,
+) -> StdResult<SuppliedValueResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::supplied_value(supplied_value_params));
+
+  let supplied_value_response: SuppliedValueResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<SuppliedValueResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => supplied_value_response = response,
+      };
+    }
+  }
+
+  Ok(supplied_value_response)
 }
 
 // query_exchange_rates receives the get exchange rate base

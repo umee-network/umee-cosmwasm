@@ -14,9 +14,10 @@ pub use query::{StructUmeeQuery, UmeeQuery};
 pub use query_leverage::{
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
   LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
-  RegisteredTokensResponse, SuppliedParams, SuppliedResponse, UmeeQueryLeverage,
-  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
-  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED,
+  RegisteredTokensResponse, SuppliedParams, SuppliedResponse, SuppliedValueParams,
+  SuppliedValueResponse, UmeeQueryLeverage, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
+  ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED,
+  ASSIGNED_QUERY_SUPPLIED_VALUE,
 };
 
 pub use query_oracle::{

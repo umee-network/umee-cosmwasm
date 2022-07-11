@@ -429,10 +429,37 @@
               "type": "null"
             }
           ]
+        },
+        "supplied_value": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SuppliedValueParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
     "SuppliedParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "SuppliedValueParams": {
       "type": "object",
       "required": [
         "address"
@@ -535,6 +562,18 @@
           "properties": {
             "supplied": {
               "$ref": "#/definitions/SuppliedParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "supplied_value"
+          ],
+          "properties": {
+            "supplied_value": {
+              "$ref": "#/definitions/SuppliedValueParams"
             }
           },
           "additionalProperties": false
