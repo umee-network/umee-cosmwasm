@@ -9,6 +9,7 @@ pub const ASSIGNED_QUERY_BORROWED: u16 = 1;
 pub const ASSIGNED_QUERY_REGISTERED_TOKENS: u16 = 3;
 pub const ASSIGNED_QUERY_LEVERAGE_PARAMS: u16 = 4;
 pub const ASSIGNED_QUERY_BORROWED_VALUE: u16 = 5;
+pub const ASSIGNED_QUERY_SUPPLIED: u16 = 6;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -26,7 +27,12 @@ pub enum UmeeQueryLeverage {
   LeverageParameters(LeverageParametersParams),
   // BorrowedValue returns an sdk.Dec representing how much in USD an
   // borrower currently owes. Expect to returns BorrowedValueResponse.
-  BorrowedValue(BorrowedParams),
+  BorrowedValue(BorrowedValueParams),
+  // Supplied returns an slice of sdk.Dec representing the amount of tokens
+  // by a user by denomination. If the denomination is not specified,
+  // the total for each supplied token is returned.
+  // Expect to returns SuppliedResponse.
+  Supplied(SuppliedParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -39,6 +45,19 @@ pub struct BorrowedParams {
 // BorrowedResponse response struct of Borrowed query.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct BorrowedResponse {
+  pub borrowed: Vec<Coin>,
+}
+
+// SuppliedParams params to query Supplied.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct SuppliedParams {
+  pub address: Addr,
+  pub denom: Option<String>,
+}
+
+// SuppliedResponse response struct of Supplied query.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct SuppliedResponse {
   pub borrowed: Vec<Coin>,
 }
 
@@ -60,6 +79,13 @@ pub struct LeverageParametersParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct LeverageParametersResponse {
   pub params: LeverageParameters,
+}
+
+// BorrowedValueParams params to query BorrowedValue.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct BorrowedValueParams {
+  pub address: Addr,
+  pub denom: Option<String>,
 }
 
 // BorrowedValueResponse response struct of Borrowed query in USD.

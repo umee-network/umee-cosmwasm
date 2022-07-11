@@ -12,10 +12,11 @@ pub use token::Token;
 pub use query::{StructUmeeQuery, UmeeQuery};
 
 pub use query_leverage::{
-  BorrowedParams, BorrowedResponse, BorrowedValueResponse, LeverageParametersParams,
-  LeverageParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, UmeeQueryLeverage,
+  BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
+  LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, SuppliedParams, SuppliedResponse, UmeeQueryLeverage,
   ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
-  ASSIGNED_QUERY_REGISTERED_TOKENS,
+  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED,
 };
 
 pub use query_oracle::{

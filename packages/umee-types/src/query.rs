@@ -1,7 +1,7 @@
 use crate::query_leverage::{
-  BorrowedParams, LeverageParametersParams, RegisteredTokensParams, UmeeQueryLeverage,
-  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
-  ASSIGNED_QUERY_REGISTERED_TOKENS,
+  BorrowedParams, BorrowedValueParams, LeverageParametersParams, RegisteredTokensParams,
+  SuppliedParams, UmeeQueryLeverage, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
+  ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED,
 };
 use crate::query_oracle::{ExchangeRatesParams, UmeeQueryOracle, ASSIGNED_QUERY_EXCHANGE_RATES};
 use cosmwasm_std::CustomQuery;
@@ -31,8 +31,8 @@ pub struct StructUmeeQuery {
   exchange_rates: Option<ExchangeRatesParams>,
   registered_tokens: Option<RegisteredTokensParams>,
   leverage_parameters: Option<LeverageParametersParams>,
-  borrowed_value: Option<BorrowedParams>,
-  // loaned,
+  borrowed_value: Option<BorrowedValueParams>,
+  supplied: Option<SuppliedParams>,
   // loaned_value,
   // avalable_borrow,
   // borrow_apy,
@@ -69,6 +69,7 @@ impl StructUmeeQuery {
       registered_tokens: None,
       leverage_parameters: None,
       borrowed_value: None,
+      supplied: None,
     }
   }
   // creates a new exchange_rates query.
@@ -80,6 +81,7 @@ impl StructUmeeQuery {
       registered_tokens: None,
       leverage_parameters: None,
       borrowed_value: None,
+      supplied: None,
     }
   }
   // creates a new registered_tokens query.
@@ -91,6 +93,7 @@ impl StructUmeeQuery {
       registered_tokens: Some(registered_tokens_params),
       leverage_parameters: None,
       borrowed_value: None,
+      supplied: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -104,17 +107,31 @@ impl StructUmeeQuery {
       registered_tokens: None,
       leverage_parameters: Some(leverage_parameters_params),
       borrowed_value: None,
+      supplied: None,
     }
   }
   // creates a new borrowed_value query.
-  pub fn borrowed_value(borrowed_params: BorrowedParams) -> StructUmeeQuery {
+  pub fn borrowed_value(borrowed_value_params: BorrowedValueParams) -> StructUmeeQuery {
     StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_BORROWED_VALUE,
       borrowed: None,
       exchange_rates: None,
       registered_tokens: None,
       leverage_parameters: None,
-      borrowed_value: Some(borrowed_params),
+      borrowed_value: Some(borrowed_value_params),
+      supplied: None,
+    }
+  }
+  // creates a new supplied query.
+  pub fn supplied(supplied_params: SuppliedParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_SUPPLIED,
+      borrowed: None,
+      exchange_rates: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: None,
+      supplied: Some(supplied_params),
     }
   }
 }

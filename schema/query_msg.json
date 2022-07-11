@@ -93,7 +93,7 @@
       ],
       "properties": {
         "borrowed_value": {
-          "$ref": "#/definitions/BorrowedParams"
+          "$ref": "#/definitions/BorrowedValueParams"
         }
       },
       "additionalProperties": false
@@ -159,6 +159,23 @@
       "type": "string"
     },
     "BorrowedParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "BorrowedValueParams": {
       "type": "object",
       "required": [
         "address"
@@ -366,7 +383,7 @@
         "borrowed_value": {
           "anyOf": [
             {
-              "$ref": "#/definitions/BorrowedParams"
+              "$ref": "#/definitions/BorrowedValueParams"
             },
             {
               "type": "null"
@@ -401,6 +418,33 @@
             {
               "type": "null"
             }
+          ]
+        },
+        "supplied": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SuppliedParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "SuppliedParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -478,7 +522,19 @@
           ],
           "properties": {
             "borrowed_value": {
-              "$ref": "#/definitions/BorrowedParams"
+              "$ref": "#/definitions/BorrowedValueParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "supplied"
+          ],
+          "properties": {
+            "supplied": {
+              "$ref": "#/definitions/SuppliedParams"
             }
           },
           "additionalProperties": false

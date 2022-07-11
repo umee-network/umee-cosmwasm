@@ -5,10 +5,11 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  BorrowedParams, BorrowedResponse, BorrowedValueResponse, ExchangeRatesParams,
-  ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg, StructUmeeQuery, UmeeMsg,
-  UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
+  ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
+  LeverageParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg,
+  StructUmeeQuery, SuppliedParams, SuppliedResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -257,8 +258,8 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::LeverageParameters(leverage_parameters_params) => to_binary(
       &query_leverage_parameters(deps, leverage_parameters_params)?,
     ),
-    QueryMsg::BorrowedValue(borrowed_params) => {
-      to_binary(&query_borrowed_value(deps, borrowed_params)?)
+    QueryMsg::BorrowedValue(borrowed_value_params) => {
+      to_binary(&query_borrowed_value(deps, borrowed_value_params)?)
     }
   }
 }
@@ -325,6 +326,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     ),
     UmeeQueryLeverage::BorrowedValue(borrowed_params) => {
       to_binary(&query_borrowed_value(deps, borrowed_params)?)
+    }
+    UmeeQueryLeverage::Supplied(supplied_params) => {
+      to_binary(&query_supplied(deps, supplied_params)?)
     }
   }
 }
@@ -442,9 +446,9 @@ fn query_leverage_parameters(
 // BorrowedValueResponse struct
 fn query_borrowed_value(
   deps: Deps,
-  borrowed_params: BorrowedParams,
+  borrowed_value_params: BorrowedValueParams,
 ) -> StdResult<BorrowedValueResponse> {
-  let request = QueryRequest::Custom(StructUmeeQuery::borrowed_value(borrowed_params));
+  let request = QueryRequest::Custom(StructUmeeQuery::borrowed_value(borrowed_value_params));
 
   let borrowed_value_response: BorrowedValueResponse;
   match query_chain(deps, &request) {
@@ -462,6 +466,30 @@ fn query_borrowed_value(
   }
 
   Ok(borrowed_value_response)
+}
+
+// query_supplied creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// SuppliedResponse struct
+fn query_supplied(deps: Deps, supplied_params: SuppliedParams) -> StdResult<SuppliedResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::supplied(supplied_params));
+
+  let supplied_response: SuppliedResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<SuppliedResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => supplied_response = response,
+      };
+    }
+  }
+
+  Ok(supplied_response)
 }
 
 // query_exchange_rates receives the get exchange rate base
