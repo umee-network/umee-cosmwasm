@@ -5,12 +5,12 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  AvailableBorrowParams, AvailableBorrowResponse, BorrowedParams, BorrowedResponse,
-  BorrowedValueParams, BorrowedValueResponse, ExchangeRatesParams, ExchangeRatesResponse,
-  LendAssetParams, LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
-  RegisteredTokensResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
+  BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
+  ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
+  LeverageParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg,
+  StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
+  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -337,6 +337,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::AvailableBorrow(available_borrow_params) => {
       to_binary(&query_available_borrow(deps, available_borrow_params)?)
     }
+    UmeeQueryLeverage::BorrowAPY(borrow_apy_params) => {
+      to_binary(&query_borrow_apy(deps, borrow_apy_params)?)
+    }
   }
 }
 
@@ -551,6 +554,33 @@ fn query_available_borrow(
   }
 
   Ok(available_borrow_response)
+}
+
+// query_borrow_apy creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// BorrowAPYResponse struct.
+fn query_borrow_apy(
+  deps: Deps,
+  borrow_apy_params: BorrowAPYParams,
+) -> StdResult<BorrowAPYResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::borrow_apy(borrow_apy_params));
+
+  let borrow_apy_response: BorrowAPYResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<BorrowAPYResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => borrow_apy_response = response,
+      };
+    }
+  }
+
+  Ok(borrow_apy_response)
 }
 
 // query_exchange_rates receives the get exchange rate base

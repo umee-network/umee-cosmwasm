@@ -12,6 +12,7 @@ pub const ASSIGNED_QUERY_BORROWED_VALUE: u16 = 5;
 pub const ASSIGNED_QUERY_SUPPLIED: u16 = 6;
 pub const ASSIGNED_QUERY_SUPPLIED_VALUE: u16 = 7;
 pub const ASSIGNED_QUERY_AVAILABLE_BORROW: u16 = 8;
+pub const ASSIGNED_QUERY_BORROW_APY: u16 = 9;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -43,6 +44,9 @@ pub enum UmeeQueryLeverage {
   // Supplied returns the available amount to borrow of a specified denomination.
   // Expect to returns AvailableBorrowResponse.
   AvailableBorrow(AvailableBorrowParams),
+  // Supplied returns current borrow interest rate on a token denom.
+  // Expect to returns BorrowAPYResponse.
+  BorrowAPY(BorrowAPYParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -126,5 +130,17 @@ pub struct AvailableBorrowParams {
 // AvailableBorrowResponse response struct of AvailableBorrow.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct AvailableBorrowResponse {
+  pub amount: Decimal,
+}
+
+// BorrowAPYParams params to query BorrowAPY.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct BorrowAPYParams {
+  pub denom: String,
+}
+
+// BorrowAPYResponse response struct of BorrowAPY.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct BorrowAPYResponse {
   pub amount: Decimal,
 }

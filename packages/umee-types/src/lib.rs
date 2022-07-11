@@ -12,12 +12,14 @@ pub use token::Token;
 pub use query::{StructUmeeQuery, UmeeQuery};
 
 pub use query_leverage::{
-  AvailableBorrowParams, AvailableBorrowResponse, BorrowedParams, BorrowedResponse,
-  BorrowedValueParams, BorrowedValueResponse, LeverageParametersParams, LeverageParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, UmeeQueryLeverage, ASSIGNED_QUERY_AVAILABLE_BORROW,
-  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
-  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE,
+  AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
+  BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
+  LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, SuppliedParams, SuppliedResponse, SuppliedValueParams,
+  SuppliedValueResponse, UmeeQueryLeverage, ASSIGNED_QUERY_AVAILABLE_BORROW,
+  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_BORROW_APY,
+  ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED,
+  ASSIGNED_QUERY_SUPPLIED_VALUE,
 };
 
 pub use query_oracle::{

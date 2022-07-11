@@ -169,6 +169,17 @@
       "description": "Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>",
       "type": "string"
     },
+    "BorrowAPYParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "BorrowedParams": {
       "type": "object",
       "required": [
@@ -391,6 +402,16 @@
             }
           ]
         },
+        "borrow_apy": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BorrowAPYParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "borrowed": {
           "anyOf": [
             {
@@ -607,6 +628,18 @@
           "properties": {
             "available_borrow": {
               "$ref": "#/definitions/AvailableBorrowParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "borrow_a_p_y"
+          ],
+          "properties": {
+            "borrow_a_p_y": {
+              "$ref": "#/definitions/BorrowAPYParams"
             }
           },
           "additionalProperties": false
