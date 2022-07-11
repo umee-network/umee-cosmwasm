@@ -1,0 +1,1 @@
+996513751cfd4f18abd197471eca266ff34af7d0eba4a4bb933a0d201162819e  umee_types.wasm

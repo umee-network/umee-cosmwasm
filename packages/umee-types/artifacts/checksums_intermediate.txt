@@ -1,0 +1,1 @@
+8b62489638f2a5c253a88fff58dfb04b32c8a5a6677eb6113b96f356a746a13d  ./target/wasm32-unknown-unknown/release/umee_types.wasm

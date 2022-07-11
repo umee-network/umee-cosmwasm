@@ -1,0 +1,36 @@
+
+[tasks.format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--all"]
+
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
+
+[tasks.build]
+command = "cargo"
+args = ["build"]
+dependencies = ["clean"]
+
+[tasks.test]
+command = "cargo"
+args = ["test"]
+dependencies = ["clean"]
+
+[tasks.schema]
+command = "cargo"
+args = ["schema"]
+dependencies = ["build"]
+
+[tasks.rust_optimizer]
+script = { file = "${CARGO_MAKE_WORKING_DIRECTORY}/rust_optimizer.sh", absolute_path = true }
+
+[tasks.git-flow]
+dependencies = [
+  "format",
+  "build",
+  "test",
+  "schema",
+  "rust_optimizer",
+]
