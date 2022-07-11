@@ -481,6 +481,16 @@
               "type": "null"
             }
           ]
+        },
+        "supply_apy": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SupplyAPYParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -515,6 +525,17 @@
             "string",
             "null"
           ]
+        }
+      }
+    },
+    "SupplyAPYParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
         }
       }
     },
@@ -640,6 +661,18 @@
           "properties": {
             "borrow_a_p_y": {
               "$ref": "#/definitions/BorrowAPYParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "supply_a_p_y"
+          ],
+          "properties": {
+            "supply_a_p_y": {
+              "$ref": "#/definitions/SupplyAPYParams"
             }
           },
           "additionalProperties": false

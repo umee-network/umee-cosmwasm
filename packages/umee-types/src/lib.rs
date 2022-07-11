@@ -16,10 +16,10 @@ pub use query_leverage::{
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
   LeverageParametersParams, LeverageParametersResponse, RegisteredTokensParams,
   RegisteredTokensResponse, SuppliedParams, SuppliedResponse, SuppliedValueParams,
-  SuppliedValueResponse, UmeeQueryLeverage, ASSIGNED_QUERY_AVAILABLE_BORROW,
-  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_BORROW_APY,
-  ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED,
-  ASSIGNED_QUERY_SUPPLIED_VALUE,
+  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, UmeeQueryLeverage,
+  ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
+  ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_REGISTERED_TOKENS,
+  ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY,
 };
 
 pub use query_oracle::{

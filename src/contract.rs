@@ -10,7 +10,8 @@ use umee_types::{
   ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
   LeverageParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg,
   StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
-  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  SupplyAPYParams, SupplyAPYResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage,
+  UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -340,6 +341,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::BorrowAPY(borrow_apy_params) => {
       to_binary(&query_borrow_apy(deps, borrow_apy_params)?)
     }
+    UmeeQueryLeverage::SupplyAPY(supply_apy_params) => {
+      to_binary(&query_supply_apy(deps, supply_apy_params)?)
+    }
   }
 }
 
@@ -581,6 +585,33 @@ fn query_borrow_apy(
   }
 
   Ok(borrow_apy_response)
+}
+
+// query_supply_apy creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// BorrowAPYResponse struct.
+fn query_supply_apy(
+  deps: Deps,
+  supply_apy_params: SupplyAPYParams,
+) -> StdResult<SupplyAPYResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::supply_apy(supply_apy_params));
+
+  let supply_apy_response: SupplyAPYResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<SupplyAPYResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => supply_apy_response = response,
+      };
+    }
+  }
+
+  Ok(supply_apy_response)
 }
 
 // query_exchange_rates receives the get exchange rate base
