@@ -89,6 +89,16 @@ the `StructUmeeQuery` struct inside `impl StructUmeeQuery` inside
 `./packages/umee-types/src/query.rs`
 - Expose the new query in `./packages/umee-types/src/lib.rs`
 
+### Cargo Make
+
+> It is expected that you have installed [cargo-make](https://github.com/sagiegurari/cargo-make)
+
+- After your changes, you can check if everything is running as expected at onde running the following script
+
+```shell
+$~ cargo make git-flow
+```
+
 ## Gitpod integration
 
 [Gitpod](https://www.gitpod.io/) container-based development platform will be enabled on your project by default.

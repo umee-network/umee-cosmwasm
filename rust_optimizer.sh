@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 set -eo pipefail
 
@@ -10,3 +10,5 @@ docker run --rm -v $CWD:/code \
   --mount type=volume,source="${BASENAME}_cache",target=/code/target \
   --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
   cosmwasm/rust-optimizer:$OPTIMIZER_VERSION
+
+echo Finish rust optimizer
