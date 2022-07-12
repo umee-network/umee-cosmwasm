@@ -22,6 +22,7 @@ pub const ASSIGNED_QUERY_COLLATERAL_VALUE: u16 = 15;
 pub const ASSIGNED_QUERY_EXCHANGE_RATE: u16 = 16;
 pub const ASSIGNED_QUERY_BORROW_LIMIT: u16 = 17;
 pub const ASSIGNED_QUERY_LIQUIDATION_THRESHOLD: u16 = 18;
+pub const ASSIGNED_QUERY_LIQUIDATION_TARGETS: u16 = 19;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -91,6 +92,10 @@ pub enum UmeeQueryLeverage {
   // given borrower is eligible for liquidation.
   // Expect to returns LiquidationThresholdResponse.
   LiquidationThreshold(LiquidationThresholdParams),
+  // LiquidationTargets returns the list of all borrower addresses eligible
+  // for liquidation.
+  // Expect to returns LiquidationTargetsResponse.
+  LiquidationTargets(LiquidationTargetsParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -297,4 +302,14 @@ pub struct LiquidationThresholdParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct LiquidationThresholdResponse {
   pub liquidation_threshold: Decimal256,
+}
+
+// LiquidationTargetsParams params to query LiquidationTargets.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct LiquidationTargetsParams {}
+
+// LiquidationTargetsResponse response struct of LiquidationTargets.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct LiquidationTargetsResponse {
+  pub targets: Vec<String>,
 }

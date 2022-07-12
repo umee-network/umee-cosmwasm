@@ -282,6 +282,9 @@
     "LeverageParametersParams": {
       "type": "object"
     },
+    "LiquidationTargetsParams": {
+      "type": "object"
+    },
     "LiquidationThresholdParams": {
       "type": "object",
       "required": [
@@ -573,6 +576,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/LeverageParametersParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "liquidation_targets": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LiquidationTargetsParams"
             },
             {
               "type": "null"
@@ -943,6 +956,18 @@
           "properties": {
             "liquidation_threshold": {
               "$ref": "#/definitions/LiquidationThresholdParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "liquidation_targets"
+          ],
+          "properties": {
+            "liquidation_targets": {
+              "$ref": "#/definitions/LiquidationTargetsParams"
             }
           },
           "additionalProperties": false
