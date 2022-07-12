@@ -7,12 +7,13 @@ use cw2::set_contract_version;
 use umee_types::{
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse, CollateralParams,
-  CollateralResponse, ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams,
-  LeverageParametersParams, LeverageParametersResponse, MarketSizeParams, MarketSizeResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
-  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
-  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
-  TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  CollateralResponse, CollateralValueParams, CollateralValueResponse, ExchangeRatesParams,
+  ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
+  MarketSizeParams, MarketSizeResponse, RegisteredTokensParams, RegisteredTokensResponse,
+  ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams,
+  SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
+  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -356,6 +357,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     }
     UmeeQueryLeverage::Collateral(collateral_params) => {
       to_binary(&query_collateral(deps, collateral_params)?)
+    }
+    UmeeQueryLeverage::CollateralValue(collateral_value_params) => {
+      to_binary(&query_collateral_value(deps, collateral_value_params)?)
     }
   }
 }
@@ -724,6 +728,33 @@ fn query_collateral(
     }
     Ok(binary) => {
       match from_binary::<CollateralResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => collateral_response = response,
+      };
+    }
+  }
+
+  Ok(collateral_response)
+}
+
+// query_collateral_value creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// CollateralValueResponse struct.
+fn query_collateral_value(
+  deps: Deps,
+  collateral_value_params: CollateralValueParams,
+) -> StdResult<CollateralValueResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::collateral_value(collateral_value_params));
+
+  let collateral_response: CollateralValueResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<CollateralValueResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }

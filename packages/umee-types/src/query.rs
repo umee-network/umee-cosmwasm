@@ -1,12 +1,12 @@
 use crate::query_leverage::{
   AvailableBorrowParams, BorrowAPYParams, BorrowedParams, BorrowedValueParams, CollateralParams,
-  LeverageParametersParams, MarketSizeParams, RegisteredTokensParams, ReserveAmountParams,
-  SuppliedParams, SuppliedValueParams, SupplyAPYParams, TokenMarketSizeParams, UmeeQueryLeverage,
-  ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
-  ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_COLLATERAL, ASSIGNED_QUERY_LEVERAGE_PARAMS,
-  ASSIGNED_QUERY_MARKET_SIZE, ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_RESERVE_AMOUNT,
-  ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY,
-  ASSIGNED_QUERY_TOKEN_MARKET_SIZE,
+  CollateralValueParams, LeverageParametersParams, MarketSizeParams, RegisteredTokensParams,
+  ReserveAmountParams, SuppliedParams, SuppliedValueParams, SupplyAPYParams, TokenMarketSizeParams,
+  UmeeQueryLeverage, ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED,
+  ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_COLLATERAL,
+  ASSIGNED_QUERY_COLLATERAL_VALUE, ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_MARKET_SIZE,
+  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_RESERVE_AMOUNT, ASSIGNED_QUERY_SUPPLIED,
+  ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY, ASSIGNED_QUERY_TOKEN_MARKET_SIZE,
 };
 use crate::query_oracle::{ExchangeRatesParams, UmeeQueryOracle, ASSIGNED_QUERY_EXCHANGE_RATES};
 use cosmwasm_std::CustomQuery;
@@ -46,6 +46,7 @@ pub struct StructUmeeQuery {
   token_market_size: Option<TokenMarketSizeParams>,
   reserve_amount: Option<ReserveAmountParams>,
   collateral: Option<CollateralParams>,
+  collateral_value: Option<CollateralValueParams>,
   // exchange_rate,
   // borrow_limit,
   // liquidation_threshold
@@ -84,6 +85,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new exchange_rates query.
@@ -104,6 +106,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new registered_tokens query.
@@ -124,6 +127,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -146,6 +150,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new borrowed_value query.
@@ -166,6 +171,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new supplied query.
@@ -186,6 +192,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new supplied value query.
@@ -206,6 +213,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new available borrow query.
@@ -226,6 +234,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new borrow apy query.
@@ -246,6 +255,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new supply apy query.
@@ -266,6 +276,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new market size query.
@@ -286,6 +297,7 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
   // creates a new token market size query.
@@ -306,9 +318,10 @@ impl StructUmeeQuery {
       token_market_size: Some(token_market_size_params),
       reserve_amount: None,
       collateral: None,
+      collateral_value: None,
     }
   }
-  // creates a reserve amount size query.
+  // creates a reserve amount query.
   pub fn reserve_amount(reserve_amount_params: ReserveAmountParams) -> StructUmeeQuery {
     StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_RESERVE_AMOUNT,
@@ -326,9 +339,10 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: Some(reserve_amount_params),
       collateral: None,
+      collateral_value: None,
     }
   }
-  // creates a collateral size query.
+  // creates a collateral query.
   pub fn collateral(collateral_params: CollateralParams) -> StructUmeeQuery {
     StructUmeeQuery {
       assigned_query: ASSIGNED_QUERY_COLLATERAL,
@@ -346,6 +360,28 @@ impl StructUmeeQuery {
       token_market_size: None,
       reserve_amount: None,
       collateral: Some(collateral_params),
+      collateral_value: None,
+    }
+  }
+  // creates a collateral value query.
+  pub fn collateral_value(collateral_value_params: CollateralValueParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_COLLATERAL_VALUE,
+      borrowed: None,
+      exchange_rates: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: None,
+      supplied: None,
+      supplied_value: None,
+      available_borrow: None,
+      borrow_apy: None,
+      supply_apy: None,
+      market_size: None,
+      token_market_size: None,
+      reserve_amount: None,
+      collateral: None,
+      collateral_value: Some(collateral_value_params),
     }
   }
 }

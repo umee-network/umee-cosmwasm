@@ -231,6 +231,23 @@
         }
       }
     },
+    "CollateralValueParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
     "ExchangeRatesParams": {
       "type": "object",
       "required": [
@@ -475,6 +492,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/CollateralParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "collateral_value": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CollateralValueParams"
             },
             {
               "type": "null"
@@ -811,6 +838,18 @@
           "properties": {
             "collateral": {
               "$ref": "#/definitions/CollateralParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "collateral_value"
+          ],
+          "properties": {
+            "collateral_value": {
+              "$ref": "#/definitions/CollateralValueParams"
             }
           },
           "additionalProperties": false

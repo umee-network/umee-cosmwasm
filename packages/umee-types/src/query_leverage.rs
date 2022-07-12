@@ -18,6 +18,7 @@ pub const ASSIGNED_QUERY_MARKET_SIZE: u16 = 11;
 pub const ASSIGNED_QUERY_TOKEN_MARKET_SIZE: u16 = 12;
 pub const ASSIGNED_QUERY_RESERVE_AMOUNT: u16 = 13;
 pub const ASSIGNED_QUERY_COLLATERAL: u16 = 14;
+pub const ASSIGNED_QUERY_COLLATERAL_VALUE: u16 = 15;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -73,6 +74,10 @@ pub enum UmeeQueryLeverage {
   // If the denomination is not specified, all of the user's collateral tokens
   // are returned. Expect to returns CollateralResponse.
   Collateral(CollateralParams),
+  // CollateralValue returns the total USD value of a user's collateral, or
+  // the USD value held as a given base asset's associated uToken denomination.
+  // Expect to returns CollateralValueResponse.
+  CollateralValue(CollateralValueParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -230,4 +235,17 @@ pub struct CollateralParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct CollateralResponse {
   pub collateral: Vec<Coin>,
+}
+
+// CollateralValueParams params to query CollateralValue.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct CollateralValueParams {
+  pub address: Addr,
+  pub denom: Option<String>,
+}
+
+// CollateralValueResponse response struct of CollateralValue.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct CollateralValueResponse {
+  pub collateral_value: Decimal256,
 }
