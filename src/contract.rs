@@ -9,10 +9,10 @@ use umee_types::{
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
   ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
   LeverageParametersResponse, MarketSizeParams, MarketSizeResponse, RegisteredTokensParams,
-  RegisteredTokensResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg,
+  StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
+  SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg,
+  UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -351,6 +351,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::TokenMarketSize(token_market_size_params) => {
       to_binary(&query_token_market_size(deps, token_market_size_params)?)
     }
+    UmeeQueryLeverage::ReserveAmount(reserve_amount_params) => {
+      to_binary(&query_reserve_amount(deps, reserve_amount_params)?)
+    }
   }
 }
 
@@ -650,7 +653,7 @@ fn query_market_size(
 
 // query_token_market_size creates an query request to the native modules
 // with query_chain wrapping the response to the actual
-// MarketSizeResponse struct.
+// TokenMarketSizeResponse struct.
 fn query_token_market_size(
   deps: Deps,
   token_market_size_params: TokenMarketSizeParams,
@@ -673,6 +676,33 @@ fn query_token_market_size(
   }
 
   Ok(market_size_response)
+}
+
+// query_reserve_amount creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// MarketSizeResponse struct.
+fn query_reserve_amount(
+  deps: Deps,
+  reserve_amount_params: ReserveAmountParams,
+) -> StdResult<ReserveAmountResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::reserve_amount(reserve_amount_params));
+
+  let reserve_amount_response: ReserveAmountResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<ReserveAmountResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => reserve_amount_response = response,
+      };
+    }
+  }
+
+  Ok(reserve_amount_response)
 }
 
 // query_exchange_rates receives the get exchange rate base

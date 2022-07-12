@@ -15,13 +15,13 @@ pub use query_leverage::{
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
   LeverageParametersParams, LeverageParametersResponse, MarketSizeParams, MarketSizeResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeQueryLeverage,
+  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
+  SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams,
+  SupplyAPYResponse, TokenMarketSizeParams, TokenMarketSizeResponse, UmeeQueryLeverage,
   ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
   ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_MARKET_SIZE,
-  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE,
-  ASSIGNED_QUERY_SUPPLY_APY, ASSIGNED_QUERY_TOKEN_MARKET_SIZE,
+  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_RESERVE_AMOUNT, ASSIGNED_QUERY_SUPPLIED,
+  ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY, ASSIGNED_QUERY_TOKEN_MARKET_SIZE,
 };
 
 pub use query_oracle::{

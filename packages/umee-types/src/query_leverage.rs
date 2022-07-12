@@ -1,6 +1,6 @@
 use crate::leverage_parameters::LeverageParameters;
 use crate::token::Token;
-use cosmwasm_std::{Addr, Coin, Decimal};
+use cosmwasm_std::{Addr, Coin, Decimal256};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -16,6 +16,7 @@ pub const ASSIGNED_QUERY_BORROW_APY: u16 = 9;
 pub const ASSIGNED_QUERY_SUPPLY_APY: u16 = 10;
 pub const ASSIGNED_QUERY_MARKET_SIZE: u16 = 11;
 pub const ASSIGNED_QUERY_TOKEN_MARKET_SIZE: u16 = 12;
+pub const ASSIGNED_QUERY_RESERVE_AMOUNT: u16 = 13;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -63,6 +64,10 @@ pub enum UmeeQueryLeverage {
   // interest owed by all users.
   // Expect to returns TokenMarketSizeResponse.
   TokenMarketSize(TokenMarketSizeParams),
+  // ReserverAmount returns the amount reserved of a specified denomination.
+  // If the token is not valid, the reserved amount is zero.
+  // Expect to returns ReserverAmountResponse.
+  ReserveAmount(ReserveAmountParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -101,7 +106,7 @@ pub struct SuppliedValueParams {
 // SuppliedValueResponse response struct of SuppliedValue query.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct SuppliedValueResponse {
-  pub supplied_value: Decimal,
+  pub supplied_value: Decimal256,
 }
 
 // RegisteredTokensParams params to query RegisteredTokens.
@@ -134,7 +139,7 @@ pub struct BorrowedValueParams {
 // BorrowedValueResponse response struct of Borrowed query in USD.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct BorrowedValueResponse {
-  pub borrowed_value: Decimal,
+  pub borrowed_value: Decimal256,
 }
 
 // AvailableBorrowParams params to query AvailableBorrow.
@@ -146,7 +151,7 @@ pub struct AvailableBorrowParams {
 // AvailableBorrowResponse response struct of AvailableBorrow.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct AvailableBorrowResponse {
-  pub amount: Decimal,
+  pub amount: Decimal256,
 }
 
 // BorrowAPYParams params to query BorrowAPY.
@@ -158,7 +163,7 @@ pub struct BorrowAPYParams {
 // BorrowAPYResponse response struct of BorrowAPY.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct BorrowAPYResponse {
-  pub amount: Decimal,
+  pub amount: Decimal256,
 }
 
 // SupplyAPYParams params to query SupplyAPY.
@@ -170,7 +175,7 @@ pub struct SupplyAPYParams {
 // SupplyAPYResponse response struct of SupplyAPY.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct SupplyAPYResponse {
-  pub apy: Decimal,
+  pub apy: Decimal256,
 }
 
 // MarketSizeParams params to query MarketSize.
@@ -182,7 +187,7 @@ pub struct MarketSizeParams {
 // MarketSizeResponse response struct of MarketSize.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MarketSizeResponse {
-  pub market_size_usd: Decimal,
+  pub market_size_usd: Decimal256,
 }
 
 // TokenMarketSizeParams params to query TokenMarketSize.
@@ -194,5 +199,17 @@ pub struct TokenMarketSizeParams {
 // TokenMarketSizeResponse response struct of TokenMarketSize.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct TokenMarketSizeResponse {
-  pub market_size_usd: Decimal,
+  pub market_size_usd: Decimal256,
+}
+
+// ReserveAmountParams params to query ReserveAmount.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct ReserveAmountParams {
+  pub denom: String,
+}
+
+// ReserveAmountResponse response struct of ReserveAmount.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct ReserveAmountResponse {
+  pub amount: Decimal256,
 }

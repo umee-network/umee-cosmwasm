@@ -294,6 +294,17 @@
     "RegisteredTokensParams": {
       "type": "object"
     },
+    "ReserveAmountParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "StakingQuery": {
       "anyOf": [
         {
@@ -477,6 +488,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/RegisteredTokensParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reserve_amount": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ReserveAmountParams"
             },
             {
               "type": "null"
@@ -739,6 +760,18 @@
           "properties": {
             "token_market_size": {
               "$ref": "#/definitions/TokenMarketSizeParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "reserve_amount"
+          ],
+          "properties": {
+            "reserve_amount": {
+              "$ref": "#/definitions/ReserveAmountParams"
             }
           },
           "additionalProperties": false
