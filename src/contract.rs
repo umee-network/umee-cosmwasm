@@ -10,8 +10,9 @@ use umee_types::{
   ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
   LeverageParametersResponse, MarketSizeParams, MarketSizeResponse, RegisteredTokensParams,
   RegisteredTokensResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, UmeeMsg,
-  UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
+  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -347,6 +348,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::MarketSize(market_size_params) => {
       to_binary(&query_market_size(deps, market_size_params)?)
     }
+    UmeeQueryLeverage::TokenMarketSize(token_market_size_params) => {
+      to_binary(&query_token_market_size(deps, token_market_size_params)?)
+    }
   }
 }
 
@@ -633,6 +637,33 @@ fn query_market_size(
     }
     Ok(binary) => {
       match from_binary::<MarketSizeResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => market_size_response = response,
+      };
+    }
+  }
+
+  Ok(market_size_response)
+}
+
+// query_token_market_size creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// MarketSizeResponse struct.
+fn query_token_market_size(
+  deps: Deps,
+  token_market_size_params: TokenMarketSizeParams,
+) -> StdResult<TokenMarketSizeResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::token_market_size(token_market_size_params));
+
+  let market_size_response: TokenMarketSizeResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<TokenMarketSizeResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }

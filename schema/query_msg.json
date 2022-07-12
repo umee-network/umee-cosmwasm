@@ -512,6 +512,16 @@
               "type": "null"
             }
           ]
+        },
+        "token_market_size": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TokenMarketSizeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -550,6 +560,17 @@
       }
     },
     "SupplyAPYParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "TokenMarketSizeParams": {
       "type": "object",
       "required": [
         "denom"
@@ -706,6 +727,18 @@
           "properties": {
             "market_size": {
               "$ref": "#/definitions/MarketSizeParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "token_market_size"
+          ],
+          "properties": {
+            "token_market_size": {
+              "$ref": "#/definitions/TokenMarketSizeParams"
             }
           },
           "additionalProperties": false

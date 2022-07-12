@@ -15,6 +15,7 @@ pub const ASSIGNED_QUERY_AVAILABLE_BORROW: u16 = 8;
 pub const ASSIGNED_QUERY_BORROW_APY: u16 = 9;
 pub const ASSIGNED_QUERY_SUPPLY_APY: u16 = 10;
 pub const ASSIGNED_QUERY_MARKET_SIZE: u16 = 11;
+pub const ASSIGNED_QUERY_TOKEN_MARKET_SIZE: u16 = 12;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -57,6 +58,11 @@ pub enum UmeeQueryLeverage {
   // interest owed by all users.
   // Expect to returns MarketSizeResponse.
   MarketSize(MarketSizeParams),
+  // TokenMarketSize returns the Market Size in base tokens of a specified
+  // denomination, which is the total tokens supplied by all users plus borrow
+  // interest owed by all users.
+  // Expect to returns TokenMarketSizeResponse.
+  TokenMarketSize(TokenMarketSizeParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -176,5 +182,17 @@ pub struct MarketSizeParams {
 // MarketSizeResponse response struct of MarketSize.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MarketSizeResponse {
+  pub market_size_usd: Decimal,
+}
+
+// TokenMarketSizeParams params to query TokenMarketSize.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct TokenMarketSizeParams {
+  pub denom: String,
+}
+
+// TokenMarketSizeResponse response struct of TokenMarketSize.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct TokenMarketSizeResponse {
   pub market_size_usd: Decimal,
 }
