@@ -7,13 +7,13 @@ use cw2::set_contract_version;
 use umee_types::{
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse, CollateralParams,
-  CollateralResponse, CollateralValueParams, CollateralValueResponse, ExchangeRatesParams,
-  ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
-  MarketSizeParams, MarketSizeResponse, RegisteredTokensParams, RegisteredTokensResponse,
-  ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams,
-  SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  CollateralResponse, CollateralValueParams, CollateralValueResponse, ExchangeRateParams,
+  ExchangeRateResponse, ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams,
+  LeverageParametersParams, LeverageParametersResponse, MarketSizeParams, MarketSizeResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
+  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
+  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
+  TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -360,6 +360,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     }
     UmeeQueryLeverage::CollateralValue(collateral_value_params) => {
       to_binary(&query_collateral_value(deps, collateral_value_params)?)
+    }
+    UmeeQueryLeverage::ExchangeRate(exchange_rate_params) => {
+      to_binary(&query_exchange_rate(deps, exchange_rate_params)?)
     }
   }
 }
@@ -764,6 +767,33 @@ fn query_collateral_value(
   }
 
   Ok(collateral_response)
+}
+
+// query_exchange_rate creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// ExchangeRateResponse struct.
+fn query_exchange_rate(
+  deps: Deps,
+  exchange_rate_params: ExchangeRateParams,
+) -> StdResult<ExchangeRateResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::exchange_rate(exchange_rate_params));
+
+  let exchange_rate_response: ExchangeRateResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<ExchangeRateResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => exchange_rate_response = response,
+      };
+    }
+  }
+
+  Ok(exchange_rate_response)
 }
 
 // query_exchange_rates receives the get exchange rate base

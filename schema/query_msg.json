@@ -183,17 +183,15 @@
     "BorrowedParams": {
       "type": "object",
       "required": [
-        "address"
+        "address",
+        "denom"
       ],
       "properties": {
         "address": {
           "$ref": "#/definitions/Addr"
         },
         "denom": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         }
       }
     },
@@ -245,6 +243,17 @@
             "string",
             "null"
           ]
+        }
+      }
+    },
+    "ExchangeRateParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
         }
       }
     },
@@ -508,6 +517,16 @@
             }
           ]
         },
+        "exchange_rate": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExchangeRateParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "exchange_rates": {
           "anyOf": [
             {
@@ -603,34 +622,30 @@
     "SuppliedParams": {
       "type": "object",
       "required": [
-        "address"
+        "address",
+        "denom"
       ],
       "properties": {
         "address": {
           "$ref": "#/definitions/Addr"
         },
         "denom": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         }
       }
     },
     "SuppliedValueParams": {
       "type": "object",
       "required": [
-        "address"
+        "address",
+        "denom"
       ],
       "properties": {
         "address": {
           "$ref": "#/definitions/Addr"
         },
         "denom": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         }
       }
     },
@@ -850,6 +865,18 @@
           "properties": {
             "collateral_value": {
               "$ref": "#/definitions/CollateralValueParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "exchange_rate"
+          ],
+          "properties": {
+            "exchange_rate": {
+              "$ref": "#/definitions/ExchangeRateParams"
             }
           },
           "additionalProperties": false

@@ -19,6 +19,7 @@ pub const ASSIGNED_QUERY_TOKEN_MARKET_SIZE: u16 = 12;
 pub const ASSIGNED_QUERY_RESERVE_AMOUNT: u16 = 13;
 pub const ASSIGNED_QUERY_COLLATERAL: u16 = 14;
 pub const ASSIGNED_QUERY_COLLATERAL_VALUE: u16 = 15;
+pub const ASSIGNED_QUERY_EXCHANGE_RATE: u16 = 16;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -78,13 +79,16 @@ pub enum UmeeQueryLeverage {
   // the USD value held as a given base asset's associated uToken denomination.
   // Expect to returns CollateralValueResponse.
   CollateralValue(CollateralValueParams),
+  // ExchangeRate returns the uToken exchange rate of a given uToken denomination.
+  // Expect to returns ExchangeRateResponse.
+  ExchangeRate(ExchangeRateParams),
 }
 
 // BorrowedParams params to query Borrowed.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct BorrowedParams {
   pub address: Addr,
-  pub denom: Option<String>,
+  pub denom: String,
 }
 
 // BorrowedResponse response struct of Borrowed query.
@@ -97,7 +101,7 @@ pub struct BorrowedResponse {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct SuppliedParams {
   pub address: Addr,
-  pub denom: Option<String>,
+  pub denom: String,
 }
 
 // SuppliedResponse response struct of Supplied query.
@@ -110,7 +114,7 @@ pub struct SuppliedResponse {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct SuppliedValueParams {
   pub address: Addr,
-  pub denom: Option<String>,
+  pub denom: String,
 }
 
 // SuppliedValueResponse response struct of SuppliedValue query.
@@ -248,4 +252,16 @@ pub struct CollateralValueParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct CollateralValueResponse {
   pub collateral_value: Decimal256,
+}
+
+// ExchangeRateParams params to query ExchangeRate.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct ExchangeRateParams {
+  pub denom: String,
+}
+
+// ExchangeRateResponse response struct of ExchangeRate.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct ExchangeRateResponse {
+  pub exchange_rate: Decimal256,
 }
