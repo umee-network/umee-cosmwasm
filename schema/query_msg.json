@@ -180,6 +180,17 @@
         }
       }
     },
+    "BorrowLimitParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
     "BorrowedParams": {
       "type": "object",
       "required": [
@@ -471,6 +482,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/BorrowAPYParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "borrow_limit": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BorrowLimitParams"
             },
             {
               "type": "null"
@@ -877,6 +898,18 @@
           "properties": {
             "exchange_rate": {
               "$ref": "#/definitions/ExchangeRateParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "borrow_limit"
+          ],
+          "properties": {
+            "borrow_limit": {
+              "$ref": "#/definitions/BorrowLimitParams"
             }
           },
           "additionalProperties": false

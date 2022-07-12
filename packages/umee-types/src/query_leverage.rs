@@ -20,6 +20,7 @@ pub const ASSIGNED_QUERY_RESERVE_AMOUNT: u16 = 13;
 pub const ASSIGNED_QUERY_COLLATERAL: u16 = 14;
 pub const ASSIGNED_QUERY_COLLATERAL_VALUE: u16 = 15;
 pub const ASSIGNED_QUERY_EXCHANGE_RATE: u16 = 16;
+pub const ASSIGNED_QUERY_BORROW_LIMIT: u16 = 17;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -82,6 +83,9 @@ pub enum UmeeQueryLeverage {
   // ExchangeRate returns the uToken exchange rate of a given uToken denomination.
   // Expect to returns ExchangeRateResponse.
   ExchangeRate(ExchangeRateParams),
+  // BorrowLimit returns the borrow limit in USD of a given borrower.
+  // Expect to returns BorrowLimitResponse.
+  BorrowLimit(BorrowLimitParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -264,4 +268,16 @@ pub struct ExchangeRateParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct ExchangeRateResponse {
   pub exchange_rate: Decimal256,
+}
+
+// BorrowLimitParams params to query BorrowLimit.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct BorrowLimitParams {
+  pub address: Addr,
+}
+
+// BorrowLimitResponse response struct of BorrowLimit.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct BorrowLimitResponse {
+  pub borrow_limit: Decimal256,
 }

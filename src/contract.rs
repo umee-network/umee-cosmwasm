@@ -6,14 +6,15 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 use umee_types::{
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
-  BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse, CollateralParams,
-  CollateralResponse, CollateralValueParams, CollateralValueResponse, ExchangeRateParams,
-  ExchangeRateResponse, ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams,
-  LeverageParametersParams, LeverageParametersResponse, MarketSizeParams, MarketSizeResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
-  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
-  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
-  TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
+  BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
+  CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams,
+  ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
+  MarketSizeParams, MarketSizeResponse, RegisteredTokensParams, RegisteredTokensResponse,
+  ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams,
+  SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
+  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -363,6 +364,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     }
     UmeeQueryLeverage::ExchangeRate(exchange_rate_params) => {
       to_binary(&query_exchange_rate(deps, exchange_rate_params)?)
+    }
+    UmeeQueryLeverage::BorrowLimit(borrow_limit_params) => {
+      to_binary(&query_borrow_limit(deps, borrow_limit_params)?)
     }
   }
 }
@@ -794,6 +798,33 @@ fn query_exchange_rate(
   }
 
   Ok(exchange_rate_response)
+}
+
+// query_borrow_limit creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// BorrowLimitResponse struct.
+fn query_borrow_limit(
+  deps: Deps,
+  borrow_limit_params: BorrowLimitParams,
+) -> StdResult<BorrowLimitResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::borrow_limit(borrow_limit_params));
+
+  let borrow_limit_response: BorrowLimitResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<BorrowLimitResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => borrow_limit_response = response,
+      };
+    }
+  }
+
+  Ok(borrow_limit_response)
 }
 
 // query_exchange_rates receives the get exchange rate base
