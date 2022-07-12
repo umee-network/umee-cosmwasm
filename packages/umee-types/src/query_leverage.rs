@@ -17,6 +17,7 @@ pub const ASSIGNED_QUERY_SUPPLY_APY: u16 = 10;
 pub const ASSIGNED_QUERY_MARKET_SIZE: u16 = 11;
 pub const ASSIGNED_QUERY_TOKEN_MARKET_SIZE: u16 = 12;
 pub const ASSIGNED_QUERY_RESERVE_AMOUNT: u16 = 13;
+pub const ASSIGNED_QUERY_COLLATERAL: u16 = 14;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -64,10 +65,14 @@ pub enum UmeeQueryLeverage {
   // interest owed by all users.
   // Expect to returns TokenMarketSizeResponse.
   TokenMarketSize(TokenMarketSizeParams),
-  // ReserverAmount returns the amount reserved of a specified denomination.
+  // ReserveAmount returns the amount reserved of a specified denomination.
   // If the token is not valid, the reserved amount is zero.
-  // Expect to returns ReserverAmountResponse.
+  // Expect to returns ReserveAmountResponse.
   ReserveAmount(ReserveAmountParams),
+  // Collateral returns the collateral amount of a user by token denomination.
+  // If the denomination is not specified, all of the user's collateral tokens
+  // are returned. Expect to returns CollateralResponse.
+  Collateral(CollateralParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -212,4 +217,17 @@ pub struct ReserveAmountParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct ReserveAmountResponse {
   pub amount: Decimal256,
+}
+
+// CollateralParams params to query Collateral.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct CollateralParams {
+  pub address: Addr,
+  pub denom: Option<String>,
+}
+
+// CollateralResponse response struct of Collateral.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct CollateralResponse {
+  pub collateral: Vec<Coin>,
 }

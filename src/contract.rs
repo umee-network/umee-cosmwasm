@@ -6,13 +6,13 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 use umee_types::{
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
-  BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
-  ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
-  LeverageParametersResponse, MarketSizeParams, MarketSizeResponse, RegisteredTokensParams,
-  RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg,
-  StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
-  SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg,
-  UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse, CollateralParams,
+  CollateralResponse, ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams,
+  LeverageParametersParams, LeverageParametersResponse, MarketSizeParams, MarketSizeResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
+  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
+  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
+  TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -354,6 +354,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::ReserveAmount(reserve_amount_params) => {
       to_binary(&query_reserve_amount(deps, reserve_amount_params)?)
     }
+    UmeeQueryLeverage::Collateral(collateral_params) => {
+      to_binary(&query_collateral(deps, collateral_params)?)
+    }
   }
 }
 
@@ -680,7 +683,7 @@ fn query_token_market_size(
 
 // query_reserve_amount creates an query request to the native modules
 // with query_chain wrapping the response to the actual
-// MarketSizeResponse struct.
+// ReserveAmountResponse struct.
 fn query_reserve_amount(
   deps: Deps,
   reserve_amount_params: ReserveAmountParams,
@@ -703,6 +706,33 @@ fn query_reserve_amount(
   }
 
   Ok(reserve_amount_response)
+}
+
+// query_collateral creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// CollateralResponse struct.
+fn query_collateral(
+  deps: Deps,
+  collateral_params: CollateralParams,
+) -> StdResult<CollateralResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::collateral(collateral_params));
+
+  let collateral_response: CollateralResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<CollateralResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => collateral_response = response,
+      };
+    }
+  }
+
+  Ok(collateral_response)
 }
 
 // query_exchange_rates receives the get exchange rate base
