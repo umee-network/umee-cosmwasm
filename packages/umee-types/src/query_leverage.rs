@@ -21,6 +21,7 @@ pub const ASSIGNED_QUERY_COLLATERAL: u16 = 14;
 pub const ASSIGNED_QUERY_COLLATERAL_VALUE: u16 = 15;
 pub const ASSIGNED_QUERY_EXCHANGE_RATE: u16 = 16;
 pub const ASSIGNED_QUERY_BORROW_LIMIT: u16 = 17;
+pub const ASSIGNED_QUERY_LIQUIDATION_THRESHOLD: u16 = 18;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -86,6 +87,10 @@ pub enum UmeeQueryLeverage {
   // BorrowLimit returns the borrow limit in USD of a given borrower.
   // Expect to returns BorrowLimitResponse.
   BorrowLimit(BorrowLimitParams),
+  // LiquidationThreshold returns the a maximum borrow value in USD above which a
+  // given borrower is eligible for liquidation.
+  // Expect to returns LiquidationThresholdResponse.
+  LiquidationThreshold(LiquidationThresholdParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -280,4 +285,16 @@ pub struct BorrowLimitParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct BorrowLimitResponse {
   pub borrow_limit: Decimal256,
+}
+
+// LiquidationThresholdParams params to query LiquidationThreshold.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct LiquidationThresholdParams {
+  pub address: Addr,
+}
+
+// LiquidationThresholdResponse response struct of LiquidationThreshold.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct LiquidationThresholdResponse {
+  pub liquidation_threshold: Decimal256,
 }

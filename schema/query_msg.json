@@ -282,6 +282,17 @@
     "LeverageParametersParams": {
       "type": "object"
     },
+    "LiquidationThresholdParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
     "MarketSizeParams": {
       "type": "object",
       "required": [
@@ -562,6 +573,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/LeverageParametersParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "liquidation_threshold": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LiquidationThresholdParams"
             },
             {
               "type": "null"
@@ -910,6 +931,18 @@
           "properties": {
             "borrow_limit": {
               "$ref": "#/definitions/BorrowLimitParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "liquidation_threshold"
+          ],
+          "properties": {
+            "liquidation_threshold": {
+              "$ref": "#/definitions/LiquidationThresholdParams"
             }
           },
           "additionalProperties": false

@@ -10,11 +10,11 @@ use umee_types::{
   BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
   CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams,
   ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
-  MarketSizeParams, MarketSizeResponse, RegisteredTokensParams, RegisteredTokensResponse,
-  ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams,
-  SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  LiquidationThresholdParams, LiquidationThresholdResponse, MarketSizeParams, MarketSizeResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
+  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
+  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
+  TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -368,6 +368,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::BorrowLimit(borrow_limit_params) => {
       to_binary(&query_borrow_limit(deps, borrow_limit_params)?)
     }
+    UmeeQueryLeverage::LiquidationThreshold(liquidation_threshold_params) => to_binary(
+      &query_liquidation_threshold(deps, liquidation_threshold_params)?,
+    ),
   }
 }
 
@@ -825,6 +828,35 @@ fn query_borrow_limit(
   }
 
   Ok(borrow_limit_response)
+}
+
+// query_liquidation_threshold creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// LiquidationThresholdResponse struct.
+fn query_liquidation_threshold(
+  deps: Deps,
+  liquidation_threshold_params: LiquidationThresholdParams,
+) -> StdResult<LiquidationThresholdResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::liquidation_threshold(
+    liquidation_threshold_params,
+  ));
+
+  let liquidation_threshold_response: LiquidationThresholdResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<LiquidationThresholdResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => liquidation_threshold_response = response,
+      };
+    }
+  }
+
+  Ok(liquidation_threshold_response)
 }
 
 // query_exchange_rates receives the get exchange rate base
