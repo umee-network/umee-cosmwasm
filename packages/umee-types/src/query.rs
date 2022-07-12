@@ -1,10 +1,10 @@
 use crate::query_leverage::{
   AvailableBorrowParams, BorrowAPYParams, BorrowedParams, BorrowedValueParams,
-  LeverageParametersParams, RegisteredTokensParams, SuppliedParams, SuppliedValueParams,
-  SupplyAPYParams, UmeeQueryLeverage, ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED,
-  ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_LEVERAGE_PARAMS,
-  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE,
-  ASSIGNED_QUERY_SUPPLY_APY,
+  LeverageParametersParams, MarketSizeParams, RegisteredTokensParams, SuppliedParams,
+  SuppliedValueParams, SupplyAPYParams, UmeeQueryLeverage, ASSIGNED_QUERY_AVAILABLE_BORROW,
+  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_BORROW_APY,
+  ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_MARKET_SIZE, ASSIGNED_QUERY_REGISTERED_TOKENS,
+  ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY,
 };
 use crate::query_oracle::{ExchangeRatesParams, UmeeQueryOracle, ASSIGNED_QUERY_EXCHANGE_RATES};
 use cosmwasm_std::CustomQuery;
@@ -40,7 +40,7 @@ pub struct StructUmeeQuery {
   available_borrow: Option<AvailableBorrowParams>,
   borrow_apy: Option<BorrowAPYParams>,
   supply_apy: Option<SupplyAPYParams>,
-  // market_size,1
+  market_size: Option<MarketSizeParams>,
   // token_market_size,
   // reserve_amount,
   // exchange_rate,
@@ -77,6 +77,7 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new exchange_rates query.
@@ -93,6 +94,7 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new registered_tokens query.
@@ -109,6 +111,7 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -127,6 +130,7 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new borrowed_value query.
@@ -143,6 +147,7 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new supplied query.
@@ -159,6 +164,7 @@ impl StructUmeeQuery {
       supplied_value: None,
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new supplied value query.
@@ -175,6 +181,7 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new available borrow query.
@@ -191,6 +198,7 @@ impl StructUmeeQuery {
       available_borrow: Some(available_borrow_params),
       borrow_apy: None,
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new borrow apy query.
@@ -207,6 +215,7 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: Some(borrow_apy_params),
       supply_apy: None,
+      market_size: None,
     }
   }
   // creates a new supply apy query.
@@ -223,6 +232,24 @@ impl StructUmeeQuery {
       available_borrow: None,
       borrow_apy: None,
       supply_apy: Some(supply_apy_params),
+      market_size: None,
+    }
+  }
+  // creates a new market size query.
+  pub fn market_size(market_size_params: MarketSizeParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_MARKET_SIZE,
+      borrowed: None,
+      exchange_rates: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: None,
+      supplied: None,
+      supplied_value: None,
+      available_borrow: None,
+      borrow_apy: None,
+      supply_apy: None,
+      market_size: Some(market_size_params),
     }
   }
 }

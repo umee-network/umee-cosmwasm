@@ -228,6 +228,17 @@
     "LeverageParametersParams": {
       "type": "object"
     },
+    "MarketSizeParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "QueryRequest_for_StructUmeeQuery": {
       "anyOf": [
         {
@@ -446,6 +457,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/LeverageParametersParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "market_size": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MarketSizeParams"
             },
             {
               "type": "null"
@@ -673,6 +694,18 @@
           "properties": {
             "supply_a_p_y": {
               "$ref": "#/definitions/SupplyAPYParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "market_size"
+          ],
+          "properties": {
+            "market_size": {
+              "$ref": "#/definitions/MarketSizeParams"
             }
           },
           "additionalProperties": false

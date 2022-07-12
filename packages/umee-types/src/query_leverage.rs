@@ -14,6 +14,7 @@ pub const ASSIGNED_QUERY_SUPPLIED_VALUE: u16 = 7;
 pub const ASSIGNED_QUERY_AVAILABLE_BORROW: u16 = 8;
 pub const ASSIGNED_QUERY_BORROW_APY: u16 = 9;
 pub const ASSIGNED_QUERY_SUPPLY_APY: u16 = 10;
+pub const ASSIGNED_QUERY_MARKET_SIZE: u16 = 11;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -37,20 +38,25 @@ pub enum UmeeQueryLeverage {
   // the total for each supplied token is returned.
   // Expect to returns SuppliedResponse.
   Supplied(SuppliedParams),
-  // Supplied returns the USD value representing the amount of tokens
+  // SuppliedValue returns the USD value representing the amount of tokens
   // by a user by denomination. If the denomination is not specified,
   // the total for each supplied token is returned.
   // Expect to returns SuppliedValueResponse.
   SuppliedValue(SuppliedValueParams),
-  // Supplied returns the available amount to borrow of a specified denomination.
+  // AvailableBorrow returns the available amount to borrow of a specified denomination.
   // Expect to returns AvailableBorrowResponse.
   AvailableBorrow(AvailableBorrowParams),
-  // Supplied returns current borrow interest rate on a token denom.
+  // BorrowAPY returns current borrow interest rate on a token denom.
   // Expect to returns BorrowAPYResponse.
   BorrowAPY(BorrowAPYParams),
-  // Supplied returns current borrow interest rate on a token denom.
+  // SupplyAPY returns current borrow interest rate on a token denom.
   // Expect to returns SupplyAPYResponse.
   SupplyAPY(SupplyAPYParams),
+  // MarketSize returns the Market Size in USD of a specified denomination,
+  // which is the USD value of total tokens supplied by all users plus borrow
+  // interest owed by all users.
+  // Expect to returns MarketSizeResponse.
+  MarketSize(MarketSizeParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -159,4 +165,16 @@ pub struct SupplyAPYParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct SupplyAPYResponse {
   pub apy: Decimal,
+}
+
+// MarketSizeParams params to query MarketSize.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MarketSizeParams {
+  pub denom: String,
+}
+
+// MarketSizeResponse response struct of MarketSize.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MarketSizeResponse {
+  pub market_size_usd: Decimal,
 }

@@ -8,10 +8,10 @@ use umee_types::{
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
   BorrowedParams, BorrowedResponse, BorrowedValueParams, BorrowedValueResponse,
   ExchangeRatesParams, ExchangeRatesResponse, LendAssetParams, LeverageParametersParams,
-  LeverageParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, StructUmeeMsg,
-  StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
-  SupplyAPYParams, SupplyAPYResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage,
-  UmeeQueryOracle,
+  LeverageParametersResponse, MarketSizeParams, MarketSizeResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
+  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, UmeeMsg,
+  UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -344,6 +344,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::SupplyAPY(supply_apy_params) => {
       to_binary(&query_supply_apy(deps, supply_apy_params)?)
     }
+    UmeeQueryLeverage::MarketSize(market_size_params) => {
+      to_binary(&query_market_size(deps, market_size_params)?)
+    }
   }
 }
 
@@ -589,7 +592,7 @@ fn query_borrow_apy(
 
 // query_supply_apy creates an query request to the native modules
 // with query_chain wrapping the response to the actual
-// BorrowAPYResponse struct.
+// SupplyAPYResponse struct.
 fn query_supply_apy(
   deps: Deps,
   supply_apy_params: SupplyAPYParams,
@@ -612,6 +615,33 @@ fn query_supply_apy(
   }
 
   Ok(supply_apy_response)
+}
+
+// query_market_size creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// MarketSizeResponse struct.
+fn query_market_size(
+  deps: Deps,
+  market_size_params: MarketSizeParams,
+) -> StdResult<MarketSizeResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::market_size(market_size_params));
+
+  let market_size_response: MarketSizeResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MarketSizeResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => market_size_response = response,
+      };
+    }
+  }
+
+  Ok(market_size_response)
 }
 
 // query_exchange_rates receives the get exchange rate base
