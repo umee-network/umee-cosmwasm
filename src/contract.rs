@@ -14,11 +14,12 @@ use umee_types::{
   LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
   LiquidationTargetsResponse, LiquidationThresholdParams, LiquidationThresholdResponse,
   MarketSizeParams, MarketSizeResponse, MarketSummaryParams, MarketSummaryResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
-  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
-  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
-  TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams,
-  TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  MissCounterParams, MissCounterResponse, RegisteredTokensParams, RegisteredTokensResponse,
+  ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams,
+  SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
+  TokenMarketSizeParams, TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse,
+  TotalCollateralParams, TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -419,6 +420,9 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     ),
     UmeeQueryOracle::FeederDelegation(feeder_delegation_params) => {
       to_binary(&query_feeder_delegation(deps, feeder_delegation_params)?)
+    }
+    UmeeQueryOracle::MissCounter(miss_counter_params) => {
+      to_binary(&query_miss_counter(deps, miss_counter_params)?)
     }
   }
 }
@@ -1075,6 +1079,34 @@ fn query_feeder_delegation(
   }
 
   Ok(feeder_delegation_resp)
+}
+
+// query_miss_counter receives the get exchange rate base
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// MissCounterResponse struct
+fn query_miss_counter(
+  deps: Deps,
+  miss_counter_params: MissCounterParams,
+) -> StdResult<MissCounterResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::miss_counter(miss_counter_params));
+
+  let miss_counter_resp: MissCounterResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MissCounterResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => miss_counter_resp = response,
+      };
+    }
+  }
+
+  Ok(miss_counter_resp)
 }
 
 // -----------------------------------TESTS---------------------------------------

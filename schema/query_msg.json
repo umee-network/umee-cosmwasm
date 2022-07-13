@@ -332,6 +332,17 @@
         }
       }
     },
+    "MissCounterParams": {
+      "type": "object",
+      "required": [
+        "validator_addr"
+      ],
+      "properties": {
+        "validator_addr": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
     "QueryRequest_for_StructUmeeQuery": {
       "anyOf": [
         {
@@ -661,6 +672,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/MarketSummaryParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "miss_counter": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MissCounterParams"
             },
             {
               "type": "null"
@@ -1141,6 +1162,18 @@
           "properties": {
             "feeder_delegation": {
               "$ref": "#/definitions/FeederDelegationParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "miss_counter"
+          ],
+          "properties": {
+            "miss_counter": {
+              "$ref": "#/definitions/MissCounterParams"
             }
           },
           "additionalProperties": false

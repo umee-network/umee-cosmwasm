@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 2;
 pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 23;
 pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 24;
+pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 25;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -21,6 +22,9 @@ pub enum UmeeQueryOracle {
   // FeederDelegation returns feeder delegation of a validator.
   // Expect to returns FeederDelegationResponse.
   FeederDelegation(FeederDelegationParams),
+  // MissCounter returns oracle miss counter of a validator.
+  // Expect to returns MissCounterResponse.
+  MissCounter(MissCounterParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -65,4 +69,16 @@ pub struct FeederDelegationParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct FeederDelegationResponse {
   pub feeder_addr: String,
+}
+
+// MissCounterParams params to query MissCounter.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MissCounterParams {
+  validator_addr: Addr,
+}
+
+// MissCounterResponse response struct of MissCounter.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MissCounterResponse {
+  pub miss_counter: u64,
 }
