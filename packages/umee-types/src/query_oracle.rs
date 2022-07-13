@@ -1,9 +1,10 @@
-use cosmwasm_std::Decimal;
+use cosmwasm_std::Decimal256;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query
 pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 2;
+pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 23;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -13,6 +14,9 @@ pub enum UmeeQueryOracle {
   // ExchangeRates returns an sdk.Dec representing the exchange rate
   // of an denom. Expect to returns ExchangeRatesResponse.
   ExchangeRates(ExchangeRatesParams),
+  // ActiveExchangeRates returns all active denoms.
+  // Expect to returns ActiveExchangeRatesResponse.
+  ActiveExchangeRates(ActiveExchangeRatesParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -34,5 +38,15 @@ pub struct ExchangeRatesResponse {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct DecCoin {
   pub denom: String,
-  pub amount: Decimal,
+  pub amount: Decimal256,
+}
+
+// ActiveExchangeRatesParams params to query ActiveExchangeRates.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct ActiveExchangeRatesParams {}
+
+// ActiveExchangeRatesResponse response struct of ActiveExchangeRates.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct ActiveExchangeRatesResponse {
+  pub active_rates: Vec<String>,
 }

@@ -5,8 +5,9 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use umee_types::{
-  AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
-  BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
+  ActiveExchangeRatesParams, ActiveExchangeRatesResponse, AvailableBorrowParams,
+  AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse, BorrowLimitParams,
+  BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
   BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
   CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams,
   ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
@@ -413,6 +414,9 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     UmeeQueryOracle::ExchangeRates(exchange_rates_params) => {
       to_binary(&query_exchange_rates(deps, exchange_rates_params)?)
     }
+    UmeeQueryOracle::ActiveExchangeRates(active_exchange_rates_params) => to_binary(
+      &query_active_exchange_rates(deps, active_exchange_rates_params)?,
+    ),
   }
 }
 
@@ -1010,6 +1014,36 @@ fn query_exchange_rates(
   }
 
   Ok(exchange_rates_resp)
+}
+
+// query_active_exchange_rates receives the get exchange rate base
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// ActiveExchangeRatesResponse struct
+fn query_active_exchange_rates(
+  deps: Deps,
+  active_exchange_rates_params: ActiveExchangeRatesParams,
+) -> StdResult<ActiveExchangeRatesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::active_exchange_rates(
+    active_exchange_rates_params,
+  ));
+
+  let active_exchange_rates_resp: ActiveExchangeRatesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<ActiveExchangeRatesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => active_exchange_rates_resp = response,
+      };
+    }
+  }
+
+  Ok(active_exchange_rates_resp)
 }
 
 // -----------------------------------TESTS---------------------------------------
