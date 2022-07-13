@@ -307,6 +307,17 @@
         }
       }
     },
+    "MarketSummaryParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "QueryRequest_for_StructUmeeQuery": {
       "anyOf": [
         {
@@ -606,6 +617,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/MarketSizeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "market_summary": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MarketSummaryParams"
             },
             {
               "type": "null"
@@ -968,6 +989,18 @@
           "properties": {
             "liquidation_targets": {
               "$ref": "#/definitions/LiquidationTargetsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "market_summary"
+          ],
+          "properties": {
+            "market_summary": {
+              "$ref": "#/definitions/MarketSummaryParams"
             }
           },
           "additionalProperties": false

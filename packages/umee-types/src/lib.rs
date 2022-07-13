@@ -18,16 +18,17 @@ pub use query_leverage::{
   CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, LeverageParametersParams,
   LeverageParametersResponse, LiquidationTargetsParams, LiquidationTargetsResponse,
   LiquidationThresholdParams, LiquidationThresholdResponse, MarketSizeParams, MarketSizeResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
-  SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams,
-  SupplyAPYResponse, TokenMarketSizeParams, TokenMarketSizeResponse, UmeeQueryLeverage,
+  MarketSummaryParams, MarketSummaryResponse, RegisteredTokensParams, RegisteredTokensResponse,
+  ReserveAmountParams, ReserveAmountResponse, SuppliedParams, SuppliedResponse,
+  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
+  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeQueryLeverage,
   ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
   ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_BORROW_LIMIT, ASSIGNED_QUERY_COLLATERAL,
   ASSIGNED_QUERY_COLLATERAL_VALUE, ASSIGNED_QUERY_EXCHANGE_RATE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
   ASSIGNED_QUERY_LIQUIDATION_TARGETS, ASSIGNED_QUERY_LIQUIDATION_THRESHOLD,
-  ASSIGNED_QUERY_MARKET_SIZE, ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_RESERVE_AMOUNT,
-  ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY,
-  ASSIGNED_QUERY_TOKEN_MARKET_SIZE,
+  ASSIGNED_QUERY_MARKET_SIZE, ASSIGNED_QUERY_MARKET_SUMMARY, ASSIGNED_QUERY_REGISTERED_TOKENS,
+  ASSIGNED_QUERY_RESERVE_AMOUNT, ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE,
+  ASSIGNED_QUERY_SUPPLY_APY, ASSIGNED_QUERY_TOKEN_MARKET_SIZE,
 };
 
 pub use query_oracle::{

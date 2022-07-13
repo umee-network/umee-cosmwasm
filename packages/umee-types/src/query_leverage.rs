@@ -23,6 +23,7 @@ pub const ASSIGNED_QUERY_EXCHANGE_RATE: u16 = 16;
 pub const ASSIGNED_QUERY_BORROW_LIMIT: u16 = 17;
 pub const ASSIGNED_QUERY_LIQUIDATION_THRESHOLD: u16 = 18;
 pub const ASSIGNED_QUERY_LIQUIDATION_TARGETS: u16 = 19;
+pub const ASSIGNED_QUERY_MARKET_SUMMARY: u16 = 20;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -96,6 +97,9 @@ pub enum UmeeQueryLeverage {
   // for liquidation.
   // Expect to returns LiquidationTargetsResponse.
   LiquidationTargets(LiquidationTargetsParams),
+  // MarketSummary returns base asset's current borrowing and supplying conditions.
+  // Expect to returns MarketSummaryResponse.
+  MarketSummary(MarketSummaryParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -312,4 +316,26 @@ pub struct LiquidationTargetsParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct LiquidationTargetsResponse {
   pub targets: Vec<String>,
+}
+
+// MarketSummaryParams params to query MarketSummary.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MarketSummaryParams {
+  pub denom: String,
+}
+
+// MarketSummary base asset's current borrowing and supplying conditions.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MarketSummaryResponse {
+  symbol_denom: String,
+  exponent: u32,
+  oracle_price: Decimal256,
+  utoken_exchange_rate: Decimal256,
+  supply_apy: Decimal256,
+  borrow_apy: Decimal256,
+  market_size: Decimal256,
+  available_borrow: Decimal256,
+  reserved: Decimal256,
+  collateral: Decimal256,
+  borrowed: Decimal256,
 }
