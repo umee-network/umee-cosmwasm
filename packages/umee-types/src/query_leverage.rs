@@ -24,6 +24,7 @@ pub const ASSIGNED_QUERY_BORROW_LIMIT: u16 = 17;
 pub const ASSIGNED_QUERY_LIQUIDATION_THRESHOLD: u16 = 18;
 pub const ASSIGNED_QUERY_LIQUIDATION_TARGETS: u16 = 19;
 pub const ASSIGNED_QUERY_MARKET_SUMMARY: u16 = 20;
+pub const ASSIGNED_QUERY_TOTAL_COLLATERAL: u16 = 21;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -100,6 +101,10 @@ pub enum UmeeQueryLeverage {
   // MarketSummary returns base asset's current borrowing and supplying conditions.
   // Expect to returns MarketSummaryResponse.
   MarketSummary(MarketSummaryParams),
+  // TotalCollateral returns the total collateral system-wide of a given
+  // uToken denomination.
+  // Expect to returns TotalCollateralResponse.
+  TotalCollateral(TotalCollateralParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -338,4 +343,16 @@ pub struct MarketSummaryResponse {
   reserved: Decimal256,
   collateral: Decimal256,
   borrowed: Decimal256,
+}
+
+// TotalCollateralParams params to query TotalCollateral.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct TotalCollateralParams {
+  pub address: Addr,
+}
+
+// TotalCollateralResponse response struct of TotalCollateral.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct TotalCollateralResponse {
+  pub amount: Decimal256,
 }

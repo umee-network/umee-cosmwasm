@@ -15,8 +15,8 @@ use umee_types::{
   MarketSummaryResponse, RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams,
   ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
   SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  TokenMarketSizeParams, TokenMarketSizeResponse, TotalCollateralParams, TotalCollateralResponse,
+  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -378,6 +378,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     ),
     UmeeQueryLeverage::MarketSummary(market_summary_params) => {
       to_binary(&query_market_summary(deps, market_summary_params)?)
+    }
+    UmeeQueryLeverage::TotalCollateral(total_collateral_params) => {
+      to_binary(&query_total_collateral(deps, total_collateral_params)?)
     }
   }
 }
@@ -898,7 +901,7 @@ fn query_liquidation_targets(
 
 // query_market_summary creates an query request to the native modules
 // with query_chain wrapping the response to the actual
-// LiquidationTargetsResponse struct.
+// MarketSummaryResponse struct.
 fn query_market_summary(
   deps: Deps,
   market_summary_params: MarketSummaryParams,
@@ -921,6 +924,33 @@ fn query_market_summary(
   }
 
   Ok(market_summary_response)
+}
+
+// query_total_collateral creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// TotalCollateralResponse struct.
+fn query_total_collateral(
+  deps: Deps,
+  total_collateral_params: TotalCollateralParams,
+) -> StdResult<TotalCollateralResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::total_collateral(total_collateral_params));
+
+  let total_collateral_response: TotalCollateralResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<TotalCollateralResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => total_collateral_response = response,
+      };
+    }
+  }
+
+  Ok(total_collateral_response)
 }
 
 // query_exchange_rates receives the get exchange rate base

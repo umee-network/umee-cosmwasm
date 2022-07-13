@@ -692,6 +692,16 @@
               "type": "null"
             }
           ]
+        },
+        "total_collateral": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TotalCollateralParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -744,6 +754,17 @@
       "properties": {
         "denom": {
           "type": "string"
+        }
+      }
+    },
+    "TotalCollateralParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
         }
       }
     },
@@ -1001,6 +1022,18 @@
           "properties": {
             "market_summary": {
               "$ref": "#/definitions/MarketSummaryParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "total_collateral"
+          ],
+          "properties": {
+            "total_collateral": {
+              "$ref": "#/definitions/TotalCollateralParams"
             }
           },
           "additionalProperties": false

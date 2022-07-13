@@ -3,13 +3,14 @@ use crate::query_leverage::{
   CollateralParams, CollateralValueParams, ExchangeRateParams, LeverageParametersParams,
   LiquidationTargetsParams, LiquidationThresholdParams, MarketSizeParams, MarketSummaryParams,
   RegisteredTokensParams, ReserveAmountParams, SuppliedParams, SuppliedValueParams,
-  SupplyAPYParams, TokenMarketSizeParams, UmeeQueryLeverage, ASSIGNED_QUERY_AVAILABLE_BORROW,
-  ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE, ASSIGNED_QUERY_BORROW_APY,
-  ASSIGNED_QUERY_BORROW_LIMIT, ASSIGNED_QUERY_COLLATERAL, ASSIGNED_QUERY_COLLATERAL_VALUE,
-  ASSIGNED_QUERY_EXCHANGE_RATE, ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_LIQUIDATION_TARGETS,
-  ASSIGNED_QUERY_LIQUIDATION_THRESHOLD, ASSIGNED_QUERY_MARKET_SIZE, ASSIGNED_QUERY_MARKET_SUMMARY,
-  ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_RESERVE_AMOUNT, ASSIGNED_QUERY_SUPPLIED,
-  ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY, ASSIGNED_QUERY_TOKEN_MARKET_SIZE,
+  SupplyAPYParams, TokenMarketSizeParams, TotalCollateralParams, UmeeQueryLeverage,
+  ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
+  ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_BORROW_LIMIT, ASSIGNED_QUERY_COLLATERAL,
+  ASSIGNED_QUERY_COLLATERAL_VALUE, ASSIGNED_QUERY_EXCHANGE_RATE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
+  ASSIGNED_QUERY_LIQUIDATION_TARGETS, ASSIGNED_QUERY_LIQUIDATION_THRESHOLD,
+  ASSIGNED_QUERY_MARKET_SIZE, ASSIGNED_QUERY_MARKET_SUMMARY, ASSIGNED_QUERY_REGISTERED_TOKENS,
+  ASSIGNED_QUERY_RESERVE_AMOUNT, ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE,
+  ASSIGNED_QUERY_SUPPLY_APY, ASSIGNED_QUERY_TOKEN_MARKET_SIZE, ASSIGNED_QUERY_TOTAL_COLLATERAL,
 };
 use crate::query_oracle::{ExchangeRatesParams, UmeeQueryOracle, ASSIGNED_QUERY_EXCHANGE_RATES};
 use cosmwasm_std::CustomQuery;
@@ -55,6 +56,7 @@ pub struct StructUmeeQuery {
   liquidation_threshold: Option<LiquidationThresholdParams>,
   liquidation_targets: Option<LiquidationTargetsParams>,
   market_summary: Option<MarketSummaryParams>,
+  total_collateral: Option<TotalCollateralParams>,
   // active_exchange_rates
   // feeder_delegation
   // miss_counter,
@@ -94,6 +96,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new exchange_rates query.
@@ -120,6 +123,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new registered_tokens query.
@@ -146,6 +150,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -174,6 +179,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new borrowed_value query.
@@ -200,6 +206,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new supplied query.
@@ -226,6 +233,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new supplied value query.
@@ -252,6 +260,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new available borrow query.
@@ -278,6 +287,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new borrow apy query.
@@ -304,6 +314,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new supply apy query.
@@ -330,6 +341,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new market size query.
@@ -356,6 +368,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a new token market size query.
@@ -382,6 +395,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a reserve amount query.
@@ -408,6 +422,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a collateral query.
@@ -434,6 +449,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a collateral value query.
@@ -460,6 +476,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a exchange rate query.
@@ -486,6 +503,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a borrow limit query.
@@ -512,6 +530,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a liquidation threshold query.
@@ -540,6 +559,7 @@ impl StructUmeeQuery {
       liquidation_threshold: Some(liquidation_threshold_params),
       liquidation_targets: None,
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a liquidation targets query.
@@ -568,6 +588,7 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: Some(liquidation_targets_params),
       market_summary: None,
+      total_collateral: None,
     }
   }
   // creates a market summary query.
@@ -594,6 +615,34 @@ impl StructUmeeQuery {
       liquidation_threshold: None,
       liquidation_targets: None,
       market_summary: Some(market_summary_params),
+      total_collateral: None,
+    }
+  }
+  // creates a total collateral query.
+  pub fn total_collateral(total_collateral_params: TotalCollateralParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_TOTAL_COLLATERAL,
+      borrowed: None,
+      exchange_rates: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: None,
+      supplied: None,
+      supplied_value: None,
+      available_borrow: None,
+      borrow_apy: None,
+      supply_apy: None,
+      market_size: None,
+      token_market_size: None,
+      reserve_amount: None,
+      collateral: None,
+      collateral_value: None,
+      exchange_rate: None,
+      borrow_limit: None,
+      liquidation_threshold: None,
+      liquidation_targets: None,
+      market_summary: None,
+      total_collateral: Some(total_collateral_params),
     }
   }
 }
