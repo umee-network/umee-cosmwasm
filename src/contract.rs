@@ -15,8 +15,9 @@ use umee_types::{
   MarketSummaryResponse, RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams,
   ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
   SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, TotalCollateralParams, TotalCollateralResponse,
-  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  TokenMarketSizeParams, TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse,
+  TotalCollateralParams, TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -381,6 +382,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     }
     UmeeQueryLeverage::TotalCollateral(total_collateral_params) => {
       to_binary(&query_total_collateral(deps, total_collateral_params)?)
+    }
+    UmeeQueryLeverage::TotalBorrowed(total_borrowed_params) => {
+      to_binary(&query_total_borrowed(deps, total_borrowed_params)?)
     }
   }
 }
@@ -951,6 +955,33 @@ fn query_total_collateral(
   }
 
   Ok(total_collateral_response)
+}
+
+// query_total_borrowed creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// TotalBorrowedResponse struct.
+fn query_total_borrowed(
+  deps: Deps,
+  total_borrowed_params: TotalBorrowedParams,
+) -> StdResult<TotalBorrowedResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::total_borrowed(total_borrowed_params));
+
+  let total_borrowed_response: TotalBorrowedResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<TotalBorrowedResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => total_borrowed_response = response,
+      };
+    }
+  }
+
+  Ok(total_borrowed_response)
 }
 
 // query_exchange_rates receives the get exchange rate base

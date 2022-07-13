@@ -25,6 +25,7 @@ pub const ASSIGNED_QUERY_LIQUIDATION_THRESHOLD: u16 = 18;
 pub const ASSIGNED_QUERY_LIQUIDATION_TARGETS: u16 = 19;
 pub const ASSIGNED_QUERY_MARKET_SUMMARY: u16 = 20;
 pub const ASSIGNED_QUERY_TOTAL_COLLATERAL: u16 = 21;
+pub const ASSIGNED_QUERY_TOTAL_BORROWED: u16 = 22;
 
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -105,6 +106,10 @@ pub enum UmeeQueryLeverage {
   // uToken denomination.
   // Expect to returns TotalCollateralResponse.
   TotalCollateral(TotalCollateralParams),
+  // TotalBorrowed returns the total borrowed system-wide of a given
+  // token denomination.
+  // Expect to returns TotalBorrowedResponse.
+  TotalBorrowed(TotalBorrowedParams),
 }
 
 // BorrowedParams params to query Borrowed.
@@ -348,11 +353,23 @@ pub struct MarketSummaryResponse {
 // TotalCollateralParams params to query TotalCollateral.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct TotalCollateralParams {
-  pub address: Addr,
+  pub denom: String,
 }
 
 // TotalCollateralResponse response struct of TotalCollateral.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct TotalCollateralResponse {
+  pub amount: Decimal256,
+}
+
+// TotalBorrowedParams params to query TotalBorrowed.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct TotalBorrowedParams {
+  pub denom: String,
+}
+
+// TotalBorrowedResponse response struct of TotalBorrowed.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct TotalBorrowedResponse {
   pub amount: Decimal256,
 }

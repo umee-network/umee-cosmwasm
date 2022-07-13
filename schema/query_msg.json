@@ -693,6 +693,16 @@
             }
           ]
         },
+        "total_borrowed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TotalBorrowedParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "total_collateral": {
           "anyOf": [
             {
@@ -757,14 +767,25 @@
         }
       }
     },
+    "TotalBorrowedParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "TotalCollateralParams": {
       "type": "object",
       "required": [
-        "address"
+        "denom"
       ],
       "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
+        "denom": {
+          "type": "string"
         }
       }
     },
@@ -1034,6 +1055,18 @@
           "properties": {
             "total_collateral": {
               "$ref": "#/definitions/TotalCollateralParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "total_borrowed"
+          ],
+          "properties": {
+            "total_borrowed": {
+              "$ref": "#/definitions/TotalBorrowedParams"
             }
           },
           "additionalProperties": false
