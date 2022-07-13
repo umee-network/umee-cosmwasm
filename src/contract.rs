@@ -16,12 +16,12 @@ use umee_types::{
   LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
   LiquidationTargetsResponse, LiquidationThresholdParams, LiquidationThresholdResponse,
   MarketSizeParams, MarketSizeResponse, MarketSummaryParams, MarketSummaryResponse,
-  MissCounterParams, MissCounterResponse, RegisteredTokensParams, RegisteredTokensResponse,
-  ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams,
-  SuppliedResponse, SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse,
-  TotalCollateralParams, TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
+  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
+  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
+  TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams,
+  TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -437,6 +437,9 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     }
     UmeeQueryOracle::AggregateVotes(aggregate_votes_params) => {
       to_binary(&query_aggregate_votes(deps, aggregate_votes_params)?)
+    }
+    UmeeQueryOracle::OracleParameters(oracle_parameters_params) => {
+      to_binary(&query_oracle_parameters(deps, oracle_parameters_params)?)
     }
   }
 }
@@ -1235,6 +1238,34 @@ fn query_aggregate_votes(
   }
 
   Ok(aggregate_votes_resp)
+}
+
+// query_oracle_parameters receives the get exchange rate base
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// OracleParametersResponse struct
+fn query_oracle_parameters(
+  deps: Deps,
+  oracle_parameters_params: OracleParametersParams,
+) -> StdResult<OracleParametersResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::oracle_parameters(oracle_parameters_params));
+
+  let oracle_parameters_resp: OracleParametersResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<OracleParametersResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => oracle_parameters_resp = response,
+      };
+    }
+  }
+
+  Ok(oracle_parameters_resp)
 }
 
 // -----------------------------------TESTS---------------------------------------

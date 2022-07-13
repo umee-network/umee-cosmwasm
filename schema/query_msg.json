@@ -371,6 +371,9 @@
         }
       }
     },
+    "OracleParametersParams": {
+      "type": "object"
+    },
     "QueryRequest_for_StructUmeeQuery": {
       "anyOf": [
         {
@@ -750,6 +753,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/MissCounterParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "oracle_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OracleParametersParams"
             },
             {
               "type": "null"
@@ -1290,6 +1303,18 @@
           "properties": {
             "aggregate_votes": {
               "$ref": "#/definitions/AggregateVotesParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "oracle_parameters"
+          ],
+          "properties": {
+            "oracle_parameters": {
+              "$ref": "#/definitions/OracleParametersParams"
             }
           },
           "additionalProperties": false

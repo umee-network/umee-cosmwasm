@@ -16,9 +16,10 @@ use crate::query_leverage::{
 use crate::query_oracle::{
   ActiveExchangeRatesParams, AggregatePrevoteParams, AggregatePrevotesParams, AggregateVoteParams,
   AggregateVotesParams, ExchangeRatesParams, FeederDelegationParams, MissCounterParams,
-  UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES, ASSIGNED_QUERY_AGGREGATE_PREVOTE,
-  ASSIGNED_QUERY_AGGREGATE_PREVOTES, ASSIGNED_QUERY_AGGREGATE_VOTE, ASSIGNED_QUERY_AGGREGATE_VOTES,
-  ASSIGNED_QUERY_EXCHANGE_RATES, ASSIGNED_QUERY_FEEDER_DELEGATION, ASSIGNED_QUERY_MISS_COUNTER,
+  OracleParametersParams, UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES,
+  ASSIGNED_QUERY_AGGREGATE_PREVOTE, ASSIGNED_QUERY_AGGREGATE_PREVOTES,
+  ASSIGNED_QUERY_AGGREGATE_VOTE, ASSIGNED_QUERY_AGGREGATE_VOTES, ASSIGNED_QUERY_EXCHANGE_RATES,
+  ASSIGNED_QUERY_FEEDER_DELEGATION, ASSIGNED_QUERY_MISS_COUNTER, ASSIGNED_QUERY_ORACLE_PARAMS,
 };
 use cosmwasm_std::CustomQuery;
 use schemars::JsonSchema;
@@ -72,7 +73,7 @@ pub struct StructUmeeQuery {
   aggregate_prevotes: Option<AggregatePrevotesParams>,
   aggregate_vote: Option<AggregateVoteParams>,
   aggregate_votes: Option<AggregateVotesParams>,
-  // oracle_params
+  oracle_params: Option<OracleParametersParams>,
 }
 
 // Defines all the implementation related to the StructUmeeQuery
@@ -113,6 +114,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new exchange_rates query.
@@ -148,6 +150,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new registered_tokens query.
@@ -183,6 +186,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -220,6 +224,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new borrowed_value query.
@@ -255,6 +260,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new supplied query.
@@ -290,6 +296,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new supplied value query.
@@ -325,6 +332,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new available borrow query.
@@ -360,6 +368,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new borrow apy query.
@@ -395,6 +404,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new supply apy query.
@@ -430,6 +440,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new market size query.
@@ -465,6 +476,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a new token market size query.
@@ -500,6 +512,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a reserve amount query.
@@ -535,6 +548,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a collateral query.
@@ -570,6 +584,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a collateral value query.
@@ -605,6 +620,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a exchange rate query.
@@ -640,6 +656,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a borrow limit query.
@@ -675,6 +692,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a liquidation threshold query.
@@ -712,6 +730,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a liquidation targets query.
@@ -749,6 +768,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a market summary query.
@@ -784,6 +804,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a total collateral query.
@@ -819,6 +840,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a total borrowed query.
@@ -854,6 +876,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a active exchange rates query.
@@ -891,6 +914,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a feeder delegation query.
@@ -926,6 +950,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a miss counter query.
@@ -961,6 +986,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a aggregate prevote query.
@@ -996,6 +1022,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a aggregate prevotes query.
@@ -1031,6 +1058,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: Some(aggregate_prevotes_params),
       aggregate_vote: None,
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a aggregate vote query.
@@ -1066,6 +1094,7 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: Some(aggregate_vote_params),
       aggregate_votes: None,
+      oracle_params: None,
     }
   }
   // creates a aggregate votes query.
@@ -1101,6 +1130,43 @@ impl StructUmeeQuery {
       aggregate_prevotes: None,
       aggregate_vote: None,
       aggregate_votes: Some(aggregate_votes_params),
+      oracle_params: None,
+    }
+  }
+  // creates a new oracle parameters query.
+  pub fn oracle_parameters(oracle_parameters_params: OracleParametersParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_ORACLE_PARAMS,
+      borrowed: None,
+      exchange_rates: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: None,
+      supplied: None,
+      supplied_value: None,
+      available_borrow: None,
+      borrow_apy: None,
+      supply_apy: None,
+      market_size: None,
+      token_market_size: None,
+      reserve_amount: None,
+      collateral: None,
+      collateral_value: None,
+      exchange_rate: None,
+      borrow_limit: None,
+      liquidation_threshold: None,
+      liquidation_targets: None,
+      market_summary: None,
+      total_collateral: None,
+      total_borrowed: None,
+      active_exchange_rates: None,
+      feeder_delegation: None,
+      miss_counter: None,
+      aggregate_prevote: None,
+      aggregate_prevotes: None,
+      aggregate_vote: None,
+      aggregate_votes: None,
+      oracle_params: Some(oracle_parameters_params),
     }
   }
 }

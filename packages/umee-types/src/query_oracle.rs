@@ -1,5 +1,6 @@
 use crate::aggregate_exchange_rate_prevote::AggregateExchangeRatePrevote;
 use crate::aggregate_exchange_rate_vote::AggregateExchangeRateVote;
+use crate::oracle_parameters::OracleParameters;
 use cosmwasm_std::{Addr, Decimal256};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -13,6 +14,7 @@ pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 26;
 pub const ASSIGNED_QUERY_AGGREGATE_PREVOTES: u16 = 27;
 pub const ASSIGNED_QUERY_AGGREGATE_VOTE: u16 = 28;
 pub const ASSIGNED_QUERY_AGGREGATE_VOTES: u16 = 29;
+pub const ASSIGNED_QUERY_ORACLE_PARAMS: u16 = 30;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -43,6 +45,9 @@ pub enum UmeeQueryOracle {
   // AggregateVotes returns an aggregate vote of all validators.
   // Expect to returns AggregateVotesResponse.
   AggregateVotes(AggregateVotesParams),
+  // OracleParameters returns all oracle module parameters.
+  // Expect to returns OracleParametersParams.
+  OracleParameters(OracleParametersParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -143,4 +148,14 @@ pub struct AggregateVotesParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct AggregateVotesResponse {
   pub aggregate_votes: Vec<AggregateExchangeRateVote>,
+}
+
+// OracleParametersParams params to query OracleParameters.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct OracleParametersParams {}
+
+// OracleParametersResponse response struct of OracleParameters.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct OracleParametersResponse {
+  pub params: OracleParameters,
 }
