@@ -37,9 +37,10 @@ pub use query_leverage::{
 
 pub use query_oracle::{
   ActiveExchangeRatesParams, ActiveExchangeRatesResponse, AggregatePrevoteParams,
-  AggregatePrevoteResponse, ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams,
-  FeederDelegationResponse, MissCounterParams, MissCounterResponse, UmeeQueryOracle,
-  ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES, ASSIGNED_QUERY_AGGREGATE_PREVOTE,
+  AggregatePrevoteResponse, AggregatePrevotesParams, AggregatePrevotesResponse,
+  ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
+  MissCounterParams, MissCounterResponse, UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES,
+  ASSIGNED_QUERY_AGGREGATE_PREVOTE, ASSIGNED_QUERY_AGGREGATE_PREVOTES,
   ASSIGNED_QUERY_EXCHANGE_RATES, ASSIGNED_QUERY_FEEDER_DELEGATION, ASSIGNED_QUERY_MISS_COUNTER,
 };
 

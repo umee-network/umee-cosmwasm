@@ -9,6 +9,7 @@ pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 23;
 pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 24;
 pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 25;
 pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 26;
+pub const ASSIGNED_QUERY_AGGREGATE_PREVOTES: u16 = 27;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -30,6 +31,9 @@ pub enum UmeeQueryOracle {
   // AggregatePrevote returns an aggregate prevote of a validator.
   // Expect to returns AggregatePrevoteResponse.
   AggregatePrevote(AggregatePrevoteParams),
+  // AggregatePrevotes returns an aggregate prevotes of all validators.
+  // Expect to returns AggregatePrevotesResponse.
+  AggregatePrevotes(AggregatePrevotesParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -98,4 +102,14 @@ pub struct AggregatePrevoteParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct AggregatePrevoteResponse {
   pub aggregate_prevote: AggregateExchangeRatePrevote,
+}
+
+// AggregatePrevotesParams params to query AggregatePrevotes.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregatePrevotesParams {}
+
+// AggregatePrevotesResponse response struct of AggregatePrevotes.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregatePrevotesResponse {
+  pub aggregate_prevotes: Vec<AggregateExchangeRatePrevote>,
 }

@@ -118,6 +118,9 @@
         }
       }
     },
+    "AggregatePrevotesParams": {
+      "type": "object"
+    },
     "AvailableBorrowParams": {
       "type": "object",
       "required": [
@@ -538,6 +541,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/AggregatePrevoteParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregate_prevotes": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AggregatePrevotesParams"
             },
             {
               "type": "null"
@@ -1207,6 +1220,18 @@
           "properties": {
             "aggregate_prevote": {
               "$ref": "#/definitions/AggregatePrevoteParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "aggregate_prevotes"
+          ],
+          "properties": {
+            "aggregate_prevotes": {
+              "$ref": "#/definitions/AggregatePrevotesParams"
             }
           },
           "additionalProperties": false

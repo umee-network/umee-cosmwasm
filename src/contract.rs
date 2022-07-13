@@ -6,12 +6,13 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 use umee_types::{
   ActiveExchangeRatesParams, ActiveExchangeRatesResponse, AggregatePrevoteParams,
-  AggregatePrevoteResponse, AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams,
-  BorrowAPYResponse, BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse,
-  BorrowedValueParams, BorrowedValueResponse, CollateralParams, CollateralResponse,
-  CollateralValueParams, CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse,
-  ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
-  LendAssetParams, LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
+  AggregatePrevoteResponse, AggregatePrevotesParams, AggregatePrevotesResponse,
+  AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
+  BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
+  BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
+  CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams,
+  ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse, LendAssetParams,
+  LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
   LiquidationTargetsResponse, LiquidationThresholdParams, LiquidationThresholdResponse,
   MarketSizeParams, MarketSizeResponse, MarketSummaryParams, MarketSummaryResponse,
   MissCounterParams, MissCounterResponse, RegisteredTokensParams, RegisteredTokensResponse,
@@ -426,6 +427,9 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     }
     UmeeQueryOracle::AggregatePrevote(aggregate_prevote_params) => {
       to_binary(&query_aggregate_prevote(deps, aggregate_prevote_params)?)
+    }
+    UmeeQueryOracle::AggregatePrevotes(aggregate_prevotes_params) => {
+      to_binary(&query_aggregate_prevotes(deps, aggregate_prevotes_params)?)
     }
   }
 }
@@ -1138,6 +1142,36 @@ fn query_aggregate_prevote(
   }
 
   Ok(aggregate_prevote_resp)
+}
+
+// query_aggregate_prevotes receives the get exchange rate base
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// AggregatePrevotesResponse struct
+fn query_aggregate_prevotes(
+  deps: Deps,
+  aggregate_prevotes_params: AggregatePrevotesParams,
+) -> StdResult<AggregatePrevotesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::aggregate_prevotes(
+    aggregate_prevotes_params,
+  ));
+
+  let aggregate_prevotes_resp: AggregatePrevotesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<AggregatePrevotesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => aggregate_prevotes_resp = response,
+      };
+    }
+  }
+
+  Ok(aggregate_prevotes_resp)
 }
 
 // -----------------------------------TESTS---------------------------------------
