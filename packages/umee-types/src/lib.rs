@@ -35,8 +35,9 @@ pub use query_leverage::{
 
 pub use query_oracle::{
   ActiveExchangeRatesParams, ActiveExchangeRatesResponse, ExchangeRatesParams,
-  ExchangeRatesResponse, UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES,
-  ASSIGNED_QUERY_EXCHANGE_RATES,
+  ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse, UmeeQueryOracle,
+  ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES, ASSIGNED_QUERY_EXCHANGE_RATES,
+  ASSIGNED_QUERY_FEEDER_DELEGATION,
 };
 
 pub use msg_leverage::{

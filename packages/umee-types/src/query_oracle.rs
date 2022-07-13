@@ -1,10 +1,11 @@
-use cosmwasm_std::Decimal256;
+use cosmwasm_std::{Addr, Decimal256};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query
 pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 2;
 pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 23;
+pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 24;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -17,6 +18,9 @@ pub enum UmeeQueryOracle {
   // ActiveExchangeRates returns all active denoms.
   // Expect to returns ActiveExchangeRatesResponse.
   ActiveExchangeRates(ActiveExchangeRatesParams),
+  // FeederDelegation returns feeder delegation of a validator.
+  // Expect to returns FeederDelegationResponse.
+  FeederDelegation(FeederDelegationParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -49,4 +53,16 @@ pub struct ActiveExchangeRatesParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct ActiveExchangeRatesResponse {
   pub active_rates: Vec<String>,
+}
+
+// FeederDelegationParams params to query FeederDelegation.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct FeederDelegationParams {
+  validator_addr: Addr,
+}
+
+// FeederDelegationResponse response struct of FeederDelegation.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct FeederDelegationResponse {
+  pub feeder_addr: String,
 }

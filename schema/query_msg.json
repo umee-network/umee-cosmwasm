@@ -282,6 +282,17 @@
         }
       }
     },
+    "FeederDelegationParams": {
+      "type": "object",
+      "required": [
+        "validator_addr"
+      ],
+      "properties": {
+        "validator_addr": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
     "LeverageParametersParams": {
       "type": "object"
     },
@@ -590,6 +601,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/ExchangeRatesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "feeder_delegation": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FeederDelegationParams"
             },
             {
               "type": "null"
@@ -1108,6 +1129,18 @@
           "properties": {
             "active_exchange_rates": {
               "$ref": "#/definitions/ActiveExchangeRatesParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "feeder_delegation"
+          ],
+          "properties": {
+            "feeder_delegation": {
+              "$ref": "#/definitions/FeederDelegationParams"
             }
           },
           "additionalProperties": false

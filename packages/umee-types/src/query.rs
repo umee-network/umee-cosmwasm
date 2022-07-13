@@ -14,8 +14,9 @@ use crate::query_leverage::{
   ASSIGNED_QUERY_TOTAL_BORROWED, ASSIGNED_QUERY_TOTAL_COLLATERAL,
 };
 use crate::query_oracle::{
-  ActiveExchangeRatesParams, ExchangeRatesParams, UmeeQueryOracle,
+  ActiveExchangeRatesParams, ExchangeRatesParams, FeederDelegationParams, UmeeQueryOracle,
   ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES, ASSIGNED_QUERY_EXCHANGE_RATES,
+  ASSIGNED_QUERY_FEEDER_DELEGATION,
 };
 use cosmwasm_std::CustomQuery;
 use schemars::JsonSchema;
@@ -63,7 +64,7 @@ pub struct StructUmeeQuery {
   total_collateral: Option<TotalCollateralParams>,
   total_borrowed: Option<TotalBorrowedParams>,
   active_exchange_rates: Option<ActiveExchangeRatesParams>,
-  // feeder_delegation
+  feeder_delegation: Option<FeederDelegationParams>,
   // miss_counter,
   // aggregate_prevote
   // aggregate_prevotes
@@ -104,6 +105,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new exchange_rates query.
@@ -133,6 +135,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new registered_tokens query.
@@ -162,6 +165,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -193,6 +197,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new borrowed_value query.
@@ -222,6 +227,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new supplied query.
@@ -251,6 +257,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new supplied value query.
@@ -280,6 +287,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new available borrow query.
@@ -309,6 +317,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new borrow apy query.
@@ -338,6 +347,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new supply apy query.
@@ -367,6 +377,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new market size query.
@@ -396,6 +407,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a new token market size query.
@@ -425,6 +437,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a reserve amount query.
@@ -454,6 +467,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a collateral query.
@@ -483,6 +497,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a collateral value query.
@@ -512,6 +527,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a exchange rate query.
@@ -541,6 +557,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a borrow limit query.
@@ -570,6 +587,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a liquidation threshold query.
@@ -601,6 +619,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a liquidation targets query.
@@ -632,6 +651,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a market summary query.
@@ -661,6 +681,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a total collateral query.
@@ -690,6 +711,7 @@ impl StructUmeeQuery {
       total_collateral: Some(total_collateral_params),
       total_borrowed: None,
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a total borrowed query.
@@ -719,6 +741,7 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: Some(total_borrowed_params),
       active_exchange_rates: None,
+      feeder_delegation: None,
     }
   }
   // creates a active exchange rates query.
@@ -750,6 +773,37 @@ impl StructUmeeQuery {
       total_collateral: None,
       total_borrowed: None,
       active_exchange_rates: Some(active_exchange_rates_params),
+      feeder_delegation: None,
+    }
+  }
+  // creates a feeder delegation query.
+  pub fn feeder_delegation(feeder_delegation_params: FeederDelegationParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_FEEDER_DELEGATION,
+      borrowed: None,
+      exchange_rates: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: None,
+      supplied: None,
+      supplied_value: None,
+      available_borrow: None,
+      borrow_apy: None,
+      supply_apy: None,
+      market_size: None,
+      token_market_size: None,
+      reserve_amount: None,
+      collateral: None,
+      collateral_value: None,
+      exchange_rate: None,
+      borrow_limit: None,
+      liquidation_threshold: None,
+      liquidation_targets: None,
+      market_summary: None,
+      total_collateral: None,
+      total_borrowed: None,
+      active_exchange_rates: None,
+      feeder_delegation: Some(feeder_delegation_params),
     }
   }
 }

@@ -10,15 +10,15 @@ use umee_types::{
   BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
   BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
   CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams,
-  ExchangeRatesResponse, LendAssetParams, LeverageParametersParams, LeverageParametersResponse,
-  LiquidationTargetsParams, LiquidationTargetsResponse, LiquidationThresholdParams,
-  LiquidationThresholdResponse, MarketSizeParams, MarketSizeResponse, MarketSummaryParams,
-  MarketSummaryResponse, RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams,
-  ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse,
-  TokenMarketSizeParams, TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse,
-  TotalCollateralParams, TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle,
+  ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse, LendAssetParams,
+  LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
+  LiquidationTargetsResponse, LiquidationThresholdParams, LiquidationThresholdResponse,
+  MarketSizeParams, MarketSizeResponse, MarketSummaryParams, MarketSummaryResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
+  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
+  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
+  TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams,
+  TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::error::ContractError;
@@ -417,6 +417,9 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     UmeeQueryOracle::ActiveExchangeRates(active_exchange_rates_params) => to_binary(
       &query_active_exchange_rates(deps, active_exchange_rates_params)?,
     ),
+    UmeeQueryOracle::FeederDelegation(feeder_delegation_params) => {
+      to_binary(&query_feeder_delegation(deps, feeder_delegation_params)?)
+    }
   }
 }
 
@@ -1044,6 +1047,34 @@ fn query_active_exchange_rates(
   }
 
   Ok(active_exchange_rates_resp)
+}
+
+// query_feeder_delegation receives the get exchange rate base
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// FeederDelegationResponse struct
+fn query_feeder_delegation(
+  deps: Deps,
+  feeder_delegation_params: FeederDelegationParams,
+) -> StdResult<FeederDelegationResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::feeder_delegation(feeder_delegation_params));
+
+  let feeder_delegation_resp: FeederDelegationResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<FeederDelegationResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => feeder_delegation_resp = response,
+      };
+    }
+  }
+
+  Ok(feeder_delegation_resp)
 }
 
 // -----------------------------------TESTS---------------------------------------
