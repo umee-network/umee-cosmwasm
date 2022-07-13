@@ -1,4 +1,5 @@
 pub mod aggregate_exchange_rate_prevote;
+pub mod aggregate_exchange_rate_vote;
 pub mod leverage_parameters;
 pub mod msg;
 pub mod msg_leverage;
@@ -8,6 +9,7 @@ pub mod query_oracle;
 pub mod token;
 
 pub use aggregate_exchange_rate_prevote::AggregateExchangeRatePrevote;
+pub use aggregate_exchange_rate_vote::{AggregateExchangeRateVote, ExchangeRateTuple};
 pub use leverage_parameters::LeverageParameters;
 pub use token::Token;
 
@@ -38,10 +40,12 @@ pub use query_leverage::{
 pub use query_oracle::{
   ActiveExchangeRatesParams, ActiveExchangeRatesResponse, AggregatePrevoteParams,
   AggregatePrevoteResponse, AggregatePrevotesParams, AggregatePrevotesResponse,
+  AggregateVoteParams, AggregateVoteResponse, AggregateVotesParams, AggregateVotesResponse,
   ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
   MissCounterParams, MissCounterResponse, UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES,
   ASSIGNED_QUERY_AGGREGATE_PREVOTE, ASSIGNED_QUERY_AGGREGATE_PREVOTES,
-  ASSIGNED_QUERY_EXCHANGE_RATES, ASSIGNED_QUERY_FEEDER_DELEGATION, ASSIGNED_QUERY_MISS_COUNTER,
+  ASSIGNED_QUERY_AGGREGATE_VOTES, ASSIGNED_QUERY_EXCHANGE_RATES, ASSIGNED_QUERY_FEEDER_DELEGATION,
+  ASSIGNED_QUERY_MISS_COUNTER,
 };
 
 pub use msg_leverage::{

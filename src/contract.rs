@@ -7,6 +7,7 @@ use cw2::set_contract_version;
 use umee_types::{
   ActiveExchangeRatesParams, ActiveExchangeRatesResponse, AggregatePrevoteParams,
   AggregatePrevoteResponse, AggregatePrevotesParams, AggregatePrevotesResponse,
+  AggregateVoteParams, AggregateVoteResponse, AggregateVotesParams, AggregateVotesResponse,
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
   BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
   BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
@@ -430,6 +431,12 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     }
     UmeeQueryOracle::AggregatePrevotes(aggregate_prevotes_params) => {
       to_binary(&query_aggregate_prevotes(deps, aggregate_prevotes_params)?)
+    }
+    UmeeQueryOracle::AggregateVote(aggregate_vote_params) => {
+      to_binary(&query_aggregate_vote(deps, aggregate_vote_params)?)
+    }
+    UmeeQueryOracle::AggregateVotes(aggregate_votes_params) => {
+      to_binary(&query_aggregate_votes(deps, aggregate_votes_params)?)
     }
   }
 }
@@ -1172,6 +1179,62 @@ fn query_aggregate_prevotes(
   }
 
   Ok(aggregate_prevotes_resp)
+}
+
+// query_aggregate_vote receives the get exchange rate base
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// AggregateVoteResponse struct
+fn query_aggregate_vote(
+  deps: Deps,
+  aggregate_vote_params: AggregateVoteParams,
+) -> StdResult<AggregateVoteResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::aggregate_vote(aggregate_vote_params));
+
+  let aggregate_vote_resp: AggregateVoteResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<AggregateVoteResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => aggregate_vote_resp = response,
+      };
+    }
+  }
+
+  Ok(aggregate_vote_resp)
+}
+
+// query_aggregate_votes receives the get exchange rate base
+// query params and creates an query request to the native modules
+// with query_chain wrapping the response to the actual
+// AggregateVotesResponse struct
+fn query_aggregate_votes(
+  deps: Deps,
+  aggregate_votes_params: AggregateVotesParams,
+) -> StdResult<AggregateVotesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::aggregate_votes(aggregate_votes_params));
+
+  let aggregate_votes_resp: AggregateVotesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<AggregateVotesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => aggregate_votes_resp = response,
+      };
+    }
+  }
+
+  Ok(aggregate_votes_resp)
 }
 
 // -----------------------------------TESTS---------------------------------------

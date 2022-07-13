@@ -121,6 +121,20 @@
     "AggregatePrevotesParams": {
       "type": "object"
     },
+    "AggregateVoteParams": {
+      "type": "object",
+      "required": [
+        "validator_addr"
+      ],
+      "properties": {
+        "validator_addr": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
+    "AggregateVotesParams": {
+      "type": "object"
+    },
     "AvailableBorrowParams": {
       "type": "object",
       "required": [
@@ -551,6 +565,26 @@
           "anyOf": [
             {
               "$ref": "#/definitions/AggregatePrevotesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregate_vote": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AggregateVoteParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregate_votes": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AggregateVotesParams"
             },
             {
               "type": "null"
@@ -1232,6 +1266,30 @@
           "properties": {
             "aggregate_prevotes": {
               "$ref": "#/definitions/AggregatePrevotesParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "aggregate_vote"
+          ],
+          "properties": {
+            "aggregate_vote": {
+              "$ref": "#/definitions/AggregateVoteParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "aggregate_votes"
+          ],
+          "properties": {
+            "aggregate_votes": {
+              "$ref": "#/definitions/AggregateVotesParams"
             }
           },
           "additionalProperties": false

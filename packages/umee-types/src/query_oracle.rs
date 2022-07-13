@@ -1,4 +1,5 @@
 use crate::aggregate_exchange_rate_prevote::AggregateExchangeRatePrevote;
+use crate::aggregate_exchange_rate_vote::AggregateExchangeRateVote;
 use cosmwasm_std::{Addr, Decimal256};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -10,6 +11,8 @@ pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 24;
 pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 25;
 pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 26;
 pub const ASSIGNED_QUERY_AGGREGATE_PREVOTES: u16 = 27;
+pub const ASSIGNED_QUERY_AGGREGATE_VOTE: u16 = 28;
+pub const ASSIGNED_QUERY_AGGREGATE_VOTES: u16 = 29;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -34,6 +37,12 @@ pub enum UmeeQueryOracle {
   // AggregatePrevotes returns an aggregate prevotes of all validators.
   // Expect to returns AggregatePrevotesResponse.
   AggregatePrevotes(AggregatePrevotesParams),
+  // AggregateVote returns an aggregate vote of a validator.
+  // Expect to returns AggregateVoteResponse.
+  AggregateVote(AggregateVoteParams),
+  // AggregateVotes returns an aggregate vote of all validators.
+  // Expect to returns AggregateVotesResponse.
+  AggregateVotes(AggregateVotesParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -112,4 +121,26 @@ pub struct AggregatePrevotesParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct AggregatePrevotesResponse {
   pub aggregate_prevotes: Vec<AggregateExchangeRatePrevote>,
+}
+
+// AggregateVoteParams params to query AggregateVote.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregateVoteParams {
+  validator_addr: Addr,
+}
+
+// AggregateVoteResponse response struct of AggregateVote.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregateVoteResponse {
+  pub aggregate_vote: AggregateExchangeRateVote,
+}
+
+// AggregateVotesParams params to query AggregateVotes.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregateVotesParams {}
+
+// AggregateVotesResponse response struct of AggregateVotes.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregateVotesResponse {
+  pub aggregate_votes: Vec<AggregateExchangeRateVote>,
 }
