@@ -1,3 +1,4 @@
+use crate::aggregate_exchange_rate_prevote::AggregateExchangeRatePrevote;
 use cosmwasm_std::{Addr, Decimal256};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -7,6 +8,7 @@ pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 2;
 pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 23;
 pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 24;
 pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 25;
+pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 26;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -25,6 +27,9 @@ pub enum UmeeQueryOracle {
   // MissCounter returns oracle miss counter of a validator.
   // Expect to returns MissCounterResponse.
   MissCounter(MissCounterParams),
+  // AggregatePrevote returns an aggregate prevote of a validator.
+  // Expect to returns AggregatePrevoteResponse.
+  AggregatePrevote(AggregatePrevoteParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -81,4 +86,16 @@ pub struct MissCounterParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MissCounterResponse {
   pub miss_counter: u64,
+}
+
+// AggregatePrevoteParams params to query AggregatePrevote.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregatePrevoteParams {
+  validator_addr: Addr,
+}
+
+// AggregatePrevoteResponse response struct of AggregatePrevote.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AggregatePrevoteResponse {
+  pub aggregate_prevote: AggregateExchangeRatePrevote,
 }

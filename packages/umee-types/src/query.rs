@@ -14,8 +14,9 @@ use crate::query_leverage::{
   ASSIGNED_QUERY_TOTAL_BORROWED, ASSIGNED_QUERY_TOTAL_COLLATERAL,
 };
 use crate::query_oracle::{
-  ActiveExchangeRatesParams, ExchangeRatesParams, FeederDelegationParams, MissCounterParams,
-  UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES, ASSIGNED_QUERY_EXCHANGE_RATES,
+  ActiveExchangeRatesParams, AggregatePrevoteParams, ExchangeRatesParams, FeederDelegationParams,
+  MissCounterParams, UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES,
+  ASSIGNED_QUERY_AGGREGATE_PREVOTE, ASSIGNED_QUERY_EXCHANGE_RATES,
   ASSIGNED_QUERY_FEEDER_DELEGATION, ASSIGNED_QUERY_MISS_COUNTER,
 };
 use cosmwasm_std::CustomQuery;
@@ -66,7 +67,7 @@ pub struct StructUmeeQuery {
   active_exchange_rates: Option<ActiveExchangeRatesParams>,
   feeder_delegation: Option<FeederDelegationParams>,
   miss_counter: Option<MissCounterParams>,
-  // aggregate_prevote
+  aggregate_prevote: Option<AggregatePrevoteParams>,
   // aggregate_prevotes
   // aggregate_vote
   // aggregate_votes
@@ -107,6 +108,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new exchange_rates query.
@@ -138,6 +140,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new registered_tokens query.
@@ -169,6 +172,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -202,6 +206,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new borrowed_value query.
@@ -233,6 +238,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new supplied query.
@@ -264,6 +270,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new supplied value query.
@@ -295,6 +302,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new available borrow query.
@@ -326,6 +334,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new borrow apy query.
@@ -357,6 +366,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new supply apy query.
@@ -388,6 +398,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new market size query.
@@ -419,6 +430,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a new token market size query.
@@ -450,6 +462,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a reserve amount query.
@@ -481,6 +494,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a collateral query.
@@ -512,6 +526,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a collateral value query.
@@ -543,6 +558,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a exchange rate query.
@@ -574,6 +590,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a borrow limit query.
@@ -605,6 +622,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a liquidation threshold query.
@@ -638,6 +656,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a liquidation targets query.
@@ -671,6 +690,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a market summary query.
@@ -702,6 +722,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a total collateral query.
@@ -733,6 +754,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a total borrowed query.
@@ -764,6 +786,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a active exchange rates query.
@@ -797,6 +820,7 @@ impl StructUmeeQuery {
       active_exchange_rates: Some(active_exchange_rates_params),
       feeder_delegation: None,
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a feeder delegation query.
@@ -828,6 +852,7 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: Some(feeder_delegation_params),
       miss_counter: None,
+      aggregate_prevote: None,
     }
   }
   // creates a miss counter query.
@@ -859,6 +884,39 @@ impl StructUmeeQuery {
       active_exchange_rates: None,
       feeder_delegation: None,
       miss_counter: Some(miss_counter_params),
+      aggregate_prevote: None,
+    }
+  }
+  // creates a aggregate prevote query.
+  pub fn aggregate_prevote(aggregate_prevote_params: AggregatePrevoteParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_AGGREGATE_PREVOTE,
+      borrowed: None,
+      exchange_rates: None,
+      registered_tokens: None,
+      leverage_parameters: None,
+      borrowed_value: None,
+      supplied: None,
+      supplied_value: None,
+      available_borrow: None,
+      borrow_apy: None,
+      supply_apy: None,
+      market_size: None,
+      token_market_size: None,
+      reserve_amount: None,
+      collateral: None,
+      collateral_value: None,
+      exchange_rate: None,
+      borrow_limit: None,
+      liquidation_threshold: None,
+      liquidation_targets: None,
+      market_summary: None,
+      total_collateral: None,
+      total_borrowed: None,
+      active_exchange_rates: None,
+      feeder_delegation: None,
+      miss_counter: None,
+      aggregate_prevote: Some(aggregate_prevote_params),
     }
   }
 }
