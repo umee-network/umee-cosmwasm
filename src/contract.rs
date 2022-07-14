@@ -12,16 +12,17 @@ use umee_types::{
   BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
   BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
   CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams,
-  ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse, LendAssetParams,
+  ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
   LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
   LiquidationTargetsResponse, LiquidationThresholdParams, LiquidationThresholdResponse,
   MarketSizeParams, MarketSizeResponse, MarketSummaryParams, MarketSummaryResponse,
   MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
   RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
   StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
-  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TokenMarketSizeParams,
+  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, SupplyParams, TokenMarketSizeParams,
   TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams,
   TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  WithdrawParams,
 };
 
 use crate::error::ContractError;
@@ -70,7 +71,7 @@ pub fn execute(
     ExecuteMsg::Umee(UmeeMsg::Leverage(execute_leverage_msg)) => {
       execute_leverage(execute_leverage_msg)
     }
-    ExecuteMsg::LendAsset(lend_asset_params) => execute_lend(lend_asset_params),
+    ExecuteMsg::Supply(supply_params) => execute_lend(supply_params),
   }
 }
 
@@ -110,32 +111,32 @@ fn execute_leverage(
   execute_leverage_msg: UmeeMsgLeverage,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   match execute_leverage_msg {
-    UmeeMsgLeverage::LendAsset(lend_asset_params) => execute_lend(lend_asset_params),
-    UmeeMsgLeverage::WithdrawAsset(withdraw_asset_params) => {
-      execute_withdraw(withdraw_asset_params)
-    }
+    UmeeMsgLeverage::Supply(supply_params) => execute_lend(supply_params),
+    UmeeMsgLeverage::Withdraw(withdraw_params) => execute_withdraw(withdraw_params),
   }
 }
 
-// execute_lend sends umee leverage module an message of LendAsset
-fn execute_lend(
-  lend_asset_params: LendAssetParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
+// execute_lend sends umee leverage module an message of Supply
+fn execute_lend(supply_params: SupplyParams) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::supply(supply_params);
+
   Ok(
     Response::new()
-      .add_attribute("method", "lend_asset")
-      .add_message(StructUmeeMsg::lend_asset(lend_asset_params)),
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
   )
 }
 
-// execute_withdraw sends umee leverage module an message of WithdrawAsset
+// execute_withdraw sends umee leverage module an message of Withdraw
 fn execute_withdraw(
-  withdraw_asset_params: LendAssetParams,
+  withdraw_params: WithdrawParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::withdraw(withdraw_params);
+
   Ok(
     Response::new()
-      .add_attribute("method", "lend_asset")
-      .add_message(StructUmeeMsg::withdraw_asset(withdraw_asset_params)),
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
   )
 }
 

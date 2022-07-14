@@ -2,9 +2,8 @@ use cosmwasm_std::{Addr, QueryRequest};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use umee_types::{
-  BorrowedParams, BorrowedValueParams, ExchangeRatesParams, LendAssetParams,
-  LeverageParametersParams, RegisteredTokensParams, StructUmeeMsg, StructUmeeQuery, UmeeMsg,
-  UmeeQuery,
+  BorrowedParams, BorrowedValueParams, ExchangeRatesParams, LeverageParametersParams,
+  RegisteredTokensParams, StructUmeeMsg, StructUmeeQuery, SupplyParams, UmeeMsg, UmeeQuery,
 };
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -17,7 +16,7 @@ pub enum ExecuteMsg {
   ChangeOwner { new_owner: Addr },
   Chain(StructUmeeMsg),
   Umee(UmeeMsg),
-  LendAsset(LendAssetParams),
+  Supply(SupplyParams),
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

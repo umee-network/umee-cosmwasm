@@ -1,5 +1,5 @@
 use crate::msg_leverage::{
-  LendAssetParams, UmeeMsgLeverage, ASSIGNED_MSG_LEND, ASSIGNED_MSG_WITHDRAW,
+  SupplyParams, UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
 };
 // use crate::query_oracle::{
 //   ExchangeRateBaseParams, UmeeMsgOracle, ASSIGNED_QUERY_EXCHANGE_RATES,
@@ -27,8 +27,8 @@ pub enum UmeeMsg {
 #[serde(rename_all = "snake_case")]
 pub struct StructUmeeMsg {
   assigned_msg: u16,
-  lend_asset: Option<LendAssetParams>,
-  withdraw_asset: Option<LendAssetParams>,
+  supply: Option<SupplyParams>,
+  withdraw: Option<WithdrawParams>,
 }
 
 // Defines all the implementation related to the StructUmeeMsg
@@ -43,25 +43,25 @@ impl StructUmeeMsg {
 
   pub fn assigned_str(&self) -> String {
     match self.assigned_msg {
-      ASSIGNED_MSG_LEND => String::from("lend_asset"),
-      ASSIGNED_MSG_WITHDRAW => String::from("withdraw_asset"),
+      ASSIGNED_MSG_SUPPLY => String::from("supply"),
+      ASSIGNED_MSG_WITHDRAW => String::from("withdraw"),
       _ => String::from("unrecognized_msg"),
     }
   }
-  // creates a new lend asset message.
-  pub fn lend_asset(lend_asset_params: LendAssetParams) -> StructUmeeMsg {
+  // creates a new lend message.
+  pub fn supply(supply_params: SupplyParams) -> StructUmeeMsg {
     StructUmeeMsg {
-      assigned_msg: ASSIGNED_MSG_LEND,
-      lend_asset: Some(lend_asset_params),
-      withdraw_asset: None,
+      assigned_msg: ASSIGNED_MSG_SUPPLY,
+      supply: Some(supply_params),
+      withdraw: None,
     }
   }
-  // creates a new withdraw asset message.
-  pub fn withdraw_asset(withdraw_asset_params: LendAssetParams) -> StructUmeeMsg {
+  // creates a new withdraw message.
+  pub fn withdraw(withdraw_params: WithdrawParams) -> StructUmeeMsg {
     StructUmeeMsg {
       assigned_msg: ASSIGNED_MSG_WITHDRAW,
-      lend_asset: None,
-      withdraw_asset: Some(withdraw_asset_params),
+      supply: None,
+      withdraw: Some(withdraw_params),
     }
   }
 }

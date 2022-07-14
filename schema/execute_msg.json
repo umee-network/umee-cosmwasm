@@ -49,11 +49,11 @@
     {
       "type": "object",
       "required": [
-        "lend_asset"
+        "supply"
       ],
       "properties": {
-        "lend_asset": {
-          "$ref": "#/definitions/LendAssetParams"
+        "supply": {
+          "$ref": "#/definitions/SupplyParams"
         }
       },
       "additionalProperties": false
@@ -79,21 +79,6 @@
         }
       }
     },
-    "LendAssetParams": {
-      "type": "object",
-      "required": [
-        "amount",
-        "lender"
-      ],
-      "properties": {
-        "amount": {
-          "$ref": "#/definitions/Coin"
-        },
-        "lender": {
-          "$ref": "#/definitions/Addr"
-        }
-      }
-    },
     "StructUmeeMsg": {
       "type": "object",
       "required": [
@@ -105,25 +90,40 @@
           "format": "uint16",
           "minimum": 0.0
         },
-        "lend_asset": {
+        "supply": {
           "anyOf": [
             {
-              "$ref": "#/definitions/LendAssetParams"
+              "$ref": "#/definitions/SupplyParams"
             },
             {
               "type": "null"
             }
           ]
         },
-        "withdraw_asset": {
+        "withdraw": {
           "anyOf": [
             {
-              "$ref": "#/definitions/LendAssetParams"
+              "$ref": "#/definitions/WithdrawParams"
             },
             {
               "type": "null"
             }
           ]
+        }
+      }
+    },
+    "SupplyParams": {
+      "type": "object",
+      "required": [
+        "amount",
+        "supplier"
+      ],
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/Coin"
+        },
+        "supplier": {
+          "$ref": "#/definitions/Addr"
         }
       }
     },
@@ -152,11 +152,11 @@
         {
           "type": "object",
           "required": [
-            "lend_asset"
+            "supply"
           ],
           "properties": {
-            "lend_asset": {
-              "$ref": "#/definitions/LendAssetParams"
+            "supply": {
+              "$ref": "#/definitions/SupplyParams"
             }
           },
           "additionalProperties": false
@@ -164,16 +164,31 @@
         {
           "type": "object",
           "required": [
-            "withdraw_asset"
+            "withdraw"
           ],
           "properties": {
-            "withdraw_asset": {
-              "$ref": "#/definitions/LendAssetParams"
+            "withdraw": {
+              "$ref": "#/definitions/WithdrawParams"
             }
           },
           "additionalProperties": false
         }
       ]
+    },
+    "WithdrawParams": {
+      "type": "object",
+      "required": [
+        "amount",
+        "supplier"
+      ],
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/Coin"
+        },
+        "supplier": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
     }
   }
 }

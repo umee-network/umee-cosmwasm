@@ -51,7 +51,7 @@ pub use query_oracle::{
 };
 
 pub use msg_leverage::{
-  LendAssetParams, UmeeMsgLeverage, ASSIGNED_MSG_LEND, ASSIGNED_MSG_WITHDRAW,
+  SupplyParams, UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
 };
 
 pub use msg::{StructUmeeMsg, UmeeMsg};
