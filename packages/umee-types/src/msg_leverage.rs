@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 pub const ASSIGNED_MSG_SUPPLY: u16 = 1;
 pub const ASSIGNED_MSG_WITHDRAW: u16 = 2;
 pub const ASSIGNED_MSG_COLLATERALIZE: u16 = 3;
+pub const ASSIGNED_MSG_DECOLLATERALIZE: u16 = 4;
 
 // UmeeMsgLeverage defines all the available msgs
 // for the umee leverage native module.
@@ -20,6 +21,9 @@ pub enum UmeeMsgLeverage {
   // Collateralize enables selected uTokens as collateral,
   // which moves them to the module.
   Collateralize(CollateralizeParams),
+  // Decollateralize disable amount of an selected uTokens
+  // as collateral.
+  Decollateralize(DecollateralizeParams),
 }
 
 // SupplyParams params to lending coins to the capital facility.
@@ -41,7 +45,15 @@ pub struct WithdrawParams {
 // CollateralizeParams to enable selected uTokens as collateral.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct CollateralizeParams {
-	// Borrower is the account address adding collateral and the signer of the message.
+  // Borrower is the account address adding collateral and the signer of the message.
+  pub borrower: Addr,
+  pub coin: Coin,
+}
+
+// DecollateralizeParams to disable selected uTokens as collateral.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct DecollateralizeParams {
+  // Borrower is the account address removing collateral and the signer of the message.
   pub borrower: Addr,
   pub coin: Coin,
 }

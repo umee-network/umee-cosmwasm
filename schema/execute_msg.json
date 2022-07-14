@@ -79,6 +79,36 @@
         }
       }
     },
+    "CollateralizeParams": {
+      "type": "object",
+      "required": [
+        "borrower",
+        "coin"
+      ],
+      "properties": {
+        "borrower": {
+          "$ref": "#/definitions/Addr"
+        },
+        "coin": {
+          "$ref": "#/definitions/Coin"
+        }
+      }
+    },
+    "DecollateralizeParams": {
+      "type": "object",
+      "required": [
+        "borrower",
+        "coin"
+      ],
+      "properties": {
+        "borrower": {
+          "$ref": "#/definitions/Addr"
+        },
+        "coin": {
+          "$ref": "#/definitions/Coin"
+        }
+      }
+    },
     "StructUmeeMsg": {
       "type": "object",
       "required": [
@@ -89,6 +119,26 @@
           "type": "integer",
           "format": "uint16",
           "minimum": 0.0
+        },
+        "collateralize": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CollateralizeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decollateralize": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DecollateralizeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "supply": {
           "anyOf": [
@@ -169,6 +219,30 @@
           "properties": {
             "withdraw": {
               "$ref": "#/definitions/WithdrawParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "collateralize"
+          ],
+          "properties": {
+            "collateralize": {
+              "$ref": "#/definitions/CollateralizeParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "decollateralize"
+          ],
+          "properties": {
+            "decollateralize": {
+              "$ref": "#/definitions/DecollateralizeParams"
             }
           },
           "additionalProperties": false

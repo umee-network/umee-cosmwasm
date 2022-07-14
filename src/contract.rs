@@ -11,18 +11,18 @@ use umee_types::{
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
   BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
   BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
-  CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams,
-  ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
-  LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
-  LiquidationTargetsResponse, LiquidationThresholdParams, LiquidationThresholdResponse,
-  MarketSizeParams, MarketSizeResponse, MarketSummaryParams, MarketSummaryResponse,
-  MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse,
-  StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams,
-  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, SupplyParams, TokenMarketSizeParams,
-  TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams,
-  TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
-  WithdrawParams, CollateralizeParams
+  CollateralValueResponse, CollateralizeParams, DecollateralizeParams, ExchangeRateParams,
+  ExchangeRateResponse, ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams,
+  FeederDelegationResponse, LeverageParametersParams, LeverageParametersResponse,
+  LiquidationTargetsParams, LiquidationTargetsResponse, LiquidationThresholdParams,
+  LiquidationThresholdResponse, MarketSizeParams, MarketSizeResponse, MarketSummaryParams,
+  MarketSummaryResponse, MissCounterParams, MissCounterResponse, OracleParametersParams,
+  OracleParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams,
+  ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
+  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, SupplyParams,
+  TokenMarketSizeParams, TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse,
+  TotalCollateralParams, TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
 };
 
 use crate::error::ContractError;
@@ -113,7 +113,12 @@ fn execute_leverage(
   match execute_leverage_msg {
     UmeeMsgLeverage::Supply(supply_params) => execute_lend(supply_params),
     UmeeMsgLeverage::Withdraw(withdraw_params) => execute_withdraw(withdraw_params),
-    UmeeMsgLeverage::Collateralize(collateralize_params) => execute_collateralize(collateralize_params),
+    UmeeMsgLeverage::Collateralize(collateralize_params) => {
+      execute_collateralize(collateralize_params)
+    }
+    UmeeMsgLeverage::Decollateralize(decollateralize_params) => {
+      execute_decollateralize(decollateralize_params)
+    }
   }
 }
 
@@ -144,6 +149,18 @@ fn execute_collateralize(
   collateralize_params: CollateralizeParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::collateralize(collateralize_params);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
+
+// execute_decollateralize sends umee leverage module an message of Decollateralize.
+fn execute_decollateralize(
+  decollateralize_params: DecollateralizeParams,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::decollateralize(decollateralize_params);
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())

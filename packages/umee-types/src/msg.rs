@@ -1,6 +1,7 @@
 use crate::msg_leverage::{
-  SupplyParams, UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
-  ASSIGNED_MSG_COLLATERALIZE, CollateralizeParams
+  CollateralizeParams, DecollateralizeParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
+  ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE, ASSIGNED_MSG_SUPPLY,
+  ASSIGNED_MSG_WITHDRAW,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
@@ -25,7 +26,8 @@ pub struct StructUmeeMsg {
   assigned_msg: u16,
   supply: Option<SupplyParams>,
   withdraw: Option<WithdrawParams>,
-  collateralize: Option<CollateralizeParams>
+  collateralize: Option<CollateralizeParams>,
+  decollateralize: Option<DecollateralizeParams>,
 }
 
 // Defines all the implementation related to the StructUmeeMsg
@@ -43,6 +45,7 @@ impl StructUmeeMsg {
       ASSIGNED_MSG_SUPPLY => String::from("supply"),
       ASSIGNED_MSG_WITHDRAW => String::from("withdraw"),
       ASSIGNED_MSG_COLLATERALIZE => String::from("collateralize"),
+      ASSIGNED_MSG_DECOLLATERALIZE => String::from("decollateralize"),
       _ => String::from("unrecognized_msg"),
     }
   }
@@ -53,6 +56,7 @@ impl StructUmeeMsg {
       supply: Some(supply_params),
       withdraw: None,
       collateralize: None,
+      decollateralize: None,
     }
   }
   // creates a new withdraw message.
@@ -62,6 +66,7 @@ impl StructUmeeMsg {
       supply: None,
       withdraw: Some(withdraw_params),
       collateralize: None,
+      decollateralize: None,
     }
   }
   // creates a new collateralize message.
@@ -71,6 +76,17 @@ impl StructUmeeMsg {
       supply: None,
       withdraw: None,
       collateralize: Some(collateralize_params),
+      decollateralize: None,
+    }
+  }
+  // creates a new decollateralize message.
+  pub fn decollateralize(decollateralize_params: DecollateralizeParams) -> StructUmeeMsg {
+    StructUmeeMsg {
+      assigned_msg: ASSIGNED_MSG_DECOLLATERALIZE,
+      supply: None,
+      withdraw: None,
+      collateralize: None,
+      decollateralize: Some(decollateralize_params),
     }
   }
 }
