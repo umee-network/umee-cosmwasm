@@ -1,7 +1,7 @@
 use crate::msg_leverage::{
-  CollateralizeParams, DecollateralizeParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
-  ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE, ASSIGNED_MSG_SUPPLY,
-  ASSIGNED_MSG_WITHDRAW,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, SupplyParams, UmeeMsgLeverage,
+  WithdrawParams, ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE,
+  ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
@@ -28,6 +28,7 @@ pub struct StructUmeeMsg {
   withdraw: Option<WithdrawParams>,
   collateralize: Option<CollateralizeParams>,
   decollateralize: Option<DecollateralizeParams>,
+  borrow: Option<BorrowParams>,
 }
 
 // Defines all the implementation related to the StructUmeeMsg
@@ -46,6 +47,7 @@ impl StructUmeeMsg {
       ASSIGNED_MSG_WITHDRAW => String::from("withdraw"),
       ASSIGNED_MSG_COLLATERALIZE => String::from("collateralize"),
       ASSIGNED_MSG_DECOLLATERALIZE => String::from("decollateralize"),
+      ASSIGNED_MSG_BORROW => String::from("borrow"),
       _ => String::from("unrecognized_msg"),
     }
   }
@@ -57,6 +59,7 @@ impl StructUmeeMsg {
       withdraw: None,
       collateralize: None,
       decollateralize: None,
+      borrow: None,
     }
   }
   // creates a new withdraw message.
@@ -67,6 +70,7 @@ impl StructUmeeMsg {
       withdraw: Some(withdraw_params),
       collateralize: None,
       decollateralize: None,
+      borrow: None,
     }
   }
   // creates a new collateralize message.
@@ -77,6 +81,7 @@ impl StructUmeeMsg {
       withdraw: None,
       collateralize: Some(collateralize_params),
       decollateralize: None,
+      borrow: None,
     }
   }
   // creates a new decollateralize message.
@@ -87,6 +92,18 @@ impl StructUmeeMsg {
       withdraw: None,
       collateralize: None,
       decollateralize: Some(decollateralize_params),
+      borrow: None,
+    }
+  }
+  // creates a new borrow message.
+  pub fn borrow(borrow_params: BorrowParams) -> StructUmeeMsg {
+    StructUmeeMsg {
+      assigned_msg: ASSIGNED_MSG_BORROW,
+      supply: None,
+      withdraw: None,
+      collateralize: None,
+      decollateralize: None,
+      borrow: Some(borrow_params),
     }
   }
 }

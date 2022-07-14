@@ -9,20 +9,20 @@ use umee_types::{
   AggregatePrevoteResponse, AggregatePrevotesParams, AggregatePrevotesResponse,
   AggregateVoteParams, AggregateVoteResponse, AggregateVotesParams, AggregateVotesResponse,
   AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
-  BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
-  BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
-  CollateralValueResponse, CollateralizeParams, DecollateralizeParams, ExchangeRateParams,
-  ExchangeRateResponse, ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams,
-  FeederDelegationResponse, LeverageParametersParams, LeverageParametersResponse,
-  LiquidationTargetsParams, LiquidationTargetsResponse, LiquidationThresholdParams,
-  LiquidationThresholdResponse, MarketSizeParams, MarketSizeResponse, MarketSummaryParams,
-  MarketSummaryResponse, MissCounterParams, MissCounterResponse, OracleParametersParams,
-  OracleParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams,
-  ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, SupplyParams,
-  TokenMarketSizeParams, TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse,
-  TotalCollateralParams, TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
-  UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
+  BorrowLimitParams, BorrowLimitResponse, BorrowParams, BorrowedParams, BorrowedResponse,
+  BorrowedValueParams, BorrowedValueResponse, CollateralParams, CollateralResponse,
+  CollateralValueParams, CollateralValueResponse, CollateralizeParams, DecollateralizeParams,
+  ExchangeRateParams, ExchangeRateResponse, ExchangeRatesParams, ExchangeRatesResponse,
+  FeederDelegationParams, FeederDelegationResponse, LeverageParametersParams,
+  LeverageParametersResponse, LiquidationTargetsParams, LiquidationTargetsResponse,
+  LiquidationThresholdParams, LiquidationThresholdResponse, MarketSizeParams, MarketSizeResponse,
+  MarketSummaryParams, MarketSummaryResponse, MissCounterParams, MissCounterResponse,
+  OracleParametersParams, OracleParametersResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg,
+  StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
+  SupplyAPYParams, SupplyAPYResponse, SupplyParams, TokenMarketSizeParams, TokenMarketSizeResponse,
+  TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams, TotalCollateralResponse,
+  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
 };
 
 use crate::error::ContractError;
@@ -119,6 +119,7 @@ fn execute_leverage(
     UmeeMsgLeverage::Decollateralize(decollateralize_params) => {
       execute_decollateralize(decollateralize_params)
     }
+    UmeeMsgLeverage::Borrow(borrow_params) => execute_borrow(borrow_params),
   }
 }
 
@@ -161,6 +162,16 @@ fn execute_decollateralize(
   decollateralize_params: DecollateralizeParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::decollateralize(decollateralize_params);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
+
+// execute_borrow sends umee leverage module an message of Borrow.
+fn execute_borrow(borrow_params: BorrowParams) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::borrow(borrow_params);
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())

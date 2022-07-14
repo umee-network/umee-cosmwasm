@@ -51,9 +51,9 @@ pub use query_oracle::{
 };
 
 pub use msg_leverage::{
-  CollateralizeParams, DecollateralizeParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
-  ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE, ASSIGNED_MSG_SUPPLY,
-  ASSIGNED_MSG_WITHDRAW,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, SupplyParams, UmeeMsgLeverage,
+  WithdrawParams, ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE,
+  ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
 };
 
 pub use msg::{StructUmeeMsg, UmeeMsg};
