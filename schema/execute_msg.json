@@ -124,6 +124,29 @@
         }
       }
     },
+    "LiquidateParams": {
+      "type": "object",
+      "required": [
+        "borrower",
+        "liquidator",
+        "repayment",
+        "reward"
+      ],
+      "properties": {
+        "borrower": {
+          "$ref": "#/definitions/Addr"
+        },
+        "liquidator": {
+          "$ref": "#/definitions/Addr"
+        },
+        "repayment": {
+          "$ref": "#/definitions/Coin"
+        },
+        "reward": {
+          "$ref": "#/definitions/Coin"
+        }
+      }
+    },
     "RepayParams": {
       "type": "object",
       "required": [
@@ -174,6 +197,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/DecollateralizeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "liquidate": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LiquidateParams"
             },
             {
               "type": "null"
@@ -317,6 +350,18 @@
           "properties": {
             "repay": {
               "$ref": "#/definitions/RepayParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "liquidate"
+          ],
+          "properties": {
+            "liquidate": {
+              "$ref": "#/definitions/LiquidateParams"
             }
           },
           "additionalProperties": false

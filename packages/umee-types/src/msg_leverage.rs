@@ -9,6 +9,7 @@ pub const ASSIGNED_MSG_COLLATERALIZE: u16 = 3;
 pub const ASSIGNED_MSG_DECOLLATERALIZE: u16 = 4;
 pub const ASSIGNED_MSG_BORROW: u16 = 5;
 pub const ASSIGNED_MSG_REPAY: u16 = 6;
+pub const ASSIGNED_MSG_LIQUIDATE: u16 = 7;
 
 // UmeeMsgLeverage defines all the available msgs
 // for the umee leverage native module.
@@ -30,6 +31,9 @@ pub enum UmeeMsgLeverage {
   Borrow(BorrowParams),
   // Repay allows a user to repay previously borrowed tokens and interest.
   Repay(RepayParams),
+  // Liquidate allows a user to repay a different user's borrowed coins in exchange for some
+  // of their collateral.
+  Liquidate(LiquidateParams),
 }
 
 // SupplyParams params to lending coins to the capital facility.
@@ -78,4 +82,16 @@ pub struct RepayParams {
   // Borrower is the account address repaying a loan and the signer of the message.
   pub borrower: Addr,
   pub asset: Coin,
+}
+
+// LiquidateParams to repaying a different user's borrowed coins
+// to the capital facility in exchange for some of their collateral.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct LiquidateParams {
+  // Liquidator is the account address performing a liquidation and the signer
+  // of the message.
+  pub liquidator: Addr,
+  pub borrower: Addr,
+  pub repayment: Coin,
+  pub reward: Coin,
 }

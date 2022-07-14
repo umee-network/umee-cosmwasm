@@ -1,7 +1,8 @@
 use crate::msg_leverage::{
-  BorrowParams, CollateralizeParams, DecollateralizeParams, RepayParams, SupplyParams,
-  UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE,
-  ASSIGNED_MSG_DECOLLATERALIZE, ASSIGNED_MSG_REPAY, ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, RepayParams,
+  SupplyParams, UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE,
+  ASSIGNED_MSG_DECOLLATERALIZE, ASSIGNED_MSG_LIQUIDATE, ASSIGNED_MSG_REPAY, ASSIGNED_MSG_SUPPLY,
+  ASSIGNED_MSG_WITHDRAW,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
@@ -30,6 +31,7 @@ pub struct StructUmeeMsg {
   decollateralize: Option<DecollateralizeParams>,
   borrow: Option<BorrowParams>,
   repay: Option<RepayParams>,
+  liquidate: Option<LiquidateParams>,
 }
 
 // Defines all the implementation related to the StructUmeeMsg
@@ -50,6 +52,7 @@ impl StructUmeeMsg {
       ASSIGNED_MSG_DECOLLATERALIZE => String::from("decollateralize"),
       ASSIGNED_MSG_BORROW => String::from("borrow"),
       ASSIGNED_MSG_REPAY => String::from("repay"),
+      ASSIGNED_MSG_LIQUIDATE => String::from("liquidate"),
       _ => String::from("unrecognized_msg"),
     }
   }
@@ -63,6 +66,7 @@ impl StructUmeeMsg {
       decollateralize: None,
       borrow: None,
       repay: None,
+      liquidate: None,
     }
   }
   // creates a new withdraw message.
@@ -75,6 +79,7 @@ impl StructUmeeMsg {
       decollateralize: None,
       borrow: None,
       repay: None,
+      liquidate: None,
     }
   }
   // creates a new collateralize message.
@@ -87,6 +92,7 @@ impl StructUmeeMsg {
       decollateralize: None,
       borrow: None,
       repay: None,
+      liquidate: None,
     }
   }
   // creates a new decollateralize message.
@@ -99,6 +105,7 @@ impl StructUmeeMsg {
       decollateralize: Some(decollateralize_params),
       borrow: None,
       repay: None,
+      liquidate: None,
     }
   }
   // creates a new borrow message.
@@ -111,6 +118,7 @@ impl StructUmeeMsg {
       decollateralize: None,
       borrow: Some(borrow_params),
       repay: None,
+      liquidate: None,
     }
   }
   // creates a new repay message.
@@ -123,6 +131,20 @@ impl StructUmeeMsg {
       decollateralize: None,
       borrow: None,
       repay: Some(repay_params),
+      liquidate: None,
+    }
+  }
+  // creates a new liquidate message.
+  pub fn liquidate(liquidate_params: LiquidateParams) -> StructUmeeMsg {
+    StructUmeeMsg {
+      assigned_msg: ASSIGNED_MSG_LIQUIDATE,
+      supply: None,
+      withdraw: None,
+      collateralize: None,
+      decollateralize: None,
+      borrow: None,
+      repay: None,
+      liquidate: Some(liquidate_params),
     }
   }
 }
