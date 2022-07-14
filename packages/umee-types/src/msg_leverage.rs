@@ -8,6 +8,7 @@ pub const ASSIGNED_MSG_WITHDRAW: u16 = 2;
 pub const ASSIGNED_MSG_COLLATERALIZE: u16 = 3;
 pub const ASSIGNED_MSG_DECOLLATERALIZE: u16 = 4;
 pub const ASSIGNED_MSG_BORROW: u16 = 5;
+pub const ASSIGNED_MSG_REPAY: u16 = 6;
 
 // UmeeMsgLeverage defines all the available msgs
 // for the umee leverage native module.
@@ -27,6 +28,8 @@ pub enum UmeeMsgLeverage {
   Decollateralize(DecollateralizeParams),
   // Borrow allows a user to borrow tokens from the module if they have sufficient collateral.
   Borrow(BorrowParams),
+  // Repay allows a user to repay previously borrowed tokens and interest.
+  Repay(RepayParams),
 }
 
 // SupplyParams params to lending coins to the capital facility.
@@ -65,6 +68,14 @@ pub struct DecollateralizeParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct BorrowParams {
   // Borrower is the account address taking a loan and the signer of the message.
+  pub borrower: Addr,
+  pub asset: Coin,
+}
+
+// RepayParams allows a user to repay previously borrowed tokens and interest.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct RepayParams {
+  // Borrower is the account address repaying a loan and the signer of the message.
   pub borrower: Addr,
   pub asset: Coin,
 }

@@ -124,6 +124,21 @@
         }
       }
     },
+    "RepayParams": {
+      "type": "object",
+      "required": [
+        "asset",
+        "borrower"
+      ],
+      "properties": {
+        "asset": {
+          "$ref": "#/definitions/Coin"
+        },
+        "borrower": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
     "StructUmeeMsg": {
       "type": "object",
       "required": [
@@ -159,6 +174,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/DecollateralizeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "repay": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RepayParams"
             },
             {
               "type": "null"
@@ -280,6 +305,18 @@
           "properties": {
             "borrow": {
               "$ref": "#/definitions/BorrowParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "repay"
+          ],
+          "properties": {
+            "repay": {
+              "$ref": "#/definitions/RepayParams"
             }
           },
           "additionalProperties": false

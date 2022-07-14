@@ -1,7 +1,7 @@
 use crate::msg_leverage::{
-  BorrowParams, CollateralizeParams, DecollateralizeParams, SupplyParams, UmeeMsgLeverage,
-  WithdrawParams, ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE,
-  ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, RepayParams, SupplyParams,
+  UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE,
+  ASSIGNED_MSG_DECOLLATERALIZE, ASSIGNED_MSG_REPAY, ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
@@ -29,6 +29,7 @@ pub struct StructUmeeMsg {
   collateralize: Option<CollateralizeParams>,
   decollateralize: Option<DecollateralizeParams>,
   borrow: Option<BorrowParams>,
+  repay: Option<RepayParams>,
 }
 
 // Defines all the implementation related to the StructUmeeMsg
@@ -48,6 +49,7 @@ impl StructUmeeMsg {
       ASSIGNED_MSG_COLLATERALIZE => String::from("collateralize"),
       ASSIGNED_MSG_DECOLLATERALIZE => String::from("decollateralize"),
       ASSIGNED_MSG_BORROW => String::from("borrow"),
+      ASSIGNED_MSG_REPAY => String::from("repay"),
       _ => String::from("unrecognized_msg"),
     }
   }
@@ -60,6 +62,7 @@ impl StructUmeeMsg {
       collateralize: None,
       decollateralize: None,
       borrow: None,
+      repay: None,
     }
   }
   // creates a new withdraw message.
@@ -71,6 +74,7 @@ impl StructUmeeMsg {
       collateralize: None,
       decollateralize: None,
       borrow: None,
+      repay: None,
     }
   }
   // creates a new collateralize message.
@@ -82,6 +86,7 @@ impl StructUmeeMsg {
       collateralize: Some(collateralize_params),
       decollateralize: None,
       borrow: None,
+      repay: None,
     }
   }
   // creates a new decollateralize message.
@@ -93,6 +98,7 @@ impl StructUmeeMsg {
       collateralize: None,
       decollateralize: Some(decollateralize_params),
       borrow: None,
+      repay: None,
     }
   }
   // creates a new borrow message.
@@ -104,6 +110,19 @@ impl StructUmeeMsg {
       collateralize: None,
       decollateralize: None,
       borrow: Some(borrow_params),
+      repay: None,
+    }
+  }
+  // creates a new repay message.
+  pub fn repay(repay_params: RepayParams) -> StructUmeeMsg {
+    StructUmeeMsg {
+      assigned_msg: ASSIGNED_MSG_REPAY,
+      supply: None,
+      withdraw: None,
+      collateralize: None,
+      decollateralize: None,
+      borrow: None,
+      repay: Some(repay_params),
     }
   }
 }

@@ -18,7 +18,7 @@ use umee_types::{
   LiquidationThresholdParams, LiquidationThresholdResponse, MarketSizeParams, MarketSizeResponse,
   MarketSummaryParams, MarketSummaryResponse, MissCounterParams, MissCounterResponse,
   OracleParametersParams, OracleParametersResponse, RegisteredTokensParams,
-  RegisteredTokensResponse, ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg,
+  RegisteredTokensResponse, RepayParams, ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg,
   StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
   SupplyAPYParams, SupplyAPYResponse, SupplyParams, TokenMarketSizeParams, TokenMarketSizeResponse,
   TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams, TotalCollateralResponse,
@@ -120,6 +120,7 @@ fn execute_leverage(
       execute_decollateralize(decollateralize_params)
     }
     UmeeMsgLeverage::Borrow(borrow_params) => execute_borrow(borrow_params),
+    UmeeMsgLeverage::Repay(repay_params) => execute_repay(repay_params),
   }
 }
 
@@ -172,6 +173,16 @@ fn execute_decollateralize(
 // execute_borrow sends umee leverage module an message of Borrow.
 fn execute_borrow(borrow_params: BorrowParams) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::borrow(borrow_params);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
+
+// execute_repay sends umee leverage module an message of repay.
+fn execute_repay(repay_params: RepayParams) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::repay(repay_params);
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())
