@@ -22,7 +22,7 @@ use umee_types::{
   SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, SupplyParams, TokenMarketSizeParams,
   TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams,
   TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
-  WithdrawParams,
+  WithdrawParams, CollateralizeParams
 };
 
 use crate::error::ContractError;
@@ -113,13 +113,13 @@ fn execute_leverage(
   match execute_leverage_msg {
     UmeeMsgLeverage::Supply(supply_params) => execute_lend(supply_params),
     UmeeMsgLeverage::Withdraw(withdraw_params) => execute_withdraw(withdraw_params),
+    UmeeMsgLeverage::Collateralize(collateralize_params) => execute_collateralize(collateralize_params),
   }
 }
 
-// execute_lend sends umee leverage module an message of Supply
+// execute_lend sends umee leverage module an message of Supply.
 fn execute_lend(supply_params: SupplyParams) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::supply(supply_params);
-
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())
@@ -127,12 +127,23 @@ fn execute_lend(supply_params: SupplyParams) -> Result<Response<StructUmeeMsg>, 
   )
 }
 
-// execute_withdraw sends umee leverage module an message of Withdraw
+// execute_withdraw sends umee leverage module an message of Withdraw.
 fn execute_withdraw(
   withdraw_params: WithdrawParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::withdraw(withdraw_params);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
 
+// execute_collateralize sends umee leverage module an message of Collateralize.
+fn execute_collateralize(
+  collateralize_params: CollateralizeParams,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::collateralize(collateralize_params);
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())

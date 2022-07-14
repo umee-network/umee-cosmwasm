@@ -1,9 +1,7 @@
 use crate::msg_leverage::{
   SupplyParams, UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_SUPPLY, ASSIGNED_MSG_WITHDRAW,
+  ASSIGNED_MSG_COLLATERALIZE, CollateralizeParams
 };
-// use crate::query_oracle::{
-//   ExchangeRateBaseParams, UmeeMsgOracle, ASSIGNED_QUERY_EXCHANGE_RATES,
-// };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -18,8 +16,6 @@ impl CustomMsg for StructUmeeMsg {}
 pub enum UmeeMsg {
   // Leverage wraps all the msg enums from the leverage module
   Leverage(UmeeMsgLeverage),
-  // Oracle wraps all the query enums from the oracle module
-  // Oracle(UmeeMsgOracle),
 }
 
 // StructUmeeMsg expected structure to send messages to the umee native modules.
@@ -29,6 +25,7 @@ pub struct StructUmeeMsg {
   assigned_msg: u16,
   supply: Option<SupplyParams>,
   withdraw: Option<WithdrawParams>,
+  collateralize: Option<CollateralizeParams>
 }
 
 // Defines all the implementation related to the StructUmeeMsg
@@ -45,6 +42,7 @@ impl StructUmeeMsg {
     match self.assigned_msg {
       ASSIGNED_MSG_SUPPLY => String::from("supply"),
       ASSIGNED_MSG_WITHDRAW => String::from("withdraw"),
+      ASSIGNED_MSG_COLLATERALIZE => String::from("collateralize"),
       _ => String::from("unrecognized_msg"),
     }
   }
@@ -54,6 +52,7 @@ impl StructUmeeMsg {
       assigned_msg: ASSIGNED_MSG_SUPPLY,
       supply: Some(supply_params),
       withdraw: None,
+      collateralize: None,
     }
   }
   // creates a new withdraw message.
@@ -62,6 +61,16 @@ impl StructUmeeMsg {
       assigned_msg: ASSIGNED_MSG_WITHDRAW,
       supply: None,
       withdraw: Some(withdraw_params),
+      collateralize: None,
+    }
+  }
+  // creates a new collateralize message.
+  pub fn collateralize(collateralize_params: CollateralizeParams) -> StructUmeeMsg {
+    StructUmeeMsg {
+      assigned_msg: ASSIGNED_MSG_COLLATERALIZE,
+      supply: None,
+      withdraw: None,
+      collateralize: Some(collateralize_params),
     }
   }
 }
