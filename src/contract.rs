@@ -68,7 +68,7 @@ pub fn execute(
   match msg {
     // receives the new owner and tries to change it in the contract state
     ExecuteMsg::ChangeOwner { new_owner } => try_change_owner(deps, info, new_owner),
-    ExecuteMsg::Chain(cosmos_umee_msg) => msg_chain(cosmos_umee_msg),
+    ExecuteMsg::Chain(cosmos_umee_msg) => msg_chain(*cosmos_umee_msg),
     ExecuteMsg::Umee(UmeeMsg::Leverage(execute_leverage_msg)) => {
       execute_leverage(execute_leverage_msg)
     }
@@ -247,45 +247,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     // }
     QueryMsg::Chain(request) => query_chain(deps, &request),
 
-    // consumes the query_chain wrapped by Umee Leverage enums
-    // to clarift the JSON queries to umee leverage native module
-    // example json input:
-    // {
-    //   "umee": {
-    //     "leverage": {
-    //       "query_func_name": {
-    //         ...
-    //       }
-    //     }
-    //   }
-    // }
-    // successful json output:
-    // {
-    //   "data": {
-    //     ...
-    //   }
-    // }
-    QueryMsg::Umee(UmeeQuery::Leverage(leverage)) => query_leverage(deps, _env, leverage),
-
-    // consumes the query_chain wrapped by Umee Leverage enums
-    // to clarift the JSON queries to umee leverage native module
-    // example json input:
-    // {
-    //   "umee": {
-    //     "oracle": {
-    //       "query_func_name": {
-    //         ...
-    //       }
-    //     }
-    //   }
-    // }
-    // successful json output:
-    // {
-    //   "data": {
-    //     ...
-    //   }
-    // }
-    QueryMsg::Umee(UmeeQuery::Oracle(oracle)) => query_oracle(deps, _env, oracle),
+    QueryMsg::Umee(umee_query_box) => query_umee(deps, _env, *umee_query_box),
 
     // consumes the query_chain wrapping the JSON to call directly
     // the Borrowed query from the leverage umee native module
@@ -338,6 +300,51 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     QueryMsg::BorrowedValue(borrowed_value_params) => {
       to_binary(&query_borrowed_value(deps, borrowed_value_params)?)
     }
+  }
+}
+
+// query_umee contains the umee leverage available queries
+fn query_umee(deps: Deps, _env: Env, umee_msg: UmeeQuery) -> StdResult<Binary> {
+  match umee_msg {
+    // consumes the query_chain wrapped by Umee Leverage enums
+    // to clarift the JSON queries to umee leverage native module
+    // example json input:
+    // {
+    //   "umee": {
+    //     "leverage": {
+    //       "query_func_name": {
+    //         ...
+    //       }
+    //     }
+    //   }
+    // }
+    // successful json output:
+    // {
+    //   "data": {
+    //     ...
+    //   }
+    // }
+    UmeeQuery::Leverage(leverage) => query_leverage(deps, _env, leverage),
+
+    // consumes the query_chain wrapped by Umee Leverage enums
+    // to clarift the JSON queries to umee leverage native module
+    // example json input:
+    // {
+    //   "umee": {
+    //     "oracle": {
+    //       "query_func_name": {
+    //         ...
+    //       }
+    //     }
+    //   }
+    // }
+    // successful json output:
+    // {
+    //   "data": {
+    //     ...
+    //   }
+    // }
+    UmeeQuery::Oracle(oracle) => query_oracle(deps, _env, oracle),
   }
 }
 

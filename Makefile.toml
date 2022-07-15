@@ -8,6 +8,10 @@ args = ["fmt", "--all"]
 command = "cargo"
 args = ["clean"]
 
+[tasks.clippy]
+command = "cargo"
+args = ["clippy", "--fix"]
+
 [tasks.build]
 command = "cargo"
 args = ["build"]
@@ -26,6 +30,7 @@ dependencies = ["build"]
 [tasks.git-flow]
 dependencies = [
   "format",
+  "clippy",
   "build",
   "test",
   "schema"

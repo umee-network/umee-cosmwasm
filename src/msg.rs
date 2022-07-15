@@ -14,7 +14,7 @@ pub struct InstantiateMsg {}
 pub enum ExecuteMsg {
   // updates the state owner
   ChangeOwner { new_owner: Addr },
-  Chain(StructUmeeMsg),
+  Chain(Box<StructUmeeMsg>),
   Umee(UmeeMsg),
   Supply(SupplyParams),
 }
@@ -25,9 +25,9 @@ pub enum QueryMsg {
   // GetOwner returns the current owner of the contract
   GetOwner {},
   // make requests directly to the blockchain using the struct
-  Chain(QueryRequest<StructUmeeQuery>),
+  Chain(Box<QueryRequest<StructUmeeQuery>>),
   // wraps to use the enums
-  Umee(UmeeQuery),
+  Umee(Box<UmeeQuery>),
   // it can also call an specific enum directly
   Borrowed(BorrowedParams),
   ExchangeRates(ExchangeRatesParams),
