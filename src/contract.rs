@@ -4,7 +4,7 @@ use cosmwasm_std::{
   MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
-use umee_types::{
+use cw_umee_types::{
   ActiveExchangeRatesParams, ActiveExchangeRatesResponse, AggregatePrevoteParams,
   AggregatePrevoteResponse, AggregatePrevotesParams, AggregatePrevotesResponse,
   AggregateVoteParams, AggregateVoteResponse, AggregateVotesParams, AggregateVotesResponse,

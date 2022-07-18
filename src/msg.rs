@@ -1,7 +1,7 @@
 use cosmwasm_std::{Addr, QueryRequest};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use umee_types::{
+use cw_umee_types::{
   BorrowedParams, BorrowedValueParams, ExchangeRatesParams, LeverageParametersParams,
   RegisteredTokensParams, StructUmeeMsg, StructUmeeQuery, SupplyParams, UmeeMsg, UmeeQuery,
 };

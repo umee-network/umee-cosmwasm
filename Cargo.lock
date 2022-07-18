@@ -199,6 +199,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "cw-umee-types"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-std",
+ "cosmwasm-storage",
+ "cw-storage-plus",
+ "cw2",
+ "schemars",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
 name = "cw-utils"
 version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -701,20 +714,7 @@ dependencies = [
  "cosmwasm-storage",
  "cw-multi-test",
  "cw-storage-plus",
- "cw2",
- "schemars",
- "serde",
- "thiserror",
- "umee-types",
-]
-
-[[package]]
-name = "umee-types"
-version = "0.1.0"
-dependencies = [
- "cosmwasm-std",
- "cosmwasm-storage",
- "cw-storage-plus",
+ "cw-umee-types",
  "cw2",
  "schemars",
  "serde",
