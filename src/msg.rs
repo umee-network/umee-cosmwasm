@@ -1,10 +1,10 @@
 use cosmwasm_std::{Addr, QueryRequest};
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
 use cw_umee_types::{
   BorrowedParams, BorrowedValueParams, ExchangeRatesParams, LeverageParametersParams,
   RegisteredTokensParams, StructUmeeMsg, StructUmeeQuery, SupplyParams, UmeeMsg, UmeeQuery,
 };
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {}
