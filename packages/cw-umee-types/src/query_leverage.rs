@@ -14,7 +14,7 @@ pub const ASSIGNED_QUERY_SUPPLIED_VALUE: u16 = 7;
 pub const ASSIGNED_QUERY_AVAILABLE_BORROW: u16 = 8;
 pub const ASSIGNED_QUERY_BORROW_APY: u16 = 9;
 pub const ASSIGNED_QUERY_SUPPLY_APY: u16 = 10;
-pub const ASSIGNED_QUERY_MARKET_SIZE: u16 = 11;
+pub const ASSIGNED_QUERY_TOTAL_SUPPLIED_VALUE: u16 = 11;
 pub const ASSIGNED_QUERY_TOKEN_MARKET_SIZE: u16 = 12;
 pub const ASSIGNED_QUERY_RESERVE_AMOUNT: u16 = 13;
 pub const ASSIGNED_QUERY_COLLATERAL: u16 = 14;
@@ -63,11 +63,11 @@ pub enum UmeeQueryLeverage {
   // SupplyAPY returns current borrow interest rate on a token denom.
   // Expect to returns SupplyAPYResponse.
   SupplyAPY(SupplyAPYParams),
-  // MarketSize returns the Market Size in USD of a specified denomination,
+  // TotalSuppliedValue returns the supplied value in USD of a specified denomination,
   // which is the USD value of total tokens supplied by all users plus borrow
   // interest owed by all users.
-  // Expect to returns MarketSizeResponse.
-  MarketSize(MarketSizeParams),
+  // Expect to returns TotalSuppliedValueResponse.
+  TotalSuppliedValue(TotalSuppliedValueParams),
   // TokenMarketSize returns the Market Size in base tokens of a specified
   // denomination, which is the total tokens supplied by all users plus borrow
   // interest owed by all users.
@@ -220,16 +220,16 @@ pub struct SupplyAPYResponse {
   pub apy: Decimal256,
 }
 
-// MarketSizeParams params to query MarketSize.
+// TotalSuppliedValueParams params to query TotalSuppliedValue.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MarketSizeParams {
+pub struct TotalSuppliedValueParams {
   pub denom: String,
 }
 
-// MarketSizeResponse response struct of MarketSize.
+// TotalSuppliedValueResponse response struct of TotalSuppliedValue.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MarketSizeResponse {
-  pub market_size_usd: Decimal256,
+pub struct TotalSuppliedValueResponse {
+  pub total_supplied_value: Decimal256,
 }
 
 // TokenMarketSizeParams params to query TokenMarketSize.

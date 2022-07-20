@@ -16,13 +16,13 @@ use cw_umee_types::{
   FeederDelegationParams, FeederDelegationResponse, LeverageParametersParams,
   LeverageParametersResponse, LiquidateParams, LiquidationTargetsParams,
   LiquidationTargetsResponse, LiquidationThresholdParams, LiquidationThresholdResponse,
-  MarketSizeParams, MarketSizeResponse, MarketSummaryParams, MarketSummaryResponse,
-  MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, RepayParams, ReserveAmountParams,
-  ReserveAmountResponse, StructUmeeMsg, StructUmeeQuery, SuppliedParams, SuppliedResponse,
-  SuppliedValueParams, SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, SupplyParams,
-  TokenMarketSizeParams, TokenMarketSizeResponse, TotalBorrowedParams, TotalBorrowedResponse,
-  TotalCollateralParams, TotalCollateralResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
+  MarketSummaryParams, MarketSummaryResponse, MissCounterParams, MissCounterResponse,
+  OracleParametersParams, OracleParametersResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, RepayParams, ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg,
+  StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
+  SupplyAPYParams, SupplyAPYResponse, SupplyParams, TokenMarketSizeParams, TokenMarketSizeResponse,
+  TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams, TotalCollateralResponse,
+  TotalSuppliedValueParams, TotalSuppliedValueResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
   UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
 };
 
@@ -426,8 +426,8 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::SupplyAPY(supply_apy_params) => {
       to_binary(&query_supply_apy(deps, supply_apy_params)?)
     }
-    UmeeQueryLeverage::MarketSize(market_size_params) => {
-      to_binary(&query_market_size(deps, market_size_params)?)
+    UmeeQueryLeverage::TotalSuppliedValue(market_size_params) => {
+      to_binary(&query_total_supplied_value(deps, market_size_params)?)
     }
     UmeeQueryLeverage::TokenMarketSize(token_market_size_params) => {
       to_binary(&query_token_market_size(deps, token_market_size_params)?)
@@ -756,31 +756,33 @@ fn query_supply_apy(
   Ok(supply_apy_response)
 }
 
-// query_market_size creates an query request to the native modules
+// query_total_supplied_value creates an query request to the native modules
 // with query_chain wrapping the response to the actual
-// MarketSizeResponse struct.
-fn query_market_size(
+// TotalSuppliedValueResponse struct.
+fn query_total_supplied_value(
   deps: Deps,
-  market_size_params: MarketSizeParams,
-) -> StdResult<MarketSizeResponse> {
-  let request = QueryRequest::Custom(StructUmeeQuery::market_size(market_size_params));
+  total_supplied_value_params: TotalSuppliedValueParams,
+) -> StdResult<TotalSuppliedValueResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::total_supplied_value(
+    total_supplied_value_params,
+  ));
 
-  let market_size_response: MarketSizeResponse;
+  let total_supplied_value_response: TotalSuppliedValueResponse;
   match query_chain(deps, &request) {
     Err(err) => {
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<MarketSizeResponse>(&binary) {
+      match from_binary::<TotalSuppliedValueResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
-        Ok(response) => market_size_response = response,
+        Ok(response) => total_supplied_value_response = response,
       };
     }
   }
 
-  Ok(market_size_response)
+  Ok(total_supplied_value_response)
 }
 
 // query_token_market_size creates an query request to the native modules

@@ -338,17 +338,6 @@
         }
       }
     },
-    "MarketSizeParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
     "MarketSummaryParams": {
       "type": "object",
       "required": [
@@ -729,16 +718,6 @@
             }
           ]
         },
-        "market_size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/MarketSizeParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "market_summary": {
           "anyOf": [
             {
@@ -848,6 +827,16 @@
               "type": "null"
             }
           ]
+        },
+        "total_supplied_value": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TotalSuppliedValueParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -915,6 +904,17 @@
       }
     },
     "TotalCollateralParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "TotalSuppliedValueParams": {
       "type": "object",
       "required": [
         "denom"
@@ -1066,11 +1066,11 @@
         {
           "type": "object",
           "required": [
-            "market_size"
+            "total_supplied_value"
           ],
           "properties": {
-            "market_size": {
-              "$ref": "#/definitions/MarketSizeParams"
+            "total_supplied_value": {
+              "$ref": "#/definitions/TotalSuppliedValueParams"
             }
           },
           "additionalProperties": false
