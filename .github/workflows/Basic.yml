@@ -64,6 +64,13 @@ jobs:
           command: clippy
           args: -- -D warnings
 
+      - name: Run cargo publish dry run
+        uses: katyo/publish-crates@v1
+        with:
+          path: './packages/cw-umee-types'
+          registry-token: ${{ secrets.CARGO_REGISTRIES_UMEE_TOKEN }}
+          dry-run: true
+
       - name: Generate Schema
         uses: actions-rs/cargo@v1
         with:
