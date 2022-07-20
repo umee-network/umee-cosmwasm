@@ -20,8 +20,8 @@ use cw_umee_types::{
   OracleParametersParams, OracleParametersResponse, RegisteredTokensParams,
   RegisteredTokensResponse, RepayParams, ReserveAmountParams, ReserveAmountResponse, StructUmeeMsg,
   StructUmeeQuery, SuppliedParams, SuppliedResponse, SuppliedValueParams, SuppliedValueResponse,
-  SupplyAPYParams, SupplyAPYResponse, SupplyParams, TokenMarketSizeParams, TokenMarketSizeResponse,
-  TotalBorrowedParams, TotalBorrowedResponse, TotalCollateralParams, TotalCollateralResponse,
+  SupplyAPYParams, SupplyAPYResponse, SupplyParams, TotalBorrowedParams, TotalBorrowedResponse,
+  TotalCollateralParams, TotalCollateralResponse, TotalSuppliedParams, TotalSuppliedResponse,
   TotalSuppliedValueParams, TotalSuppliedValueResponse, UmeeMsg, UmeeMsgLeverage, UmeeQuery,
   UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
 };
@@ -429,8 +429,8 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::TotalSuppliedValue(market_size_params) => {
       to_binary(&query_total_supplied_value(deps, market_size_params)?)
     }
-    UmeeQueryLeverage::TokenMarketSize(token_market_size_params) => {
-      to_binary(&query_token_market_size(deps, token_market_size_params)?)
+    UmeeQueryLeverage::TotalSupplied(token_market_size_params) => {
+      to_binary(&query_total_supplied(deps, token_market_size_params)?)
     }
     UmeeQueryLeverage::ReserveAmount(reserve_amount_params) => {
       to_binary(&query_reserve_amount(deps, reserve_amount_params)?)
@@ -785,31 +785,31 @@ fn query_total_supplied_value(
   Ok(total_supplied_value_response)
 }
 
-// query_token_market_size creates an query request to the native modules
+// query_total_supplied creates an query request to the native modules
 // with query_chain wrapping the response to the actual
-// TokenMarketSizeResponse struct.
-fn query_token_market_size(
+// TotalSuppliedResponse struct.
+fn query_total_supplied(
   deps: Deps,
-  token_market_size_params: TokenMarketSizeParams,
-) -> StdResult<TokenMarketSizeResponse> {
-  let request = QueryRequest::Custom(StructUmeeQuery::token_market_size(token_market_size_params));
+  total_supplied_params: TotalSuppliedParams,
+) -> StdResult<TotalSuppliedResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::total_supplied(total_supplied_params));
 
-  let market_size_response: TokenMarketSizeResponse;
+  let total_supplied_response: TotalSuppliedResponse;
   match query_chain(deps, &request) {
     Err(err) => {
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<TokenMarketSizeResponse>(&binary) {
+      match from_binary::<TotalSuppliedResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
-        Ok(response) => market_size_response = response,
+        Ok(response) => total_supplied_response = response,
       };
     }
   }
 
-  Ok(market_size_response)
+  Ok(total_supplied_response)
 }
 
 // query_reserve_amount creates an query request to the native modules

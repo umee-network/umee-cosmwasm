@@ -15,7 +15,7 @@ pub const ASSIGNED_QUERY_AVAILABLE_BORROW: u16 = 8;
 pub const ASSIGNED_QUERY_BORROW_APY: u16 = 9;
 pub const ASSIGNED_QUERY_SUPPLY_APY: u16 = 10;
 pub const ASSIGNED_QUERY_TOTAL_SUPPLIED_VALUE: u16 = 11;
-pub const ASSIGNED_QUERY_TOKEN_MARKET_SIZE: u16 = 12;
+pub const ASSIGNED_QUERY_TOTAL_SUPPLIED: u16 = 12;
 pub const ASSIGNED_QUERY_RESERVE_AMOUNT: u16 = 13;
 pub const ASSIGNED_QUERY_COLLATERAL: u16 = 14;
 pub const ASSIGNED_QUERY_COLLATERAL_VALUE: u16 = 15;
@@ -68,11 +68,11 @@ pub enum UmeeQueryLeverage {
   // interest owed by all users.
   // Expect to returns TotalSuppliedValueResponse.
   TotalSuppliedValue(TotalSuppliedValueParams),
-  // TokenMarketSize returns the Market Size in base tokens of a specified
+  // TotalSupplied returns the Market Size in base tokens of a specified
   // denomination, which is the total tokens supplied by all users plus borrow
   // interest owed by all users.
-  // Expect to returns TokenMarketSizeResponse.
-  TokenMarketSize(TokenMarketSizeParams),
+  // Expect to returns TotalSuppliedResponse.
+  TotalSupplied(TotalSuppliedParams),
   // ReserveAmount returns the amount reserved of a specified denomination.
   // If the token is not valid, the reserved amount is zero.
   // Expect to returns ReserveAmountResponse.
@@ -232,16 +232,16 @@ pub struct TotalSuppliedValueResponse {
   pub total_supplied_value: Decimal256,
 }
 
-// TokenMarketSizeParams params to query TokenMarketSize.
+// TotalSuppliedParams params to query TotalSupplied.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct TokenMarketSizeParams {
+pub struct TotalSuppliedParams {
   pub denom: String,
 }
 
-// TokenMarketSizeResponse response struct of TokenMarketSize.
+// TotalSuppliedResponse response struct of TotalSupplied.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct TokenMarketSizeResponse {
-  pub market_size_usd: Decimal256,
+pub struct TotalSuppliedResponse {
+  pub total_supplied: Decimal256,
 }
 
 // ReserveAmountParams params to query ReserveAmount.

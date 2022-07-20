@@ -798,16 +798,6 @@
             }
           ]
         },
-        "token_market_size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/TokenMarketSizeParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "total_borrowed": {
           "anyOf": [
             {
@@ -822,6 +812,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/TotalCollateralParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "total_supplied": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TotalSuppliedParams"
             },
             {
               "type": "null"
@@ -881,17 +881,6 @@
         }
       }
     },
-    "TokenMarketSizeParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
     "TotalBorrowedParams": {
       "type": "object",
       "required": [
@@ -904,6 +893,17 @@
       }
     },
     "TotalCollateralParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "TotalSuppliedParams": {
       "type": "object",
       "required": [
         "denom"
@@ -1078,11 +1078,11 @@
         {
           "type": "object",
           "required": [
-            "token_market_size"
+            "total_supplied"
           ],
           "properties": {
-            "token_market_size": {
-              "$ref": "#/definitions/TokenMarketSizeParams"
+            "total_supplied": {
+              "$ref": "#/definitions/TotalSuppliedParams"
             }
           },
           "additionalProperties": false
