@@ -27,11 +27,16 @@ command = "cargo"
 args = ["schema"]
 dependencies = ["build"]
 
-[tasks.git-flow]
+[tasks.git_flow]
 dependencies = [
   "format",
-  "clippy",
   "build",
   "test",
   "schema"
+]
+
+[tasks.git_flow_commited]
+dependencies = [
+  "git_flow",
+  "clippy"
 ]
