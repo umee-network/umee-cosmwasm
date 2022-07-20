@@ -96,7 +96,7 @@ the `StructUmeeQuery` struct inside `impl StructUmeeQuery` inside
 - After your changes, you can check if everything is running as expected at onde running the following script
 
 ```shell
-$~ cargo make git-flow
+$~ cargo make git_flow
 ```
 
 ## Gitpod integration
