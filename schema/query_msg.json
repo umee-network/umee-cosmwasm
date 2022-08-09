@@ -41,18 +41,6 @@
     {
       "type": "object",
       "required": [
-        "borrowed"
-      ],
-      "properties": {
-        "borrowed": {
-          "$ref": "#/definitions/BorrowedParams"
-        }
-      },
-      "additionalProperties": false
-    },
-    {
-      "type": "object",
-      "required": [
         "exchange_rates"
       ],
       "properties": {
@@ -85,21 +73,31 @@
         }
       },
       "additionalProperties": false
-    },
-    {
-      "type": "object",
-      "required": [
-        "borrowed_value"
-      ],
-      "properties": {
-        "borrowed_value": {
-          "$ref": "#/definitions/BorrowedValueParams"
-        }
-      },
-      "additionalProperties": false
     }
   ],
   "definitions": {
+    "AccountBalancesParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
+    "AccountSummaryParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
     "ActiveExchangeRatesParams": {
       "type": "object"
     },
@@ -134,17 +132,6 @@
     },
     "AggregateVotesParams": {
       "type": "object"
-    },
-    "AvailableBorrowParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
     },
     "BankQuery": {
       "anyOf": [
@@ -200,105 +187,6 @@
       "description": "Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>",
       "type": "string"
     },
-    "BorrowAPYParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "BorrowLimitParams": {
-      "type": "object",
-      "required": [
-        "address"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        }
-      }
-    },
-    "BorrowedParams": {
-      "type": "object",
-      "required": [
-        "address",
-        "denom"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        },
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "BorrowedValueParams": {
-      "type": "object",
-      "required": [
-        "address"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        },
-        "denom": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      }
-    },
-    "CollateralParams": {
-      "type": "object",
-      "required": [
-        "address"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        },
-        "denom": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      }
-    },
-    "CollateralValueParams": {
-      "type": "object",
-      "required": [
-        "address"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        },
-        "denom": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      }
-    },
-    "ExchangeRateParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
     "ExchangeRatesParams": {
       "type": "object",
       "required": [
@@ -326,17 +214,6 @@
     },
     "LiquidationTargetsParams": {
       "type": "object"
-    },
-    "LiquidationThresholdParams": {
-      "type": "object",
-      "required": [
-        "address"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        }
-      }
     },
     "MarketSummaryParams": {
       "type": "object",
@@ -418,16 +295,8 @@
     "RegisteredTokensParams": {
       "type": "object"
     },
-    "ReserveAmountParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
+    "SlashWindowParams": {
+      "type": "object"
     },
     "StakingQuery": {
       "anyOf": [
@@ -533,6 +402,26 @@
         "assigned_query"
       ],
       "properties": {
+        "account_balances": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AccountBalancesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "account_summary": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AccountSummaryParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "active_exchange_rates": {
           "anyOf": [
             {
@@ -588,86 +477,6 @@
           "format": "uint16",
           "minimum": 0.0
         },
-        "available_borrow": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/AvailableBorrowParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "borrow_apy": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BorrowAPYParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "borrow_limit": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BorrowLimitParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "borrowed": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BorrowedParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "borrowed_value": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BorrowedValueParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "collateral": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CollateralParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "collateral_value": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CollateralValueParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "exchange_rate": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ExchangeRateParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "exchange_rates": {
           "anyOf": [
             {
@@ -702,16 +511,6 @@
           "anyOf": [
             {
               "$ref": "#/definitions/LiquidationTargetsParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "liquidation_threshold": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/LiquidationThresholdParams"
             },
             {
               "type": "null"
@@ -758,170 +557,15 @@
             }
           ]
         },
-        "reserve_amount": {
+        "slash_window": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ReserveAmountParams"
+              "$ref": "#/definitions/SlashWindowParams"
             },
             {
               "type": "null"
             }
           ]
-        },
-        "supplied": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/SuppliedParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "supplied_value": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/SuppliedValueParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "supply_apy": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/SupplyAPYParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "total_borrowed": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/TotalBorrowedParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "total_collateral": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/TotalCollateralParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "total_supplied": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/TotalSuppliedParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "total_supplied_value": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/TotalSuppliedValueParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      }
-    },
-    "SuppliedParams": {
-      "type": "object",
-      "required": [
-        "address",
-        "denom"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        },
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "SuppliedValueParams": {
-      "type": "object",
-      "required": [
-        "address",
-        "denom"
-      ],
-      "properties": {
-        "address": {
-          "$ref": "#/definitions/Addr"
-        },
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "SupplyAPYParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "TotalBorrowedParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "TotalCollateralParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "TotalSuppliedParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
-        }
-      }
-    },
-    "TotalSuppliedValueParams": {
-      "type": "object",
-      "required": [
-        "denom"
-      ],
-      "properties": {
-        "denom": {
-          "type": "string"
         }
       }
     },
@@ -958,11 +602,11 @@
         {
           "type": "object",
           "required": [
-            "borrowed"
+            "leverage_parameters"
           ],
           "properties": {
-            "borrowed": {
-              "$ref": "#/definitions/BorrowedParams"
+            "leverage_parameters": {
+              "$ref": "#/definitions/LeverageParametersParams"
             }
           },
           "additionalProperties": false
@@ -982,198 +626,6 @@
         {
           "type": "object",
           "required": [
-            "leverage_parameters"
-          ],
-          "properties": {
-            "leverage_parameters": {
-              "$ref": "#/definitions/LeverageParametersParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "borrowed_value"
-          ],
-          "properties": {
-            "borrowed_value": {
-              "$ref": "#/definitions/BorrowedValueParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "supplied"
-          ],
-          "properties": {
-            "supplied": {
-              "$ref": "#/definitions/SuppliedParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "supplied_value"
-          ],
-          "properties": {
-            "supplied_value": {
-              "$ref": "#/definitions/SuppliedValueParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "available_borrow"
-          ],
-          "properties": {
-            "available_borrow": {
-              "$ref": "#/definitions/AvailableBorrowParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "borrow_a_p_y"
-          ],
-          "properties": {
-            "borrow_a_p_y": {
-              "$ref": "#/definitions/BorrowAPYParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "supply_a_p_y"
-          ],
-          "properties": {
-            "supply_a_p_y": {
-              "$ref": "#/definitions/SupplyAPYParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "total_supplied_value"
-          ],
-          "properties": {
-            "total_supplied_value": {
-              "$ref": "#/definitions/TotalSuppliedValueParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "total_supplied"
-          ],
-          "properties": {
-            "total_supplied": {
-              "$ref": "#/definitions/TotalSuppliedParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "reserve_amount"
-          ],
-          "properties": {
-            "reserve_amount": {
-              "$ref": "#/definitions/ReserveAmountParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "collateral"
-          ],
-          "properties": {
-            "collateral": {
-              "$ref": "#/definitions/CollateralParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "collateral_value"
-          ],
-          "properties": {
-            "collateral_value": {
-              "$ref": "#/definitions/CollateralValueParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "exchange_rate"
-          ],
-          "properties": {
-            "exchange_rate": {
-              "$ref": "#/definitions/ExchangeRateParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "borrow_limit"
-          ],
-          "properties": {
-            "borrow_limit": {
-              "$ref": "#/definitions/BorrowLimitParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "liquidation_threshold"
-          ],
-          "properties": {
-            "liquidation_threshold": {
-              "$ref": "#/definitions/LiquidationThresholdParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "liquidation_targets"
-          ],
-          "properties": {
-            "liquidation_targets": {
-              "$ref": "#/definitions/LiquidationTargetsParams"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
             "market_summary"
           ],
           "properties": {
@@ -1186,11 +638,11 @@
         {
           "type": "object",
           "required": [
-            "total_collateral"
+            "account_balances"
           ],
           "properties": {
-            "total_collateral": {
-              "$ref": "#/definitions/TotalCollateralParams"
+            "account_balances": {
+              "$ref": "#/definitions/AccountBalancesParams"
             }
           },
           "additionalProperties": false
@@ -1198,11 +650,23 @@
         {
           "type": "object",
           "required": [
-            "total_borrowed"
+            "account_summary"
           ],
           "properties": {
-            "total_borrowed": {
-              "$ref": "#/definitions/TotalBorrowedParams"
+            "account_summary": {
+              "$ref": "#/definitions/AccountSummaryParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "liquidation_targets"
+          ],
+          "properties": {
+            "liquidation_targets": {
+              "$ref": "#/definitions/LiquidationTargetsParams"
             }
           },
           "additionalProperties": false
@@ -1255,6 +719,18 @@
           "properties": {
             "miss_counter": {
               "$ref": "#/definitions/MissCounterParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "slash_window"
+          ],
+          "properties": {
+            "slash_window": {
+              "$ref": "#/definitions/SlashWindowParams"
             }
           },
           "additionalProperties": false

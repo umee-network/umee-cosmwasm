@@ -18,25 +18,13 @@ pub use token::Token;
 pub use query::{StructUmeeQuery, UmeeQuery};
 
 pub use query_leverage::{
-  AvailableBorrowParams, AvailableBorrowResponse, BorrowAPYParams, BorrowAPYResponse,
-  BorrowLimitParams, BorrowLimitResponse, BorrowedParams, BorrowedResponse, BorrowedValueParams,
-  BorrowedValueResponse, CollateralParams, CollateralResponse, CollateralValueParams,
-  CollateralValueResponse, ExchangeRateParams, ExchangeRateResponse, LeverageParametersParams,
-  LeverageParametersResponse, LiquidationTargetsParams, LiquidationTargetsResponse,
-  LiquidationThresholdParams, LiquidationThresholdResponse, MarketSummaryParams,
-  MarketSummaryResponse, RegisteredTokensParams, RegisteredTokensResponse, ReserveAmountParams,
-  ReserveAmountResponse, SuppliedParams, SuppliedResponse, SuppliedValueParams,
-  SuppliedValueResponse, SupplyAPYParams, SupplyAPYResponse, TotalBorrowedParams,
-  TotalBorrowedResponse, TotalCollateralParams, TotalCollateralResponse, TotalSuppliedParams,
-  TotalSuppliedResponse, TotalSuppliedValueParams, TotalSuppliedValueResponse, UmeeQueryLeverage,
-  ASSIGNED_QUERY_AVAILABLE_BORROW, ASSIGNED_QUERY_BORROWED, ASSIGNED_QUERY_BORROWED_VALUE,
-  ASSIGNED_QUERY_BORROW_APY, ASSIGNED_QUERY_BORROW_LIMIT, ASSIGNED_QUERY_COLLATERAL,
-  ASSIGNED_QUERY_COLLATERAL_VALUE, ASSIGNED_QUERY_EXCHANGE_RATE, ASSIGNED_QUERY_LEVERAGE_PARAMS,
-  ASSIGNED_QUERY_LIQUIDATION_TARGETS, ASSIGNED_QUERY_LIQUIDATION_THRESHOLD,
-  ASSIGNED_QUERY_MARKET_SUMMARY, ASSIGNED_QUERY_REGISTERED_TOKENS, ASSIGNED_QUERY_RESERVE_AMOUNT,
-  ASSIGNED_QUERY_SUPPLIED, ASSIGNED_QUERY_SUPPLIED_VALUE, ASSIGNED_QUERY_SUPPLY_APY,
-  ASSIGNED_QUERY_TOTAL_BORROWED, ASSIGNED_QUERY_TOTAL_COLLATERAL, ASSIGNED_QUERY_TOTAL_SUPPLIED,
-  ASSIGNED_QUERY_TOTAL_SUPPLIED_VALUE,
+  AccountBalancesParams, AccountBalancesResponse, AccountSummaryParams, AccountSummaryResponse,
+  LeverageParametersParams, LeverageParametersResponse, LiquidationTargetsParams,
+  LiquidationTargetsResponse, MarketSummaryParams, MarketSummaryResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, UmeeQueryLeverage, ASSIGNED_QUERY_ACCOUNT_BALANCES,
+  ASSIGNED_QUERY_ACCOUNT_SUMMARY, ASSIGNED_QUERY_LEVERAGE_PARAMS,
+  ASSIGNED_QUERY_LIQUIDATION_TARGETS, ASSIGNED_QUERY_MARKET_SUMMARY,
+  ASSIGNED_QUERY_REGISTERED_TOKENS,
 };
 
 pub use query_oracle::{
@@ -45,9 +33,10 @@ pub use query_oracle::{
   AggregateVoteParams, AggregateVoteResponse, AggregateVotesParams, AggregateVotesResponse,
   ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
   MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES, ASSIGNED_QUERY_AGGREGATE_PREVOTE,
-  ASSIGNED_QUERY_AGGREGATE_PREVOTES, ASSIGNED_QUERY_AGGREGATE_VOTES, ASSIGNED_QUERY_EXCHANGE_RATES,
-  ASSIGNED_QUERY_FEEDER_DELEGATION, ASSIGNED_QUERY_MISS_COUNTER,
+  SlashWindowParams, SlashWindowResponse, UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES,
+  ASSIGNED_QUERY_AGGREGATE_PREVOTE, ASSIGNED_QUERY_AGGREGATE_PREVOTES,
+  ASSIGNED_QUERY_AGGREGATE_VOTES, ASSIGNED_QUERY_EXCHANGE_RATES, ASSIGNED_QUERY_FEEDER_DELEGATION,
+  ASSIGNED_QUERY_MISS_COUNTER, ASSIGNED_QUERY_SLASH_WINDOW,
 };
 
 pub use msg_leverage::{

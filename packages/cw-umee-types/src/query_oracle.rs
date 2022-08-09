@@ -6,15 +6,16 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query
-pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 2;
-pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 23;
-pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 24;
-pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 25;
-pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 26;
-pub const ASSIGNED_QUERY_AGGREGATE_PREVOTES: u16 = 27;
-pub const ASSIGNED_QUERY_AGGREGATE_VOTE: u16 = 28;
-pub const ASSIGNED_QUERY_AGGREGATE_VOTES: u16 = 29;
-pub const ASSIGNED_QUERY_ORACLE_PARAMS: u16 = 30;
+pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 1;
+pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 8;
+pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 9;
+pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 10;
+pub const ASSIGNED_QUERY_SLASH_WINDOW: u16 = 11;
+pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 12;
+pub const ASSIGNED_QUERY_AGGREGATE_PREVOTES: u16 = 13;
+pub const ASSIGNED_QUERY_AGGREGATE_VOTE: u16 = 14;
+pub const ASSIGNED_QUERY_AGGREGATE_VOTES: u16 = 15;
+pub const ASSIGNED_QUERY_ORACLE_PARAMS: u16 = 16;
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -33,6 +34,9 @@ pub enum UmeeQueryOracle {
   // MissCounter returns oracle miss counter of a validator.
   // Expect to returns MissCounterResponse.
   MissCounter(MissCounterParams),
+  // SlashWindow returns oracle slash window.
+  // Expect to returns SlashWindowResponse.
+  SlashWindow(SlashWindowParams),
   // AggregatePrevote returns an aggregate prevote of a validator.
   // Expect to returns AggregatePrevoteResponse.
   AggregatePrevote(AggregatePrevoteParams),
@@ -104,6 +108,16 @@ pub struct MissCounterParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MissCounterResponse {
   pub miss_counter: u64,
+}
+
+// SlashWindowParams params to query SlashWindow.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct SlashWindowParams {}
+
+// SlashWindowResponse response struct of SlashWindow.
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct SlashWindowResponse {
+  pub window_progress: u64,
 }
 
 // AggregatePrevoteParams params to query AggregatePrevote.
