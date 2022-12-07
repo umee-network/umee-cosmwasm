@@ -3,7 +3,7 @@ use crate::query_leverage::{
   MarketSummaryParams, RegisteredTokensParams, UmeeQueryLeverage, ASSIGNED_QUERY_ACCOUNT_BALANCES,
   ASSIGNED_QUERY_ACCOUNT_SUMMARY, ASSIGNED_QUERY_LEVERAGE_PARAMS,
   ASSIGNED_QUERY_LIQUIDATION_TARGETS, ASSIGNED_QUERY_MARKET_SUMMARY,
-  ASSIGNED_QUERY_REGISTERED_TOKENS,
+  ASSIGNED_QUERY_REGISTERED_TOKENS, BadDebtsParams, MaxWithdrawParams, ASSIGNED_QUERY_BAD_DEBTS, ASSIGNED_QUERY_MAX_WITHDRAW,
 };
 use crate::query_oracle::{
   ActiveExchangeRatesParams, AggregatePrevoteParams, AggregatePrevotesParams, AggregateVoteParams,
@@ -12,7 +12,7 @@ use crate::query_oracle::{
   ASSIGNED_QUERY_AGGREGATE_PREVOTE, ASSIGNED_QUERY_AGGREGATE_PREVOTES,
   ASSIGNED_QUERY_AGGREGATE_VOTE, ASSIGNED_QUERY_AGGREGATE_VOTES, ASSIGNED_QUERY_EXCHANGE_RATES,
   ASSIGNED_QUERY_FEEDER_DELEGATION, ASSIGNED_QUERY_MISS_COUNTER, ASSIGNED_QUERY_ORACLE_PARAMS,
-  ASSIGNED_QUERY_SLASH_WINDOW,
+  ASSIGNED_QUERY_SLASH_WINDOW, MediansParams, MedianDeviationsParams, ASSIGNED_QUERY_MEDIANS, ASSIGNED_QUERY_MEDIAN_DEVIATIONS,
 };
 use cosmwasm_std::CustomQuery;
 use schemars::JsonSchema;
@@ -53,6 +53,10 @@ pub struct StructUmeeQuery {
   aggregate_vote: Option<AggregateVoteParams>,
   aggregate_votes: Option<AggregateVotesParams>,
   oracle_params: Option<OracleParametersParams>,
+  bad_debts_params: Option<BadDebtsParams>,
+  max_withdraw_params: Option<MaxWithdrawParams>,
+  medians_params: Option<MediansParams>,
+  median_deviations_params: Option<MedianDeviationsParams>
 }
 
 // Defines all the implementation related to the StructUmeeQuery
@@ -80,6 +84,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a new leverage_parameters query.
@@ -104,6 +112,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a market summary query.
@@ -126,6 +138,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a account balances query.
@@ -148,6 +164,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a account summary query.
@@ -170,6 +190,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a new registered_tokens query.
@@ -192,6 +216,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
 
@@ -217,6 +245,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a active exchange rates query.
@@ -241,6 +273,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a feeder delegation query.
@@ -263,6 +299,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a miss counter query.
@@ -285,6 +325,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a slash window query.
@@ -307,6 +351,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a aggregate prevote query.
@@ -329,6 +377,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a aggregate prevotes query.
@@ -351,6 +403,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a aggregate vote query.
@@ -373,6 +429,10 @@ impl StructUmeeQuery {
       aggregate_vote: Some(aggregate_vote_params),
       aggregate_votes: None,
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a aggregate votes query.
@@ -395,6 +455,10 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: Some(aggregate_votes_params),
       oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
     }
   }
   // creates a new oracle parameters query.
@@ -417,6 +481,114 @@ impl StructUmeeQuery {
       aggregate_vote: None,
       aggregate_votes: None,
       oracle_params: Some(oracle_parameters_params),
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
+    }
+  }
+  // creates a new bad debts parameters query.
+  pub fn bad_debts_parameters(bad_debts_params: BadDebtsParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_BAD_DEBTS,
+      exchange_rates: None,
+      leverage_parameters: None,
+      market_summary: None,
+      account_balances: None,
+      account_summary: None,
+      registered_tokens: None,
+      liquidation_targets: None,
+      active_exchange_rates: None,
+      feeder_delegation: None,
+      miss_counter: None,
+      slash_window: None,
+      aggregate_prevote: None,
+      aggregate_prevotes: None,
+      aggregate_vote: None,
+      aggregate_votes: None,
+      oracle_params: None,
+      bad_debts_params:Some(bad_debts_params),
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: None,
+    }
+  }
+  // creates a new max withdraw params query.
+  pub fn max_withdraw_params(max_withdraw_params: MaxWithdrawParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_MAX_WITHDRAW,
+      exchange_rates: None,
+      leverage_parameters: None,
+      market_summary: None,
+      account_balances: None,
+      account_summary: None,
+      registered_tokens: None,
+      liquidation_targets: None,
+      active_exchange_rates: None,
+      feeder_delegation: None,
+      miss_counter: None,
+      slash_window: None,
+      aggregate_prevote: None,
+      aggregate_prevotes: None,
+      aggregate_vote: None,
+      aggregate_votes: None,
+      oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: Some(max_withdraw_params),
+      medians_params: None,
+      median_deviations_params: None,
+    }
+  }
+   // creates a new medians query.
+   pub fn medians_params(medians_params: MediansParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_MEDIANS,
+      exchange_rates: None,
+      leverage_parameters: None,
+      market_summary: None,
+      account_balances: None,
+      account_summary: None,
+      registered_tokens: None,
+      liquidation_targets: None,
+      active_exchange_rates: None,
+      feeder_delegation: None,
+      miss_counter: None,
+      slash_window: None,
+      aggregate_prevote: None,
+      aggregate_prevotes: None,
+      aggregate_vote: None,
+      aggregate_votes: None,
+      oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: Some(medians_params),
+      median_deviations_params: None,
+    }
+  }
+  // creates a new median deviations params query.
+  pub fn median_deviations_params(median_deviations_params: MedianDeviationsParams) -> StructUmeeQuery {
+    StructUmeeQuery {
+      assigned_query: ASSIGNED_QUERY_MEDIAN_DEVIATIONS,
+      exchange_rates: None,
+      leverage_parameters: None,
+      market_summary: None,
+      account_balances: None,
+      account_summary: None,
+      registered_tokens: None,
+      liquidation_targets: None,
+      active_exchange_rates: None,
+      feeder_delegation: None,
+      miss_counter: None,
+      slash_window: None,
+      aggregate_prevote: None,
+      aggregate_prevotes: None,
+      aggregate_vote: None,
+      aggregate_votes: None,
+      oracle_params: None,
+      bad_debts_params:None,
+      max_withdraw_params: None,
+      medians_params: None,
+      median_deviations_params: Some(median_deviations_params),
     }
   }
 }

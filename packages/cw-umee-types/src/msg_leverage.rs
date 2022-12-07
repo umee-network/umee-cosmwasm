@@ -10,6 +10,8 @@ pub const ASSIGNED_MSG_DECOLLATERALIZE: u16 = 4;
 pub const ASSIGNED_MSG_BORROW: u16 = 5;
 pub const ASSIGNED_MSG_REPAY: u16 = 6;
 pub const ASSIGNED_MSG_LIQUIDATE: u16 = 7;
+pub const ASSIGNED_MSG_SUPPLY_COLLATERALIZE: u16 = 8;
+pub const ASSIGNED_MSG_MAX_WITHDRAW: u16 = 9;
 
 // UmeeMsgLeverage defines all the available msgs
 // for the umee leverage native module.
@@ -21,6 +23,9 @@ pub enum UmeeMsgLeverage {
   // Withdraw expect to withdraw previously loaned coins from
   // the capital facility.
   Withdraw(WithdrawParams),
+  // MaxWithdraw moves previously supplied tokens from the module back to the user balance in
+  // exchange for burning uTokens. It automatically calculates the maximum valid amount to withdraw.
+  MaxWithDraw(MsgMaxWithDrawParams),
   // Collateralize enables selected uTokens as collateral,
   // which moves them to the module.
   Collateralize(CollateralizeParams),
@@ -34,6 +39,8 @@ pub enum UmeeMsgLeverage {
   // Liquidate allows a user to repay a different user's borrowed coins in exchange for some
   // of their collateral.
   Liquidate(LiquidateParams),
+  // SupplyCollateral combines the Supply and Collateralize actions.
+  SupplyCollateral(SupplyCollateralParams),
 }
 
 // SupplyParams params to lending coins to the capital facility.
@@ -94,4 +101,18 @@ pub struct LiquidateParams {
   pub borrower: Addr,
   pub repayment: Coin,
   pub reward: Coin,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MsgMaxWithDrawParams {
+  // Supplier is the account address withdrawing assets and the signer of the message.
+  pub supplier: Addr,
+  pub denom: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct SupplyCollateralParams {
+  // Supplier is the account address supplying assets and the signer of the message.
+  pub supplier: Addr,
+  pub asset: Coin,
 }

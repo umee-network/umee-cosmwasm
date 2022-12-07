@@ -4,6 +4,13 @@ use cosmwasm_std::{
   MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
+use cw_umee_types::msg_leverage::{MsgMaxWithDrawParams, SupplyCollateralParams};
+use cw_umee_types::query_leverage::{
+  BadDebtsParams, BadDebtsResponse, MaxWithdrawParams, MaxWithdrawResponse,
+};
+use cw_umee_types::query_oracle::{
+  MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
+};
 use cw_umee_types::{
   AccountBalancesParams, AccountBalancesResponse, AccountSummaryParams, ActiveExchangeRatesParams,
   ActiveExchangeRatesResponse, AggregatePrevoteParams, AggregatePrevoteResponse,
@@ -106,6 +113,7 @@ fn execute_leverage(
   match execute_leverage_msg {
     UmeeMsgLeverage::Supply(supply_params) => execute_lend(supply_params),
     UmeeMsgLeverage::Withdraw(withdraw_params) => execute_withdraw(withdraw_params),
+    UmeeMsgLeverage::MaxWithDraw(max_withdraw_params) => execute_max_withdraw(max_withdraw_params),
     UmeeMsgLeverage::Collateralize(collateralize_params) => {
       execute_collateralize(collateralize_params)
     }
@@ -115,6 +123,9 @@ fn execute_leverage(
     UmeeMsgLeverage::Borrow(borrow_params) => execute_borrow(borrow_params),
     UmeeMsgLeverage::Repay(repay_params) => execute_repay(repay_params),
     UmeeMsgLeverage::Liquidate(liquidate_params) => execute_liquidate(liquidate_params),
+    UmeeMsgLeverage::SupplyCollateral(supply_collateralize_params) => {
+      execute_supply_collateralize(supply_collateralize_params)
+    }
   }
 }
 
@@ -133,6 +144,18 @@ fn execute_withdraw(
   withdraw_params: WithdrawParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::withdraw(withdraw_params);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
+
+// execute_max_withdraw sends umee leverage module an message of MaxWithdraw.
+fn execute_max_withdraw(
+  max_withdraw_params: MsgMaxWithDrawParams,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::max_withdraw(max_withdraw_params);
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())
@@ -196,6 +219,17 @@ fn execute_liquidate(
   )
 }
 
+// execute_supply_collateralize sends umee leverage module an message of Supply Collateralize.
+fn execute_supply_collateralize(
+  supply_collateralize_params: SupplyCollateralParams,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::supply_collateralize(supply_collateralize_params);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
 // queries doesn't change the state, but it open the state with read permissions
 // it can also query from native modules "bank, stake, custom..."
 // returns an json wrapped data, like:
@@ -362,6 +396,12 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::LiquidationTargets(liquidation_targets_params) => to_binary(
       &query_liquidation_targets(deps, liquidation_targets_params)?,
     ),
+    UmeeQueryLeverage::BadDebts(bad_debts_params) => {
+      to_binary(&query_bad_debts(deps, bad_debts_params)?)
+    }
+    UmeeQueryLeverage::MaxWithdraw(max_withdraw_params) => {
+      to_binary(&query_max_withdraw(deps, max_withdraw_params)?)
+    }
   }
 }
 
@@ -415,6 +455,10 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     }
     UmeeQueryOracle::OracleParameters(oracle_parameters_params) => {
       to_binary(&query_oracle_parameters(deps, oracle_parameters_params)?)
+    }
+    UmeeQueryOracle::Medians(median_params) => to_binary(&query_medians(deps, median_params)?),
+    UmeeQueryOracle::MedianDeviations(median_deviations_params) => {
+      to_binary(&query_median_deviations(deps, median_deviations_params)?)
     }
   }
 }
@@ -557,6 +601,52 @@ fn query_liquidation_targets(
   }
 
   Ok(liquidation_targets_response)
+}
+
+fn query_bad_debts(deps: Deps, bad_debts_params: BadDebtsParams) -> StdResult<BadDebtsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::bad_debts_parameters(bad_debts_params));
+
+  let bad_debts_response: BadDebtsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<BadDebtsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => bad_debts_response = response,
+      };
+    }
+  }
+
+  Ok(bad_debts_response)
+}
+
+// query_max_withdraw
+fn query_max_withdraw(
+  deps: Deps,
+  max_withdraw_params: MaxWithdrawParams,
+) -> StdResult<MaxWithdrawResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::max_withdraw_params(max_withdraw_params));
+
+  let max_withdraw_response: MaxWithdrawResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MaxWithdrawResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => max_withdraw_response = response,
+      };
+    }
+  }
+
+  Ok(max_withdraw_response)
 }
 
 // query_market_summary creates an query request to the native modules
@@ -868,6 +958,53 @@ fn query_oracle_parameters(
   }
 
   Ok(oracle_parameters_resp)
+}
+
+fn query_medians(deps: Deps, medians_params: MediansParams) -> StdResult<MediansParamsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::medians_params(medians_params));
+
+  let medians_response: MediansParamsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MediansParamsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => medians_response = response,
+      };
+    }
+  }
+
+  Ok(medians_response)
+}
+
+fn query_median_deviations(
+  deps: Deps,
+  medians_deviations_params: MedianDeviationsParams,
+) -> StdResult<MedianDeviationsParamsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::median_deviations_params(
+    medians_deviations_params,
+  ));
+
+  let median_deviations_response: MedianDeviationsParamsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MedianDeviationsParamsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => median_deviations_response = response,
+      };
+    }
+  }
+
+  Ok(median_deviations_response)
 }
 
 // -----------------------------------TESTS---------------------------------------
