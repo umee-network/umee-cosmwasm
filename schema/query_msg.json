@@ -133,6 +133,9 @@
     "AggregateVotesParams": {
       "type": "object"
     },
+    "BadDebtsParams": {
+      "type": "object"
+    },
     "BankQuery": {
       "anyOf": [
         {
@@ -216,6 +219,31 @@
       "type": "object"
     },
     "MarketSummaryParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MaxWithdrawParams": {
+      "type": "object"
+    },
+    "MedianDeviationsParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MediansParams": {
       "type": "object",
       "required": [
         "denom"
@@ -477,6 +505,16 @@
           "format": "uint16",
           "minimum": 0.0
         },
+        "bad_debts_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BadDebtsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "exchange_rates": {
           "anyOf": [
             {
@@ -521,6 +559,36 @@
           "anyOf": [
             {
               "$ref": "#/definitions/MarketSummaryParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_withdraw_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MaxWithdrawParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "median_deviations_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MedianDeviationsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "medians_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MediansParams"
             },
             {
               "type": "null"
@@ -670,6 +738,30 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "bad_debts"
+          ],
+          "properties": {
+            "bad_debts": {
+              "$ref": "#/definitions/BadDebtsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "max_withdraw"
+          ],
+          "properties": {
+            "max_withdraw": {
+              "$ref": "#/definitions/MaxWithdrawParams"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
@@ -791,6 +883,30 @@
           "properties": {
             "oracle_parameters": {
               "$ref": "#/definitions/OracleParametersParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "medians"
+          ],
+          "properties": {
+            "medians": {
+              "$ref": "#/definitions/MediansParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "median_deviations"
+          ],
+          "properties": {
+            "median_deviations": {
+              "$ref": "#/definitions/MedianDeviationsParams"
             }
           },
           "additionalProperties": false

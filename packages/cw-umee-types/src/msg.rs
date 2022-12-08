@@ -1,8 +1,9 @@
 use crate::msg_leverage::{
-  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, RepayParams,
-  SupplyParams, UmeeMsgLeverage, WithdrawParams, ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE,
-  ASSIGNED_MSG_DECOLLATERALIZE, ASSIGNED_MSG_LIQUIDATE, ASSIGNED_MSG_REPAY, ASSIGNED_MSG_SUPPLY,
-  ASSIGNED_MSG_WITHDRAW, MsgMaxWithDrawParams, SupplyCollateralParams, ASSIGNED_MSG_MAX_WITHDRAW, ASSIGNED_MSG_SUPPLY_COLLATERALIZE,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxWithDrawParams,
+  RepayParams, SupplyCollateralParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
+  ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE,
+  ASSIGNED_MSG_LIQUIDATE, ASSIGNED_MSG_MAX_WITHDRAW, ASSIGNED_MSG_REPAY, ASSIGNED_MSG_SUPPLY,
+  ASSIGNED_MSG_SUPPLY_COLLATERALIZE, ASSIGNED_MSG_WITHDRAW,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
@@ -71,8 +72,8 @@ impl StructUmeeMsg {
       borrow: None,
       repay: None,
       liquidate: None,
-      max_withdraw:None,
-      supply_collateralize:None,
+      max_withdraw: None,
+      supply_collateralize: None,
     }
   }
   // creates a new withdraw message.
@@ -86,8 +87,8 @@ impl StructUmeeMsg {
       borrow: None,
       repay: None,
       liquidate: None,
-      max_withdraw:None,
-      supply_collateralize:None,
+      max_withdraw: None,
+      supply_collateralize: None,
     }
   }
   // creates a new collateralize message.
@@ -101,8 +102,8 @@ impl StructUmeeMsg {
       borrow: None,
       repay: None,
       liquidate: None,
-      max_withdraw:None,
-      supply_collateralize:None,
+      max_withdraw: None,
+      supply_collateralize: None,
     }
   }
   // creates a new decollateralize message.
@@ -116,8 +117,8 @@ impl StructUmeeMsg {
       borrow: None,
       repay: None,
       liquidate: None,
-      max_withdraw:None,
-      supply_collateralize:None,
+      max_withdraw: None,
+      supply_collateralize: None,
     }
   }
   // creates a new borrow message.
@@ -131,8 +132,8 @@ impl StructUmeeMsg {
       borrow: Some(borrow_params),
       repay: None,
       liquidate: None,
-      max_withdraw:None,
-      supply_collateralize:None,
+      max_withdraw: None,
+      supply_collateralize: None,
     }
   }
   // creates a new repay message.
@@ -146,8 +147,8 @@ impl StructUmeeMsg {
       borrow: None,
       repay: Some(repay_params),
       liquidate: None,
-      max_withdraw:None,
-      supply_collateralize:None,
+      max_withdraw: None,
+      supply_collateralize: None,
     }
   }
   // creates a new liquidate message.
@@ -161,12 +162,12 @@ impl StructUmeeMsg {
       borrow: None,
       repay: None,
       liquidate: Some(liquidate_params),
-      max_withdraw:None,
-      supply_collateralize:None,
+      max_withdraw: None,
+      supply_collateralize: None,
     }
   }
-   // creates a new liquidate message.
-   pub fn max_withdraw(msg_max_withdraw_params: MsgMaxWithDrawParams) -> StructUmeeMsg {
+  // creates a new liquidate message.
+  pub fn max_withdraw(msg_max_withdraw_params: MsgMaxWithDrawParams) -> StructUmeeMsg {
     StructUmeeMsg {
       assigned_msg: ASSIGNED_MSG_MAX_WITHDRAW,
       supply: None,
@@ -176,13 +177,13 @@ impl StructUmeeMsg {
       borrow: None,
       repay: None,
       liquidate: None,
-      max_withdraw:Some(msg_max_withdraw_params),
-      supply_collateralize:None,
+      max_withdraw: Some(msg_max_withdraw_params),
+      supply_collateralize: None,
     }
   }
 
-     // creates a new liquidate message.
-   pub fn supply_collateralize(supply_collateral_params: SupplyCollateralParams) -> StructUmeeMsg {
+  // creates a new liquidate message.
+  pub fn supply_collateralize(supply_collateral_params: SupplyCollateralParams) -> StructUmeeMsg {
     StructUmeeMsg {
       assigned_msg: ASSIGNED_MSG_SUPPLY_COLLATERALIZE,
       supply: None,
@@ -191,9 +192,9 @@ impl StructUmeeMsg {
       decollateralize: None,
       borrow: None,
       repay: None,
-      liquidate:None, 
-      max_withdraw:None,
-      supply_collateralize:Some(supply_collateral_params),
+      liquidate: None,
+      max_withdraw: None,
+      supply_collateralize: Some(supply_collateral_params),
     }
   }
 }

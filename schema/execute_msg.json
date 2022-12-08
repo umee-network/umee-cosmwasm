@@ -147,6 +147,21 @@
         }
       }
     },
+    "MsgMaxWithDrawParams": {
+      "type": "object",
+      "required": [
+        "denom",
+        "supplier"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        },
+        "supplier": {
+          "$ref": "#/definitions/Addr"
+        }
+      }
+    },
     "RepayParams": {
       "type": "object",
       "required": [
@@ -213,6 +228,16 @@
             }
           ]
         },
+        "max_withdraw": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MsgMaxWithDrawParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "repay": {
           "anyOf": [
             {
@@ -233,6 +258,16 @@
             }
           ]
         },
+        "supply_collateralize": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SupplyCollateralParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "withdraw": {
           "anyOf": [
             {
@@ -242,6 +277,21 @@
               "type": "null"
             }
           ]
+        }
+      }
+    },
+    "SupplyCollateralParams": {
+      "type": "object",
+      "required": [
+        "asset",
+        "supplier"
+      ],
+      "properties": {
+        "asset": {
+          "$ref": "#/definitions/Coin"
+        },
+        "supplier": {
+          "$ref": "#/definitions/Addr"
         }
       }
     },
@@ -309,6 +359,18 @@
         {
           "type": "object",
           "required": [
+            "max_with_draw"
+          ],
+          "properties": {
+            "max_with_draw": {
+              "$ref": "#/definitions/MsgMaxWithDrawParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
             "collateralize"
           ],
           "properties": {
@@ -362,6 +424,18 @@
           "properties": {
             "liquidate": {
               "$ref": "#/definitions/LiquidateParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "supply_collateral"
+          ],
+          "properties": {
+            "supply_collateral": {
+              "$ref": "#/definitions/SupplyCollateralParams"
             }
           },
           "additionalProperties": false

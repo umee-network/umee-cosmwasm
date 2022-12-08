@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct Token {
   // The base_denom defines the denomination of the underlying base token.
   base_denom: Option<String>,
-  
+
   // The reserve factor defines what portion of accrued interest of the asset
   // type goes to reserves.
   reserve_factor: Decimal,
@@ -26,7 +26,7 @@ pub struct Token {
   // The base_borrow_rate defines the base interest rate for borrowing this
   // asset.
   base_borrow_rate: Decimal,
-  
+
   // The kink_borrow_rate defines the interest rate for borrowing this
   // asset when utilization equals to 'kink_utilization'.
   kink_borrow_rate: Decimal,

@@ -1,6 +1,6 @@
+use crate::bad_debt::BadDebt;
 use crate::leverage_parameters::LeverageParameters;
 use crate::token::Token;
-use crate::bad_debt::BadDebt;
 use cosmwasm_std::{Addr, Coin, Decimal256};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -138,7 +138,7 @@ pub struct LiquidationTargetsResponse {
 pub struct BadDebtsParams {}
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct  BadDebtsResponse {
+pub struct BadDebtsResponse {
   pub targets: Vec<BadDebt>,
 }
 
