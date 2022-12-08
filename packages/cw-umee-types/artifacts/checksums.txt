@@ -1,1 +1,2 @@
+92c691d12daa351b4f3fcd31b41a6f8e4ba748bd0fbf86ad89dcdfe4432fff4d  cw_umee_types-aarch64.wasm
 996513751cfd4f18abd197471eca266ff34af7d0eba4a4bb933a0d201162819e  umee_types.wasm
