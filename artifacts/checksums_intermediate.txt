@@ -1,1 +1,1 @@
-a18ae7caba6aedd05f1541eca2e58708f4db8f66f18419b77b1164967032ef6f  ./target/wasm32-unknown-unknown/release/umee_cosmwasm.wasm
+922a23755aec12611100c2798aa5110075bb9d919356187dbb4add1d4ff66a82  ./target/wasm32-unknown-unknown/release/umee_cosmwasm.wasm
