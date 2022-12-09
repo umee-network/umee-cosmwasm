@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 // All the queries must have an assigned query.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub enum LeverageQueries {
-  AssignedQueryLeverageParams ,
+  AssignedQueryLeverageParams,
   AssignedQueryRegisteredTokens,
   AssignedQueryMarketSummary,
   AssignedQueryAccountBalances,

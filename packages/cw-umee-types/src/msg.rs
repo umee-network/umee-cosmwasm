@@ -1,7 +1,6 @@
 use crate::msg_leverage::{
   BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxWithDrawParams,
-  RepayParams, SupplyCollateralParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
-  MsgTypes,
+  MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
@@ -57,7 +56,7 @@ impl StructUmeeMsg {
   // valid returns true if is valid
   pub fn valid(&self) -> bool {
     match &self.assigned_msg {
-      MsgTypes => true ,
+      MsgTypes => true,
       _ => false,
     }
   }
