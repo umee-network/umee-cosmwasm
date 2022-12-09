@@ -17,5 +17,6 @@ else
     --mount type=volume,source="${BASENAME}_cache",target=/code/target \
     --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
     cosmwasm/rust-optimizer:$OPTIMIZER_VERSION
+fi 
 
 echo Finish rust optimizer
