@@ -6,15 +6,17 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query.
-pub const ASSIGNED_QUERY_LEVERAGE_PARAMS: u16 = 1;
-pub const ASSIGNED_QUERY_REGISTERED_TOKENS: u16 = 2;
-pub const ASSIGNED_QUERY_MARKET_SUMMARY: u16 = 3;
-pub const ASSIGNED_QUERY_ACCOUNT_BALANCES: u16 = 4;
-pub const ASSIGNED_QUERY_ACCOUNT_SUMMARY: u16 = 5;
-pub const ASSIGNED_QUERY_LIQUIDATION_TARGETS: u16 = 6;
-pub const ASSIGNED_QUERY_BAD_DEBTS: u16 = 7;
-pub const ASSIGNED_QUERY_MAX_WITHDRAW: u16 = 8;
-
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub enum LeverageQueries {
+  AssignedQueryLeverageParams ,
+  AssignedQueryRegisteredTokens,
+  AssignedQueryMarketSummary,
+  AssignedQueryAccountBalances,
+  AssignedQueryAccountSummary,
+  AssignedQueryLiquidationTargets,
+  AssignedQueryBadDebts,
+  AssignedQueryMaxWithdraw,
+}
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]

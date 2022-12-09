@@ -162,6 +162,20 @@
         }
       }
     },
+    "MsgTypes": {
+      "type": "string",
+      "enum": [
+        "AssignedMsgSupply",
+        "AssignedMsgWithdraw",
+        "AssignedMsgCollateralize",
+        "AssignedMsgDecollateralize",
+        "AssignedMsgBorrow",
+        "AssignedMsgRepay",
+        "AssignedMsgLiquidate",
+        "AssignedMsgSupplyCollateralize",
+        "AssignedMsgMaxWithdraw"
+      ]
+    },
     "RepayParams": {
       "type": "object",
       "required": [
@@ -184,9 +198,7 @@
       ],
       "properties": {
         "assigned_msg": {
-          "type": "integer",
-          "format": "uint16",
-          "minimum": 0.0
+          "$ref": "#/definitions/MsgTypes"
         },
         "borrow": {
           "anyOf": [

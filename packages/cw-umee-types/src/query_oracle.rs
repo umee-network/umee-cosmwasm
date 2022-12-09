@@ -6,18 +6,21 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query
-pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 9;
-pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 10;
-pub const ASSIGNED_QUERY_SLASH_WINDOW: u16 = 11;
-pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 12;
-pub const ASSIGNED_QUERY_AGGREGATE_PREVOTES: u16 = 13;
-pub const ASSIGNED_QUERY_AGGREGATE_VOTE: u16 = 14;
-pub const ASSIGNED_QUERY_AGGREGATE_VOTES: u16 = 15;
-pub const ASSIGNED_QUERY_ORACLE_PARAMS: u16 = 16;
-pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 17;
-pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 18;
-pub const ASSIGNED_QUERY_MEDIANS: u16 = 19;
-pub const ASSIGNED_QUERY_MEDIAN_DEVIATIONS: u16 = 20;
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub enum OracleQueries {
+  AssignedQueryFeederDelegation,
+  AssignedQueryMissCounter,
+  AssignedQuerySlashWindow,
+  AssignedQueryAggregatePrevote,
+  AssignedQueryAggregatePrevotes,
+  AssignedQueryAggregateVote,
+  AssignedQueryAggregateVotes,
+  AssignedQueryOracleParams,
+  AssignedQueryExchangeRates,
+  AssignedQueryActiveExchangeRates,
+  AssignedQueryMedians,
+  AssignedQueryMedianDeviations,
+}
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module

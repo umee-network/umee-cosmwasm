@@ -3,16 +3,18 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the messages must have an assigned msg.
-pub const ASSIGNED_MSG_SUPPLY: u16 = 1;
-pub const ASSIGNED_MSG_WITHDRAW: u16 = 2;
-pub const ASSIGNED_MSG_COLLATERALIZE: u16 = 3;
-pub const ASSIGNED_MSG_DECOLLATERALIZE: u16 = 4;
-pub const ASSIGNED_MSG_BORROW: u16 = 5;
-pub const ASSIGNED_MSG_REPAY: u16 = 6;
-pub const ASSIGNED_MSG_LIQUIDATE: u16 = 7;
-pub const ASSIGNED_MSG_SUPPLY_COLLATERALIZE: u16 = 8;
-pub const ASSIGNED_MSG_MAX_WITHDRAW: u16 = 9;
-
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug, PartialOrd)]
+pub enum MsgTypes {
+  AssignedMsgSupply,
+  AssignedMsgWithdraw,
+  AssignedMsgCollateralize,
+  AssignedMsgDecollateralize,
+  AssignedMsgBorrow,
+  AssignedMsgRepay,
+  AssignedMsgLiquidate,
+  AssignedMsgSupplyCollateralize,
+  AssignedMsgMaxWithdraw,
+}
 // UmeeMsgLeverage defines all the available msgs
 // for the umee leverage native module.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]

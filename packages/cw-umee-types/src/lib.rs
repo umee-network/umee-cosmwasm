@@ -24,9 +24,7 @@ pub use query_leverage::{
   BadDebtsParams, BadDebtsResponse, LeverageParametersParams, LeverageParametersResponse,
   LiquidationTargetsParams, LiquidationTargetsResponse, MarketSummaryParams, MarketSummaryResponse,
   MaxWithdrawParams, MaxWithdrawResponse, RegisteredTokensParams, RegisteredTokensResponse,
-  UmeeQueryLeverage, ASSIGNED_QUERY_ACCOUNT_BALANCES, ASSIGNED_QUERY_ACCOUNT_SUMMARY,
-  ASSIGNED_QUERY_BAD_DEBTS, ASSIGNED_QUERY_LEVERAGE_PARAMS, ASSIGNED_QUERY_LIQUIDATION_TARGETS,
-  ASSIGNED_QUERY_MARKET_SUMMARY, ASSIGNED_QUERY_MAX_WITHDRAW, ASSIGNED_QUERY_REGISTERED_TOKENS,
+  UmeeQueryLeverage, LeverageQueries,
 };
 
 pub use query_oracle::{
@@ -36,18 +34,13 @@ pub use query_oracle::{
   ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
   MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
   MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  SlashWindowParams, SlashWindowResponse, UmeeQueryOracle, ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES,
-  ASSIGNED_QUERY_AGGREGATE_PREVOTE, ASSIGNED_QUERY_AGGREGATE_PREVOTES,
-  ASSIGNED_QUERY_AGGREGATE_VOTES, ASSIGNED_QUERY_EXCHANGE_RATES, ASSIGNED_QUERY_FEEDER_DELEGATION,
-  ASSIGNED_QUERY_MISS_COUNTER, ASSIGNED_QUERY_SLASH_WINDOW,
+  SlashWindowParams, SlashWindowResponse, UmeeQueryOracle, OracleQueries,
 };
 
 pub use msg_leverage::{
   BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxWithDrawParams,
   RepayParams, SupplyCollateralParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
-  ASSIGNED_MSG_BORROW, ASSIGNED_MSG_COLLATERALIZE, ASSIGNED_MSG_DECOLLATERALIZE,
-  ASSIGNED_MSG_LIQUIDATE, ASSIGNED_MSG_MAX_WITHDRAW, ASSIGNED_MSG_REPAY, ASSIGNED_MSG_SUPPLY,
-  ASSIGNED_MSG_SUPPLY_COLLATERALIZE, ASSIGNED_MSG_WITHDRAW,
+  MsgTypes,
 };
 
 pub use msg::{StructUmeeMsg, UmeeMsg};
