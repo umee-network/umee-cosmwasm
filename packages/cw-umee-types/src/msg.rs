@@ -55,10 +55,7 @@ fn default_struct_umee_msg(m: MsgTypes) -> StructUmeeMsg {
 impl StructUmeeMsg {
   // valid returns true if is valid
   pub fn valid(&self) -> bool {
-    match &self.assigned_msg {
-      MsgTypes => true,
-      _ => false,
-    }
+    return self.assigned_str() != String::from("unrecognized_msg")
   }
 
   pub fn assigned_str(&self) -> String {
