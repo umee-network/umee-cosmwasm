@@ -4,16 +4,16 @@ use serde::{Deserialize, Serialize};
 
 // All the messages must have an assigned msg.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug, PartialOrd)]
-pub enum MsgTypes {
+pub enum UmeeMsgLeverageTypes {
   AssignedMsgSupply,
   AssignedMsgWithdraw,
+  AssignedMsgMaxWithdraw,
   AssignedMsgCollateralize,
   AssignedMsgDecollateralize,
   AssignedMsgBorrow,
   AssignedMsgRepay,
   AssignedMsgLiquidate,
   AssignedMsgSupplyCollateralize,
-  AssignedMsgMaxWithdraw,
 }
 // UmeeMsgLeverage defines all the available msgs
 // for the umee leverage native module.

@@ -4,6 +4,7 @@ pub mod bad_debt;
 pub mod leverage_parameters;
 pub mod msg;
 pub mod msg_leverage;
+pub mod msg_oracle;
 pub mod oracle_parameters;
 pub mod query;
 pub mod query_leverage;
@@ -39,10 +40,16 @@ pub use query_oracle::{
 
 pub use msg_leverage::{
   BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxWithDrawParams,
-  MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
+  RepayParams, SupplyCollateralParams, SupplyParams, UmeeMsgLeverage, UmeeMsgLeverageTypes,
+  WithdrawParams,
 };
 
-pub use msg::{StructUmeeMsg, UmeeMsg};
+pub use msg_oracle::{
+  MsgAggregateExchangeRatePrevote, MsgAggregateExchangeRateVote, MsgDelegateFeedConsent,
+  UmeeMsgOracle, UmeeMsgOracleTypes,
+};
+
+pub use msg::{StructUmeeMsg, UmeeMsg, UmeeMsgTypes};
 
 // This is a signal, such that any contract that imports these helpers will only run on the
 // umee blockchain, it makes mandatory that the blockchain have the "umee" inside

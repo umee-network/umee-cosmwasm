@@ -19,10 +19,11 @@ use cw_umee_types::{
   DecollateralizeParams, ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams,
   FeederDelegationResponse, LeverageParametersParams, LeverageParametersResponse, LiquidateParams,
   LiquidationTargetsParams, LiquidationTargetsResponse, MarketSummaryParams, MarketSummaryResponse,
-  MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, RepayParams, SlashWindowParams,
-  SlashWindowResponse, StructUmeeMsg, StructUmeeQuery, SupplyParams, UmeeMsg, UmeeMsgLeverage,
-  UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
+  MissCounterParams, MissCounterResponse, MsgAggregateExchangeRatePrevote,
+  MsgAggregateExchangeRateVote, MsgDelegateFeedConsent, OracleParametersParams,
+  OracleParametersResponse, RegisteredTokensParams, RegisteredTokensResponse, RepayParams,
+  SlashWindowParams, SlashWindowResponse, StructUmeeMsg, StructUmeeQuery, SupplyParams, UmeeMsg,
+  UmeeMsgLeverage, UmeeMsgOracle, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
 };
 
 use crate::error::ContractError;
@@ -71,6 +72,7 @@ pub fn execute(
     ExecuteMsg::Umee(UmeeMsg::Leverage(execute_leverage_msg)) => {
       execute_leverage(execute_leverage_msg)
     }
+    ExecuteMsg::Umee(UmeeMsg::Oracle(execute_oracle_msg)) => execute_oracle(execute_oracle_msg),
     ExecuteMsg::Supply(supply_params) => execute_lend(supply_params),
   }
 }
@@ -127,6 +129,59 @@ fn execute_leverage(
       execute_supply_collateralize(supply_collateralize_params)
     }
   }
+}
+
+// execute_leverage handles the execution of every msg of oracle umee native modules
+fn execute_oracle(
+  execute_oracle_msg: UmeeMsgOracle,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  match execute_oracle_msg {
+    UmeeMsgOracle::AggregateExchangeRatePrevote(msg_aggregate_exchange_rate_prevote) => {
+      execute_aggregate_exchange_rate_prevote(msg_aggregate_exchange_rate_prevote)
+    }
+    UmeeMsgOracle::AggregateExchangeRateVote(msg_aggregate_exchange_rate_vote) => {
+      execute_aggregate_exchange_rate_vote(msg_aggregate_exchange_rate_vote)
+    }
+    UmeeMsgOracle::DelegateFeedConsent(msg_delegate_feed_consent) => {
+      execute_delegate_feed_consent(msg_delegate_feed_consent)
+    }
+  }
+}
+
+// execute_aggregate_exchange_rate_prevote sends umee oracle module an message of AggregateExchangeRatePrevote.
+fn execute_aggregate_exchange_rate_prevote(
+  msg_aggregate_exchange_rate_prevote: MsgAggregateExchangeRatePrevote,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::aggregate_exchange_rate_prevote(msg_aggregate_exchange_rate_prevote);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
+
+// execute_aggregate_exchange_rate_vote sends umee oracle module an message of AggregateExchangeRateVote.
+fn execute_aggregate_exchange_rate_vote(
+  msg_aggregate_exchange_rate_vote: MsgAggregateExchangeRateVote,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::aggregate_exchange_rate_vote(msg_aggregate_exchange_rate_vote);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
+
+// execute_delegate_feed_consent sends umee oracle module an message of DelegateFeedConsent.
+fn execute_delegate_feed_consent(
+  msg_delegate_feed_consent: MsgDelegateFeedConsent,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::delegate_feed_consent(msg_delegate_feed_consent);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
 }
 
 // execute_lend sends umee leverage module an message of Supply.
