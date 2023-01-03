@@ -147,6 +147,63 @@
         }
       }
     },
+    "MsgAggregateExchangeRatePrevote": {
+      "type": "object",
+      "required": [
+        "feeder",
+        "hash",
+        "validator"
+      ],
+      "properties": {
+        "feeder": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "validator": {
+          "type": "string"
+        }
+      }
+    },
+    "MsgAggregateExchangeRateVote": {
+      "type": "object",
+      "required": [
+        "exchange_rates",
+        "feeder",
+        "salt",
+        "validator"
+      ],
+      "properties": {
+        "exchange_rates": {
+          "type": "string"
+        },
+        "feeder": {
+          "type": "string"
+        },
+        "salt": {
+          "type": "string"
+        },
+        "validator": {
+          "type": "string"
+        }
+      }
+    },
+    "MsgDelegateFeedConsent": {
+      "type": "object",
+      "required": [
+        "delegate",
+        "operator"
+      ],
+      "properties": {
+        "delegate": {
+          "type": "string"
+        },
+        "operator": {
+          "type": "string"
+        }
+      }
+    },
     "MsgMaxWithDrawParams": {
       "type": "object",
       "required": [
@@ -161,20 +218,6 @@
           "$ref": "#/definitions/Addr"
         }
       }
-    },
-    "MsgTypes": {
-      "type": "string",
-      "enum": [
-        "AssignedMsgSupply",
-        "AssignedMsgWithdraw",
-        "AssignedMsgCollateralize",
-        "AssignedMsgDecollateralize",
-        "AssignedMsgBorrow",
-        "AssignedMsgRepay",
-        "AssignedMsgLiquidate",
-        "AssignedMsgSupplyCollateralize",
-        "AssignedMsgMaxWithdraw"
-      ]
     },
     "RepayParams": {
       "type": "object",
@@ -197,8 +240,28 @@
         "assigned_msg"
       ],
       "properties": {
+        "aggregate_exchange_rate_prevote": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MsgAggregateExchangeRatePrevote"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregate_exchange_rate_vote": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MsgAggregateExchangeRateVote"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "assigned_msg": {
-          "$ref": "#/definitions/MsgTypes"
+          "$ref": "#/definitions/UmeeMsgTypes"
         },
         "borrow": {
           "anyOf": [
@@ -224,6 +287,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/DecollateralizeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delegate_feed_consent": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MsgDelegateFeedConsent"
             },
             {
               "type": "null"
@@ -339,6 +412,18 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "oracle"
+          ],
+          "properties": {
+            "oracle": {
+              "$ref": "#/definitions/UmeeMsgOracle"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
@@ -448,6 +533,96 @@
           "properties": {
             "supply_collateral": {
               "$ref": "#/definitions/SupplyCollateralParams"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UmeeMsgLeverageTypes": {
+      "type": "string",
+      "enum": [
+        "AssignedMsgSupply",
+        "AssignedMsgWithdraw",
+        "AssignedMsgMaxWithdraw",
+        "AssignedMsgCollateralize",
+        "AssignedMsgDecollateralize",
+        "AssignedMsgBorrow",
+        "AssignedMsgRepay",
+        "AssignedMsgLiquidate",
+        "AssignedMsgSupplyCollateralize"
+      ]
+    },
+    "UmeeMsgOracle": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "aggregate_exchange_rate_prevote"
+          ],
+          "properties": {
+            "aggregate_exchange_rate_prevote": {
+              "$ref": "#/definitions/MsgAggregateExchangeRatePrevote"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "aggregate_exchange_rate_vote"
+          ],
+          "properties": {
+            "aggregate_exchange_rate_vote": {
+              "$ref": "#/definitions/MsgAggregateExchangeRateVote"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "delegate_feed_consent"
+          ],
+          "properties": {
+            "delegate_feed_consent": {
+              "$ref": "#/definitions/MsgDelegateFeedConsent"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UmeeMsgOracleTypes": {
+      "type": "string",
+      "enum": [
+        "assigned_aggregate_exchange_rate_prevote",
+        "assigned_aggregate_exchange_rate_vote",
+        "assigned_delegate_feed_consent"
+      ]
+    },
+    "UmeeMsgTypes": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "leverage"
+          ],
+          "properties": {
+            "leverage": {
+              "$ref": "#/definitions/UmeeMsgLeverageTypes"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "oracle"
+          ],
+          "properties": {
+            "oracle": {
+              "$ref": "#/definitions/UmeeMsgOracleTypes"
             }
           },
           "additionalProperties": false
