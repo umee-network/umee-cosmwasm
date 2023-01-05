@@ -94,7 +94,7 @@ impl StructUmeeQuery {
   // creates a new exchange_rates query.
   pub fn exchange_rates(exchange_rates_params: ExchangeRatesParams) -> StructUmeeQuery {
     let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryActiveExchangeRates,
+      OracleQueries::AssignedQueryExchangeRates,
     ));
     q.exchange_rates = Some(exchange_rates_params);
     return q;
@@ -172,7 +172,7 @@ impl StructUmeeQuery {
     active_exchange_rates_params: ActiveExchangeRatesParams,
   ) -> StructUmeeQuery {
     let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryExchangeRates,
+      OracleQueries::AssignedQueryActiveExchangeRates,
     ));
     q.active_exchange_rates = Some(active_exchange_rates_params);
     return q;
