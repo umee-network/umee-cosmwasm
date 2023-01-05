@@ -215,19 +215,6 @@
     "LeverageParametersParams": {
       "type": "object"
     },
-    "LeverageQueries": {
-      "type": "string",
-      "enum": [
-        "AssignedQueryLeverageParams",
-        "AssignedQueryRegisteredTokens",
-        "AssignedQueryMarketSummary",
-        "AssignedQueryAccountBalances",
-        "AssignedQueryAccountSummary",
-        "AssignedQueryLiquidationTargets",
-        "AssignedQueryBadDebts",
-        "AssignedQueryMaxWithdraw"
-      ]
-    },
     "LiquidationTargetsParams": {
       "type": "object"
     },
@@ -280,23 +267,6 @@
     },
     "OracleParametersParams": {
       "type": "object"
-    },
-    "OracleQueries": {
-      "type": "string",
-      "enum": [
-        "AssignedQueryFeederDelegation",
-        "AssignedQueryMissCounter",
-        "AssignedQuerySlashWindow",
-        "AssignedQueryAggregatePrevote",
-        "AssignedQueryAggregatePrevotes",
-        "AssignedQueryAggregateVote",
-        "AssignedQueryAggregateVotes",
-        "AssignedQueryOracleParams",
-        "AssignedQueryExchangeRates",
-        "AssignedQueryActiveExchangeRates",
-        "AssignedQueryMedians",
-        "AssignedQueryMedianDeviations"
-      ]
     },
     "QueryRequest_for_StructUmeeQuery": {
       "anyOf": [
@@ -531,7 +501,8 @@
           ]
         },
         "assigned_query": {
-          "$ref": "#/definitions/UmeeQueryTypes"
+          "type": "integer",
+          "format": "int32"
         },
         "bad_debts_params": {
           "anyOf": [
@@ -935,34 +906,6 @@
           "properties": {
             "median_deviations": {
               "$ref": "#/definitions/MedianDeviationsParams"
-            }
-          },
-          "additionalProperties": false
-        }
-      ]
-    },
-    "UmeeQueryTypes": {
-      "anyOf": [
-        {
-          "type": "object",
-          "required": [
-            "LeverageQueries"
-          ],
-          "properties": {
-            "LeverageQueries": {
-              "$ref": "#/definitions/LeverageQueries"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "OracleQueries"
-          ],
-          "properties": {
-            "OracleQueries": {
-              "$ref": "#/definitions/OracleQueries"
             }
           },
           "additionalProperties": false

@@ -17,12 +17,6 @@ use serde::{Deserialize, Serialize};
 impl CustomQuery for StructUmeeQuery {}
 impl CustomQuery for UmeeQuery {}
 
-#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub enum UmeeQueryTypes {
-  LeverageQueries(LeverageQueries),
-  OracleQueries(OracleQueries),
-}
-
 // UmeeQuery combines all the native modules from umee as enum
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
@@ -37,7 +31,7 @@ pub enum UmeeQuery {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
 pub struct StructUmeeQuery {
-  assigned_query: UmeeQueryTypes,
+  assigned_query: i32,
   exchange_rates: Option<ExchangeRatesParams>,
   leverage_parameters: Option<LeverageParametersParams>,
   market_summary: Option<MarketSummaryParams>,
@@ -60,7 +54,7 @@ pub struct StructUmeeQuery {
   median_deviations_params: Option<MedianDeviationsParams>,
 }
 
-fn default_struct_umee_query(q: UmeeQueryTypes) -> StructUmeeQuery {
+fn default_struct_umee_query(q: i32) -> StructUmeeQuery {
   StructUmeeQuery {
     assigned_query: q,
     exchange_rates: None,
@@ -93,9 +87,7 @@ fn default_struct_umee_query(q: UmeeQueryTypes) -> StructUmeeQuery {
 impl StructUmeeQuery {
   // creates a new exchange_rates query.
   pub fn exchange_rates(exchange_rates_params: ExchangeRatesParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryExchangeRates,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryExchangeRates as i32);
     q.exchange_rates = Some(exchange_rates_params);
     return q;
   }
@@ -103,41 +95,31 @@ impl StructUmeeQuery {
   pub fn leverage_parameters(
     leverage_parameters_params: LeverageParametersParams,
   ) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryLeverageParams,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryLeverageParams as i32);
     q.leverage_parameters = Some(leverage_parameters_params);
     return q;
   }
   // creates a market summary query.
   pub fn market_summary(market_summary_params: MarketSummaryParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryMarketSummary,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryMarketSummary as i32);
     q.market_summary = Some(market_summary_params);
     return q;
   }
   // creates a account balances query.
   pub fn account_balances(account_balances_params: AccountBalancesParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryAccountBalances,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryAccountBalances as i32);
     q.account_balances = Some(account_balances_params);
     return q;
   }
   // creates a account summary query.
   pub fn account_summary(account_summary_params: AccountSummaryParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryAccountSummary,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryAccountSummary as i32);
     q.account_summary = Some(account_summary_params);
     return q;
   }
   // creates a new registered_tokens query.
   pub fn registered_tokens(registered_tokens_params: RegisteredTokensParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryRegisteredTokens,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryRegisteredTokens as i32);
     q.registered_tokens = Some(registered_tokens_params);
     return q;
   }
@@ -145,25 +127,19 @@ impl StructUmeeQuery {
   pub fn liquidation_targets(
     liquidation_targets_params: LiquidationTargetsParams,
   ) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryLiquidationTargets,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryLiquidationTargets as i32);
     q.liquidation_targets = Some(liquidation_targets_params);
     return q;
   }
   // creates a new bad debts parameters query.
   pub fn bad_debts_parameters(bad_debts_params: BadDebtsParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryBadDebts,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryBadDebts as i32);
     q.bad_debts_params = Some(bad_debts_params);
     return q;
   }
   // creates a new max withdraw params query.
   pub fn max_withdraw_params(max_withdraw_params: MaxWithdrawParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::LeverageQueries(
-      LeverageQueries::AssignedQueryMaxWithdraw,
-    ));
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryMaxWithdraw as i32);
     q.max_withdraw_params = Some(max_withdraw_params);
     return q;
   }
@@ -171,82 +147,62 @@ impl StructUmeeQuery {
   pub fn active_exchange_rates(
     active_exchange_rates_params: ActiveExchangeRatesParams,
   ) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryActiveExchangeRates,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryActiveExchangeRates as i32);
     q.active_exchange_rates = Some(active_exchange_rates_params);
     return q;
   }
   // creates a feeder delegation query.
   pub fn feeder_delegation(feeder_delegation_params: FeederDelegationParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryFeederDelegation,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryFeederDelegation as i32);
     q.feeder_delegation = Some(feeder_delegation_params);
     return q;
   }
   // creates a miss counter query.
   pub fn miss_counter(miss_counter_params: MissCounterParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryMissCounter,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryMissCounter as i32);
     q.miss_counter = Some(miss_counter_params);
     return q;
   }
   // creates a slash window query.
   pub fn slash_window(slash_window_params: SlashWindowParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQuerySlashWindow,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQuerySlashWindow as i32);
     q.slash_window = Some(slash_window_params);
     return q;
   }
   // creates a aggregate prevote query.
   pub fn aggregate_prevote(aggregate_prevote_params: AggregatePrevoteParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryAggregatePrevote,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryAggregatePrevote as i32);
     q.aggregate_prevote = Some(aggregate_prevote_params);
     return q;
   }
   // creates a aggregate prevotes query.
   pub fn aggregate_prevotes(aggregate_prevotes_params: AggregatePrevotesParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryAggregatePrevotes,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryAggregatePrevotes as i32);
     q.aggregate_prevotes = Some(aggregate_prevotes_params);
     return q;
   }
   // creates a aggregate vote query.
   pub fn aggregate_vote(aggregate_vote_params: AggregateVoteParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryAggregateVote,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryAggregateVote as i32);
     q.aggregate_vote = Some(aggregate_vote_params);
     return q;
   }
   // creates a aggregate votes query.
   pub fn aggregate_votes(aggregate_votes_params: AggregateVotesParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryAggregateVotes,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryAggregateVotes as i32);
     q.aggregate_votes = Some(aggregate_votes_params);
     return q;
   }
   // creates a new oracle parameters query.
   pub fn oracle_parameters(oracle_parameters_params: OracleParametersParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryOracleParams,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryOracleParams as i32);
     q.oracle_params = Some(oracle_parameters_params);
     return q;
   }
 
   // creates a new medians query.
   pub fn medians_params(medians_params: MediansParams) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryMedians,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryMedians as i32);
     q.medians_params = Some(medians_params);
     return q;
   }
@@ -254,9 +210,7 @@ impl StructUmeeQuery {
   pub fn median_deviations_params(
     median_deviations_params: MedianDeviationsParams,
   ) -> StructUmeeQuery {
-    let mut q = default_struct_umee_query(UmeeQueryTypes::OracleQueries(
-      OracleQueries::AssignedQueryMedianDeviations,
-    ));
+    let mut q = default_struct_umee_query(OracleQueries::AssignedQueryMedianDeviations as i32);
     q.median_deviations_params = Some(median_deviations_params);
     return q;
   }

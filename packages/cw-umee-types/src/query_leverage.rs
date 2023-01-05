@@ -8,7 +8,11 @@ use serde::{Deserialize, Serialize};
 // All the queries must have an assigned query.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub enum LeverageQueries {
-  AssignedQueryLeverageParams,
+  // NOTE: First leverage query types then oracle module query types
+  // If you add any new query , Please increase the OracleQueryTypes first enum value 
+  // Please don't change the order, If you have change order please update the respective query type value in Umee wasm 
+  // query enum values also
+  AssignedQueryLeverageParams = 0,
   AssignedQueryRegisteredTokens,
   AssignedQueryMarketSummary,
   AssignedQueryAccountBalances,
