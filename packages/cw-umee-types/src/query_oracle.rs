@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub enum OracleQueries {
   // NOTE: First leverage query types then oracle module query types
-  // Please don't change the order, If you have change order please update the respective query type value in Umee wasm 
+  // Please don't change the order, If you change the order please update the respective query type value in Umee wasm
   // query enum values also
   AssignedQueryFeederDelegation = 8,
   AssignedQueryMissCounter,
