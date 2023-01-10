@@ -53,9 +53,9 @@ pub struct Token {
   exponent: u32,
 
   // Enable Msg Supply allows supplying for lending or collateral using this
-	// token. `false` means that a token can no longer be supplied.
-	// Note that withdrawing is always enabled. Disabling supply would
-	// be one step in phasing out an asset type.
+  // token. `false` means that a token can no longer be supplied.
+  // Note that withdrawing is always enabled. Disabling supply would
+  // be one step in phasing out an asset type.
   enable_msg_supply: Option<bool>,
 
   // Allows borrowing of this token. Note that repaying is always enabled.
@@ -98,10 +98,10 @@ pub struct Token {
   // To mark a token as not valid for supply, `msg_supply` must be set to false.
   max_supply: Decimal,
   // Historic Medians is the number of median historic prices to request from
-	// the oracle module when evaluating new borrow positions containing this token.
-	// All MsgBorrow, MsgWithdraw, and MsgDecollateralize must result in healthy
-	// borrow positions under both current and historic prices. The default value of
-	// zero for this field causes current price to be used in those calculations
-	// for the affected Token.
+  // the oracle module when evaluating new borrow positions containing this token.
+  // All MsgBorrow, MsgWithdraw, and MsgDecollateralize must result in healthy
+  // borrow positions under both current and historic prices. The default value of
+  // zero for this field causes current price to be used in those calculations
+  // for the affected Token.
   historic_medians: u32,
 }
