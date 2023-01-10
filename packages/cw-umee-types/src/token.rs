@@ -52,10 +52,11 @@ pub struct Token {
   // of its base denom.
   exponent: u32,
 
-  // Allows lending and setting a collateral using this token. Note that
-  // withdrawing is always enabled. Disabling lending would be one step in
-  // phasing out an asset type.
-  enable_msg_lend: Option<bool>,
+  // Enable Msg Supply allows supplying for lending or collateral using this
+	// token. `false` means that a token can no longer be supplied.
+	// Note that withdrawing is always enabled. Disabling supply would
+	// be one step in phasing out an asset type.
+  enable_msg_supply: Option<bool>,
 
   // Allows borrowing of this token. Note that repaying is always enabled.
   // Disabling borrowing would be one step in phasing out an asset type, but
@@ -96,4 +97,11 @@ pub struct Token {
   // Must be a non negative value. 0 means that there is no limit.
   // To mark a token as not valid for supply, `msg_supply` must be set to false.
   max_supply: Decimal,
+  // Historic Medians is the number of median historic prices to request from
+	// the oracle module when evaluating new borrow positions containing this token.
+	// All MsgBorrow, MsgWithdraw, and MsgDecollateralize must result in healthy
+	// borrow positions under both current and historic prices. The default value of
+	// zero for this field causes current price to be used in those calculations
+	// for the affected Token.
+  historic_medians: u32,
 }
