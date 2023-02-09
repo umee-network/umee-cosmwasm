@@ -70,6 +70,7 @@ jobs:
           path: './packages/cw-umee-types'
           registry-token: ${{ secrets.CARGO_REGISTRIES_UMEE_TOKEN }}
           dry-run: true
+          ignore-unpublished-changes: true
 
       - name: Generate Schema
         uses: actions-rs/cargo@v1
