@@ -204,5 +204,5 @@ pub struct MedianDeviationsParams {
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MedianDeviationsParamsResponse {
-  pub medianDeviations: Vec<DecCoin>,
+  pub median_deviations: Vec<DecCoin>,
 }

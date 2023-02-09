@@ -69,7 +69,6 @@ impl StructUmeeMsg {
       MsgTypes::AssignedMsgLiquidate => String::from("liquidate"),
       MsgTypes::AssignedMsgMaxWithdraw => String::from("max_withdraw"),
       MsgTypes::AssignedMsgSupplyCollateralize => String::from("supply_collateralize"),
-      _ => String::from("unrecognized_msg"),
     }
   }
   // creates a new lend message.

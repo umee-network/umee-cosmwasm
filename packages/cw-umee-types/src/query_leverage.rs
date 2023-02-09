@@ -153,6 +153,6 @@ pub struct MaxWithdrawParams {}
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MaxWithdrawResponse {
-  pub uTokens: Coin,
+  pub u_tokens: Coin,
   pub tokens: Coin,
 }
