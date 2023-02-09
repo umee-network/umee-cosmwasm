@@ -65,7 +65,7 @@ jobs:
           args: -- -D warnings
 
       - name: Run cargo publish dry run
-        uses: katyo/publish-crates@v1
+        uses: katyo/publish-crates@v2
         with:
           path: './packages/cw-umee-types'
           registry-token: ${{ secrets.CARGO_REGISTRIES_UMEE_TOKEN }}
