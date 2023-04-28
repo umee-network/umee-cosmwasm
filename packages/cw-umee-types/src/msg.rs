@@ -1,6 +1,7 @@
 use crate::msg_leverage::{
-  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxWithDrawParams,
-  MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams, UmeeMsgLeverage, WithdrawParams,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MaxBorrowParams,
+  MsgMaxWithDrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
+  UmeeMsgLeverage, WithdrawParams,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
 use schemars::JsonSchema;
@@ -29,6 +30,7 @@ pub struct StructUmeeMsg {
   collateralize: Option<CollateralizeParams>,
   decollateralize: Option<DecollateralizeParams>,
   borrow: Option<BorrowParams>,
+  max_borrow: Option<MaxBorrowParams>,
   repay: Option<RepayParams>,
   liquidate: Option<LiquidateParams>,
   supply_collateralize: Option<SupplyCollateralParams>,
@@ -42,6 +44,7 @@ fn default_struct_umee_msg(m: MsgTypes) -> StructUmeeMsg {
     collateralize: None,
     decollateralize: None,
     borrow: None,
+    max_borrow: None,
     repay: None,
     liquidate: None,
     max_withdraw: None,
@@ -62,12 +65,13 @@ impl StructUmeeMsg {
     match self.assigned_msg {
       MsgTypes::AssignedMsgSupply => String::from("supply"),
       MsgTypes::AssignedMsgWithdraw => String::from("withdraw"),
+      MsgTypes::AssignedMsgMaxWithdraw => String::from("max_withdraw"),
       MsgTypes::AssignedMsgCollateralize => String::from("collateralize"),
       MsgTypes::AssignedMsgDecollateralize => String::from("decollateralize"),
       MsgTypes::AssignedMsgBorrow => String::from("borrow"),
+      MsgTypes::AssignedMsgMaxBorrow => String::from("max_borrow"),
       MsgTypes::AssignedMsgRepay => String::from("repay"),
       MsgTypes::AssignedMsgLiquidate => String::from("liquidate"),
-      MsgTypes::AssignedMsgMaxWithdraw => String::from("max_withdraw"),
       MsgTypes::AssignedMsgSupplyCollateralize => String::from("supply_collateralize"),
     }
   }
@@ -81,6 +85,12 @@ impl StructUmeeMsg {
   pub fn withdraw(withdraw_params: WithdrawParams) -> StructUmeeMsg {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgWithdraw);
     m.withdraw = Some(withdraw_params);
+    return m;
+  }
+  // creates a new maximum withdraw message.
+  pub fn max_withdraw(msg_max_withdraw_params: MsgMaxWithDrawParams) -> StructUmeeMsg {
+    let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgMaxWithdraw);
+    m.max_withdraw = Some(msg_max_withdraw_params);
     return m;
   }
   // creates a new collateralize message.
@@ -101,6 +111,12 @@ impl StructUmeeMsg {
     m.borrow = Some(borrow_params);
     return m;
   }
+  // creates a new max borrow message.
+  pub fn max_borrow(max_borrow_params: MaxBorrowParams) -> StructUmeeMsg {
+    let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgMaxBorrow);
+    m.max_borrow = Some(max_borrow_params);
+    return m;
+  }
   // creates a new repay message.
   pub fn repay(repay_params: RepayParams) -> StructUmeeMsg {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgRepay);
@@ -113,12 +129,7 @@ impl StructUmeeMsg {
     m.liquidate = Some(liquidate_params);
     return m;
   }
-  // creates a new maximum withdraw message.
-  pub fn max_withdraw(msg_max_withdraw_params: MsgMaxWithDrawParams) -> StructUmeeMsg {
-    let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgMaxWithdraw);
-    m.max_withdraw = Some(msg_max_withdraw_params);
-    return m;
-  }
+
   // creates a new supply collateralize message.
   pub fn supply_collateralize(supply_collateral_params: SupplyCollateralParams) -> StructUmeeMsg {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgSupplyCollateralize);

@@ -4,7 +4,7 @@ use cosmwasm_std::{
   MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
-use cw_umee_types::msg_leverage::{MsgMaxWithDrawParams, SupplyCollateralParams};
+use cw_umee_types::msg_leverage::{MaxBorrowParams, MsgMaxWithDrawParams, SupplyCollateralParams};
 use cw_umee_types::query_leverage::{
   BadDebtsParams, BadDebtsResponse, MaxWithdrawParams, MaxWithdrawResponse,
 };
@@ -121,6 +121,7 @@ fn execute_leverage(
       execute_decollateralize(decollateralize_params)
     }
     UmeeMsgLeverage::Borrow(borrow_params) => execute_borrow(borrow_params),
+    UmeeMsgLeverage::MaxBorrow(borrow_params) => execute_max_borrow(borrow_params),
     UmeeMsgLeverage::Repay(repay_params) => execute_repay(repay_params),
     UmeeMsgLeverage::Liquidate(liquidate_params) => execute_liquidate(liquidate_params),
     UmeeMsgLeverage::SupplyCollateral(supply_collateralize_params) => {
@@ -190,6 +191,18 @@ fn execute_decollateralize(
 // execute_borrow sends umee leverage module an message of Borrow.
 fn execute_borrow(borrow_params: BorrowParams) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::borrow(borrow_params);
+  Ok(
+    Response::new()
+      .add_attribute("method", msg.assigned_str())
+      .add_message(msg),
+  )
+}
+
+// execute_max_borrow sends umee leverage module an message of MaxBorrow.
+fn execute_max_borrow(
+  max_borrow_params: MaxBorrowParams,
+) -> Result<Response<StructUmeeMsg>, ContractError> {
+  let msg = StructUmeeMsg::max_borrow(max_borrow_params);
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())

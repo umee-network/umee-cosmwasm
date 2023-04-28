@@ -10,6 +10,7 @@ pub enum MsgTypes {
   AssignedMsgCollateralize,
   AssignedMsgDecollateralize,
   AssignedMsgBorrow,
+  AssignedMsgMaxBorrow,
   AssignedMsgRepay,
   AssignedMsgLiquidate,
   AssignedMsgSupplyCollateralize,
@@ -36,6 +37,8 @@ pub enum UmeeMsgLeverage {
   Decollateralize(DecollateralizeParams),
   // Borrow allows a user to borrow tokens from the module if they have sufficient collateral.
   Borrow(BorrowParams),
+  // MaxBorrow allows a user to borrow maximum tokens from the module if they have sufficient collateral.
+  MaxBorrow(MaxBorrowParams),
   // Repay allows a user to repay previously borrowed tokens and interest.
   Repay(RepayParams),
   // Liquidate allows a user to repay a different user's borrowed coins in exchange for some
@@ -50,7 +53,7 @@ pub enum UmeeMsgLeverage {
 pub struct SupplyParams {
   // Supplier is the account address supplying assets and the signer of the message.
   pub supplier: Addr,
-  pub amount: Coin,
+  pub asset: Coin,
 }
 
 // WithdrawParams params to withdraw coins from the capital facility.
@@ -58,7 +61,13 @@ pub struct SupplyParams {
 pub struct WithdrawParams {
   // Supplier is the account address withdrawing assets and the signer of the message.
   pub supplier: Addr,
-  pub amount: Coin,
+  pub asset: Coin,
+}
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MsgMaxWithDrawParams {
+  // Supplier is the account address withdrawing assets and the signer of the message.
+  pub supplier: Addr,
+  pub denom: String,
 }
 
 // CollateralizeParams to enable selected uTokens as collateral.
@@ -66,7 +75,7 @@ pub struct WithdrawParams {
 pub struct CollateralizeParams {
   // Borrower is the account address adding collateral and the signer of the message.
   pub borrower: Addr,
-  pub coin: Coin,
+  pub asset: Coin,
 }
 
 // DecollateralizeParams to disable selected uTokens as collateral.
@@ -74,7 +83,7 @@ pub struct CollateralizeParams {
 pub struct DecollateralizeParams {
   // Borrower is the account address removing collateral and the signer of the message.
   pub borrower: Addr,
-  pub coin: Coin,
+  pub asset: Coin,
 }
 
 // BorrowParams to borrow a base asset type from the module.
@@ -83,6 +92,13 @@ pub struct BorrowParams {
   // Borrower is the account address taking a loan and the signer of the message.
   pub borrower: Addr,
   pub asset: Coin,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MaxBorrowParams {
+  // Borrower is the account address taking a loan and the signer of the message.
+  pub borrower: Addr,
+  pub denom: Coin,
 }
 
 // RepayParams allows a user to repay previously borrowed tokens and interest.
@@ -103,13 +119,6 @@ pub struct LiquidateParams {
   pub borrower: Addr,
   pub repayment: Coin,
   pub reward: Coin,
-}
-
-#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MsgMaxWithDrawParams {
-  // Supplier is the account address withdrawing assets and the signer of the message.
-  pub supplier: Addr,
-  pub denom: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
