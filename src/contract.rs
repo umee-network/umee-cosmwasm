@@ -4,9 +4,12 @@ use cosmwasm_std::{
   MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
-use cw_umee_types::msg_leverage::{MaxBorrowParams, MsgMaxWithDrawParams, SupplyCollateralParams};
+use cw_umee_types::msg_leverage::{
+  MsgMaxBorrowParams, MsgMaxWithDrawParams, SupplyCollateralParams,
+};
 use cw_umee_types::query_leverage::{
-  BadDebtsParams, BadDebtsResponse, MaxWithdrawParams, MaxWithdrawResponse,
+  BadDebtsParams, BadDebtsResponse, MaxBorrowParams, MaxBorrowResponse, MaxWithdrawParams,
+  MaxWithdrawResponse,
 };
 use cw_umee_types::query_oracle::{
   MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
@@ -200,7 +203,7 @@ fn execute_borrow(borrow_params: BorrowParams) -> Result<Response<StructUmeeMsg>
 
 // execute_max_borrow sends umee leverage module an message of MaxBorrow.
 fn execute_max_borrow(
-  max_borrow_params: MaxBorrowParams,
+  max_borrow_params: MsgMaxBorrowParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::max_borrow(max_borrow_params);
   Ok(
@@ -234,9 +237,9 @@ fn execute_liquidate(
 
 // execute_supply_collateralize sends umee leverage module an message of Supply Collateralize.
 fn execute_supply_collateralize(
-  supply_collateralize_params: SupplyCollateralParams,
+  supply_collateral_params: SupplyCollateralParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::supply_collateralize(supply_collateralize_params);
+  let msg = StructUmeeMsg::supply_collateral(supply_collateral_params);
   Ok(
     Response::new()
       .add_attribute("method", msg.assigned_str())
@@ -414,6 +417,9 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     }
     UmeeQueryLeverage::MaxWithdraw(max_withdraw_params) => {
       to_binary(&query_max_withdraw(deps, max_withdraw_params)?)
+    }
+    UmeeQueryLeverage::MaxBorrow(max_borrow_params) => {
+      to_binary(&query_max_borrow(deps, max_borrow_params)?)
     }
   }
 }
@@ -660,6 +666,31 @@ fn query_max_withdraw(
   }
 
   Ok(max_withdraw_response)
+}
+
+// query_max_borrow
+fn query_max_borrow(
+  deps: Deps,
+  max_borrow_params: MaxBorrowParams,
+) -> StdResult<MaxBorrowResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::max_borrow_params(max_borrow_params));
+
+  let max_borrow_response: MaxBorrowResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MaxBorrowResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => max_borrow_response = response,
+      };
+    }
+  }
+
+  Ok(max_borrow_response)
 }
 
 // query_market_summary creates an query request to the native modules

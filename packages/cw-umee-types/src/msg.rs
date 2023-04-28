@@ -1,5 +1,5 @@
 use crate::msg_leverage::{
-  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MaxBorrowParams,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxBorrowParams,
   MsgMaxWithDrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
   UmeeMsgLeverage, WithdrawParams,
 };
@@ -30,10 +30,10 @@ pub struct StructUmeeMsg {
   collateralize: Option<CollateralizeParams>,
   decollateralize: Option<DecollateralizeParams>,
   borrow: Option<BorrowParams>,
-  max_borrow: Option<MaxBorrowParams>,
+  max_borrow: Option<MsgMaxBorrowParams>,
   repay: Option<RepayParams>,
   liquidate: Option<LiquidateParams>,
-  supply_collateralize: Option<SupplyCollateralParams>,
+  supply_collateral: Option<SupplyCollateralParams>,
 }
 
 fn default_struct_umee_msg(m: MsgTypes) -> StructUmeeMsg {
@@ -48,7 +48,7 @@ fn default_struct_umee_msg(m: MsgTypes) -> StructUmeeMsg {
     repay: None,
     liquidate: None,
     max_withdraw: None,
-    supply_collateralize: None,
+    supply_collateral: None,
   }
 }
 // Defines all the implementation related to the StructUmeeMsg
@@ -72,7 +72,7 @@ impl StructUmeeMsg {
       MsgTypes::AssignedMsgMaxBorrow => String::from("max_borrow"),
       MsgTypes::AssignedMsgRepay => String::from("repay"),
       MsgTypes::AssignedMsgLiquidate => String::from("liquidate"),
-      MsgTypes::AssignedMsgSupplyCollateralize => String::from("supply_collateralize"),
+      MsgTypes::AssignedMsgSupplyCollateralize => String::from("supply_collateral"),
     }
   }
   // creates a new lend message.
@@ -112,7 +112,7 @@ impl StructUmeeMsg {
     return m;
   }
   // creates a new max borrow message.
-  pub fn max_borrow(max_borrow_params: MaxBorrowParams) -> StructUmeeMsg {
+  pub fn max_borrow(max_borrow_params: MsgMaxBorrowParams) -> StructUmeeMsg {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgMaxBorrow);
     m.max_borrow = Some(max_borrow_params);
     return m;
@@ -131,9 +131,9 @@ impl StructUmeeMsg {
   }
 
   // creates a new supply collateralize message.
-  pub fn supply_collateralize(supply_collateral_params: SupplyCollateralParams) -> StructUmeeMsg {
+  pub fn supply_collateral(supply_collateral_params: SupplyCollateralParams) -> StructUmeeMsg {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgSupplyCollateralize);
-    m.supply_collateralize = Some(supply_collateral_params);
+    m.supply_collateral = Some(supply_collateral_params);
     return m;
   }
 }

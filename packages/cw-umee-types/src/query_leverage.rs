@@ -20,6 +20,7 @@ pub enum LeverageQueries {
   AssignedQueryLiquidationTargets,
   AssignedQueryBadDebts,
   AssignedQueryMaxWithdraw,
+  AssignedQueryMaxBorrow,
 }
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
@@ -49,6 +50,8 @@ pub enum UmeeQueryLeverage {
   BadDebts(BadDebtsParams),
   // MaxWithdraw returns the maximum amount of a given token an address can withdraw.
   MaxWithdraw(MaxWithdrawParams),
+  // MaxBorrow queries the maximum amount of a given token an address can borrow.
+  MaxBorrow(MaxBorrowParams),
 }
 
 // LeverageParametersParams params to query LeverageParameters.
@@ -149,10 +152,24 @@ pub struct BadDebtsResponse {
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MaxWithdrawParams {}
+pub struct MaxWithdrawParams {
+  pub address: Addr,
+  pub denom: String,
+}
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MaxWithdrawResponse {
   pub u_tokens: Coin,
   pub tokens: Coin,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MaxBorrowParams {
+  pub address: Addr,
+  pub denom: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MaxBorrowResponse {
+  pub tokens: Vec<Coin>,
 }

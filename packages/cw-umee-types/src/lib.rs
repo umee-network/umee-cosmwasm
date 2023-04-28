@@ -23,8 +23,8 @@ pub use query_leverage::{
   AccountBalancesParams, AccountBalancesResponse, AccountSummaryParams, AccountSummaryResponse,
   BadDebtsParams, BadDebtsResponse, LeverageParametersParams, LeverageParametersResponse,
   LeverageQueries, LiquidationTargetsParams, LiquidationTargetsResponse, MarketSummaryParams,
-  MarketSummaryResponse, MaxWithdrawParams, MaxWithdrawResponse, RegisteredTokensParams,
-  RegisteredTokensResponse, UmeeQueryLeverage,
+  MarketSummaryResponse, MaxBorrowParams, MaxWithdrawParams, MaxWithdrawResponse,
+  RegisteredTokensParams, RegisteredTokensResponse, UmeeQueryLeverage,
 };
 
 pub use query_oracle::{
@@ -38,7 +38,7 @@ pub use query_oracle::{
 };
 
 pub use msg_leverage::{
-  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MaxBorrowParams,
+  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxBorrowParams,
   MsgMaxWithDrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
   UmeeMsgLeverage, WithdrawParams,
 };

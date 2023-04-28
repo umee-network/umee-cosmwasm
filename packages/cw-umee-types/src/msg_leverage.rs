@@ -38,7 +38,7 @@ pub enum UmeeMsgLeverage {
   // Borrow allows a user to borrow tokens from the module if they have sufficient collateral.
   Borrow(BorrowParams),
   // MaxBorrow allows a user to borrow maximum tokens from the module if they have sufficient collateral.
-  MaxBorrow(MaxBorrowParams),
+  MaxBorrow(MsgMaxBorrowParams),
   // Repay allows a user to repay previously borrowed tokens and interest.
   Repay(RepayParams),
   // Liquidate allows a user to repay a different user's borrowed coins in exchange for some
@@ -95,7 +95,7 @@ pub struct BorrowParams {
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MaxBorrowParams {
+pub struct MsgMaxBorrowParams {
   // Borrower is the account address taking a loan and the signer of the message.
   pub borrower: Addr,
   pub denom: Coin,

@@ -9,6 +9,7 @@ use crate::query_oracle::{
   MediansParams, MissCounterParams, OracleParametersParams, OracleQueries, SlashWindowParams,
   UmeeQueryOracle,
 };
+use crate::MaxBorrowParams;
 use cosmwasm_std::CustomQuery;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -50,6 +51,7 @@ pub struct StructUmeeQuery {
   oracle_params: Option<OracleParametersParams>,
   bad_debts_params: Option<BadDebtsParams>,
   max_withdraw_params: Option<MaxWithdrawParams>,
+  max_borrow_params: Option<MaxBorrowParams>,
   medians_params: Option<MediansParams>,
   median_deviations_params: Option<MedianDeviationsParams>,
 }
@@ -75,6 +77,7 @@ fn default_struct_umee_query(q: i32) -> StructUmeeQuery {
     oracle_params: None,
     bad_debts_params: None,
     max_withdraw_params: None,
+    max_borrow_params: None,
     medians_params: None,
     median_deviations_params: None,
   }
@@ -141,6 +144,12 @@ impl StructUmeeQuery {
   pub fn max_withdraw_params(max_withdraw_params: MaxWithdrawParams) -> StructUmeeQuery {
     let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryMaxWithdraw as i32);
     q.max_withdraw_params = Some(max_withdraw_params);
+    return q;
+  }
+  // creates a new max borrows params query.
+  pub fn max_borrow_params(max_borrow_params: MaxBorrowParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query(LeverageQueries::AssignedQueryMaxBorrow as i32);
+    q.max_borrow_params = Some(max_borrow_params);
     return q;
   }
   // creates a active exchange rates query.
