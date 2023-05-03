@@ -39,7 +39,7 @@ pub use query_oracle::{
 
 pub use msg_leverage::{
   BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxBorrowParams,
-  MsgMaxWithDrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
+  MsgMaxWithdrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
   UmeeMsgLeverage, WithdrawParams,
 };
 

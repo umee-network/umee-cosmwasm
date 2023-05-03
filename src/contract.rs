@@ -5,7 +5,7 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use cw_umee_types::msg_leverage::{
-  MsgMaxBorrowParams, MsgMaxWithDrawParams, SupplyCollateralParams,
+  MsgMaxBorrowParams, MsgMaxWithdrawParams, SupplyCollateralParams,
 };
 use cw_umee_types::query_leverage::{
   BadDebtsParams, BadDebtsResponse, MaxBorrowParams, MaxBorrowResponse, MaxWithdrawParams,
@@ -116,7 +116,7 @@ fn execute_leverage(
   match execute_leverage_msg {
     UmeeMsgLeverage::Supply(supply_params) => execute_lend(supply_params),
     UmeeMsgLeverage::Withdraw(withdraw_params) => execute_withdraw(withdraw_params),
-    UmeeMsgLeverage::MaxWithDraw(max_withdraw_params) => execute_max_withdraw(max_withdraw_params),
+    UmeeMsgLeverage::MaxWithdraw(max_withdraw_params) => execute_max_withdraw(max_withdraw_params),
     UmeeMsgLeverage::Collateralize(collateralize_params) => {
       execute_collateralize(collateralize_params)
     }
@@ -157,7 +157,7 @@ fn execute_withdraw(
 
 // execute_max_withdraw sends umee leverage module an message of MaxWithdraw.
 fn execute_max_withdraw(
-  max_withdraw_params: MsgMaxWithDrawParams,
+  max_withdraw_params: MsgMaxWithdrawParams,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   let msg = StructUmeeMsg::max_withdraw(max_withdraw_params);
   Ok(

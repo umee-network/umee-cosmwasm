@@ -1,6 +1,6 @@
 use crate::msg_leverage::{
   BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxBorrowParams,
-  MsgMaxWithDrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
+  MsgMaxWithdrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
   UmeeMsgLeverage, WithdrawParams,
 };
 use cosmwasm_std::{CosmosMsg, CustomMsg};
@@ -26,7 +26,7 @@ pub struct StructUmeeMsg {
   assigned_msg: MsgTypes,
   supply: Option<SupplyParams>,
   withdraw: Option<WithdrawParams>,
-  max_withdraw: Option<MsgMaxWithDrawParams>,
+  max_withdraw: Option<MsgMaxWithdrawParams>,
   collateralize: Option<CollateralizeParams>,
   decollateralize: Option<DecollateralizeParams>,
   borrow: Option<BorrowParams>,
@@ -88,7 +88,7 @@ impl StructUmeeMsg {
     return m;
   }
   // creates a new maximum withdraw message.
-  pub fn max_withdraw(msg_max_withdraw_params: MsgMaxWithDrawParams) -> StructUmeeMsg {
+  pub fn max_withdraw(msg_max_withdraw_params: MsgMaxWithdrawParams) -> StructUmeeMsg {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgMaxWithdraw);
     m.max_withdraw = Some(msg_max_withdraw_params);
     return m;

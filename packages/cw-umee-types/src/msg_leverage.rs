@@ -28,7 +28,7 @@ pub enum UmeeMsgLeverage {
   Withdraw(WithdrawParams),
   // MaxWithdraw moves previously supplied tokens from the module back to the user balance in
   // exchange for burning uTokens. It automatically calculates the maximum valid amount to withdraw.
-  MaxWithDraw(MsgMaxWithDrawParams),
+  MaxWithdraw(MsgMaxWithdrawParams),
   // Collateralize enables selected uTokens as collateral,
   // which moves them to the module.
   Collateralize(CollateralizeParams),
@@ -64,7 +64,7 @@ pub struct WithdrawParams {
   pub asset: Coin,
 }
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MsgMaxWithDrawParams {
+pub struct MsgMaxWithdrawParams {
   // Supplier is the account address withdrawing assets and the signer of the message.
   pub supplier: Addr,
   pub denom: String,
