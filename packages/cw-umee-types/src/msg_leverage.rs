@@ -52,7 +52,6 @@ pub enum UmeeMsgLeverage {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct SupplyParams {
   // Supplier is the account address supplying assets and the signer of the message.
-  pub supplier: Addr,
   pub asset: Coin,
 }
 
@@ -60,13 +59,11 @@ pub struct SupplyParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct WithdrawParams {
   // Supplier is the account address withdrawing assets and the signer of the message.
-  pub supplier: Addr,
   pub asset: Coin,
 }
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MsgMaxWithdrawParams {
   // Supplier is the account address withdrawing assets and the signer of the message.
-  pub supplier: Addr,
   pub denom: String,
 }
 
@@ -74,7 +71,6 @@ pub struct MsgMaxWithdrawParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct CollateralizeParams {
   // Borrower is the account address adding collateral and the signer of the message.
-  pub borrower: Addr,
   pub asset: Coin,
 }
 
@@ -82,7 +78,6 @@ pub struct CollateralizeParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct DecollateralizeParams {
   // Borrower is the account address removing collateral and the signer of the message.
-  pub borrower: Addr,
   pub asset: Coin,
 }
 
@@ -90,14 +85,12 @@ pub struct DecollateralizeParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct BorrowParams {
   // Borrower is the account address taking a loan and the signer of the message.
-  pub borrower: Addr,
   pub asset: Coin,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MsgMaxBorrowParams {
   // Borrower is the account address taking a loan and the signer of the message.
-  pub borrower: Addr,
   pub denom: Coin,
 }
 
@@ -105,7 +98,6 @@ pub struct MsgMaxBorrowParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct RepayParams {
   // Borrower is the account address repaying a loan and the signer of the message.
-  pub borrower: Addr,
   pub asset: Coin,
 }
 
@@ -115,7 +107,6 @@ pub struct RepayParams {
 pub struct LiquidateParams {
   // Liquidator is the account address performing a liquidation and the signer
   // of the message.
-  pub liquidator: Addr,
   pub borrower: Addr,
   pub repayment: Coin,
   pub reward: Coin,
@@ -124,6 +115,5 @@ pub struct LiquidateParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct SupplyCollateralParams {
   // Supplier is the account address supplying assets and the signer of the message.
-  pub supplier: Addr,
   pub asset: Coin,
 }

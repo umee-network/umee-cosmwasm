@@ -1,6 +1,7 @@
 pub mod aggregate_exchange_rate_prevote;
 pub mod aggregate_exchange_rate_vote;
 pub mod bad_debt;
+pub mod error;
 pub mod leverage_parameters;
 pub mod msg;
 pub mod msg_leverage;

@@ -1,7 +1,7 @@
 use cosmwasm_std::{Addr, QueryRequest};
 use cw_umee_types::{
-  ExchangeRatesParams, LeverageParametersParams, RegisteredTokensParams, StructUmeeMsg,
-  StructUmeeQuery, SupplyParams, UmeeMsg, UmeeQuery,
+  ExchangeRatesParams, LeverageParametersParams, RegisteredTokensParams, StructUmeeQuery,
+  SupplyParams, UmeeMsg, UmeeQuery,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -14,7 +14,6 @@ pub struct InstantiateMsg {}
 pub enum ExecuteMsg {
   // updates the state owner
   ChangeOwner { new_owner: Addr },
-  Chain(Box<StructUmeeMsg>),
   Umee(UmeeMsg),
   Supply(SupplyParams),
 }

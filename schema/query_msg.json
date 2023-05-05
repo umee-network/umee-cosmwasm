@@ -229,8 +229,35 @@
         }
       }
     },
+    "MaxBorrowParams": {
+      "type": "object",
+      "required": [
+        "address",
+        "denom"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "MaxWithdrawParams": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "address",
+        "denom"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": "string"
+        }
+      }
     },
     "MedianDeviationsParams": {
       "type": "object",
@@ -564,6 +591,16 @@
             }
           ]
         },
+        "max_borrow_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MaxBorrowParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "max_withdraw_params": {
           "anyOf": [
             {
@@ -758,6 +795,18 @@
           "properties": {
             "max_withdraw": {
               "$ref": "#/definitions/MaxWithdrawParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "max_borrow"
+          ],
+          "properties": {
+            "max_borrow": {
+              "$ref": "#/definitions/MaxBorrowParams"
             }
           },
           "additionalProperties": false

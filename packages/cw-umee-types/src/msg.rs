@@ -1,9 +1,12 @@
-use crate::msg_leverage::{
-  BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxBorrowParams,
-  MsgMaxWithdrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
-  UmeeMsgLeverage, WithdrawParams,
+use crate::{
+  error::ContractError,
+  msg_leverage::{
+    BorrowParams, CollateralizeParams, DecollateralizeParams, LiquidateParams, MsgMaxBorrowParams,
+    MsgMaxWithdrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
+    UmeeMsgLeverage, WithdrawParams,
+  },
 };
-use cosmwasm_std::{CosmosMsg, CustomMsg};
+use cosmwasm_std::{CosmosMsg, CustomMsg, Response};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -51,6 +54,22 @@ fn default_struct_umee_msg(m: MsgTypes) -> StructUmeeMsg {
     supply_collateral: None,
   }
 }
+
+// msg_chain sends any message in the chain native modules
+pub fn msg_chain(umee_msg: StructUmeeMsg) -> Result<Response<StructUmeeMsg>, ContractError> {
+  if !umee_msg.valid() {
+    return Err(ContractError::CustomError {
+      val: String::from("invalid umee msg"),
+    });
+  }
+
+  let res = Response::new()
+    .add_attribute("method", umee_msg.assigned_str())
+    .add_message(umee_msg);
+
+  Ok(res)
+}
+
 // Defines all the implementation related to the StructUmeeMsg
 // like creating new messages structs, it is needed because
 // the fields inside the struct are private, to avoid missmatching
@@ -76,65 +95,80 @@ impl StructUmeeMsg {
     }
   }
   // creates a new lend message.
-  pub fn supply(supply_params: SupplyParams) -> StructUmeeMsg {
+  pub fn supply(supply_params: SupplyParams) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgSupply);
     m.supply = Some(supply_params);
-    return m;
+    return msg_chain(m);
   }
+
   // creates a new withdraw message.
-  pub fn withdraw(withdraw_params: WithdrawParams) -> StructUmeeMsg {
+  pub fn withdraw(
+    withdraw_params: WithdrawParams,
+  ) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgWithdraw);
     m.withdraw = Some(withdraw_params);
-    return m;
+    return msg_chain(m);
   }
   // creates a new maximum withdraw message.
-  pub fn max_withdraw(msg_max_withdraw_params: MsgMaxWithdrawParams) -> StructUmeeMsg {
+  pub fn max_withdraw(
+    msg_max_withdraw_params: MsgMaxWithdrawParams,
+  ) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgMaxWithdraw);
     m.max_withdraw = Some(msg_max_withdraw_params);
-    return m;
+    return msg_chain(m);
   }
   // creates a new collateralize message.
-  pub fn collateralize(collateralize_params: CollateralizeParams) -> StructUmeeMsg {
+  pub fn collateralize(
+    collateralize_params: CollateralizeParams,
+  ) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgCollateralize);
     m.collateralize = Some(collateralize_params);
-    return m;
+    return msg_chain(m);
   }
   // creates a new decollateralize message.
-  pub fn decollateralize(decollateralize_params: DecollateralizeParams) -> StructUmeeMsg {
+  pub fn decollateralize(
+    decollateralize_params: DecollateralizeParams,
+  ) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgDecollateralize);
     m.decollateralize = Some(decollateralize_params);
-    return m;
+    return msg_chain(m);
   }
   // creates a new borrow message.
-  pub fn borrow(borrow_params: BorrowParams) -> StructUmeeMsg {
+  pub fn borrow(borrow_params: BorrowParams) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgBorrow);
     m.borrow = Some(borrow_params);
-    return m;
+    return msg_chain(m);
   }
   // creates a new max borrow message.
-  pub fn max_borrow(max_borrow_params: MsgMaxBorrowParams) -> StructUmeeMsg {
+  pub fn max_borrow(
+    max_borrow_params: MsgMaxBorrowParams,
+  ) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgMaxBorrow);
     m.max_borrow = Some(max_borrow_params);
-    return m;
+    return msg_chain(m);
   }
   // creates a new repay message.
-  pub fn repay(repay_params: RepayParams) -> StructUmeeMsg {
+  pub fn repay(repay_params: RepayParams) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgRepay);
     m.repay = Some(repay_params);
-    return m;
+    return msg_chain(m);
   }
   // creates a new liquidate message.
-  pub fn liquidate(liquidate_params: LiquidateParams) -> StructUmeeMsg {
+  pub fn liquidate(
+    liquidate_params: LiquidateParams,
+  ) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgLiquidate);
     m.liquidate = Some(liquidate_params);
-    return m;
+    return msg_chain(m);
   }
 
   // creates a new supply collateralize message.
-  pub fn supply_collateral(supply_collateral_params: SupplyCollateralParams) -> StructUmeeMsg {
+  pub fn supply_collateral(
+    supply_collateral_params: SupplyCollateralParams,
+  ) -> Result<Response<StructUmeeMsg>, ContractError> {
     let mut m = default_struct_umee_msg(MsgTypes::AssignedMsgSupplyCollateralize);
     m.supply_collateral = Some(supply_collateral_params);
-    return m;
+    return msg_chain(m);
   }
 }
 

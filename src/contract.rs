@@ -4,9 +4,7 @@ use cosmwasm_std::{
   MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
-use cw_umee_types::msg_leverage::{
-  MsgMaxBorrowParams, MsgMaxWithdrawParams, SupplyCollateralParams,
-};
+use cw_umee_types::error::ContractError;
 use cw_umee_types::query_leverage::{
   BadDebtsParams, BadDebtsResponse, MaxBorrowParams, MaxBorrowResponse, MaxWithdrawParams,
   MaxWithdrawResponse,
@@ -18,17 +16,15 @@ use cw_umee_types::{
   AccountBalancesParams, AccountBalancesResponse, AccountSummaryParams, ActiveExchangeRatesParams,
   ActiveExchangeRatesResponse, AggregatePrevoteParams, AggregatePrevoteResponse,
   AggregatePrevotesParams, AggregatePrevotesResponse, AggregateVoteParams, AggregateVoteResponse,
-  AggregateVotesParams, AggregateVotesResponse, BorrowParams, CollateralizeParams,
-  DecollateralizeParams, ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams,
-  FeederDelegationResponse, LeverageParametersParams, LeverageParametersResponse, LiquidateParams,
-  LiquidationTargetsParams, LiquidationTargetsResponse, MarketSummaryParams, MarketSummaryResponse,
-  MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, RepayParams, SlashWindowParams,
-  SlashWindowResponse, StructUmeeMsg, StructUmeeQuery, SupplyParams, UmeeMsg, UmeeMsgLeverage,
-  UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
+  AggregateVotesParams, AggregateVotesResponse, ExchangeRatesParams, ExchangeRatesResponse,
+  FeederDelegationParams, FeederDelegationResponse, LeverageParametersParams,
+  LeverageParametersResponse, LiquidationTargetsParams, LiquidationTargetsResponse,
+  MarketSummaryParams, MarketSummaryResponse, MissCounterParams, MissCounterResponse,
+  OracleParametersParams, OracleParametersResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, SlashWindowParams, SlashWindowResponse, StructUmeeMsg, StructUmeeQuery,
+  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
-use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, OwnerResponse, QueryMsg};
 use crate::state::{State, STATE};
 
@@ -70,11 +66,10 @@ pub fn execute(
   match msg {
     // receives the new owner and tries to change it in the contract state
     ExecuteMsg::ChangeOwner { new_owner } => try_change_owner(deps, info, new_owner),
-    ExecuteMsg::Chain(cosmos_umee_msg) => msg_chain(*cosmos_umee_msg),
     ExecuteMsg::Umee(UmeeMsg::Leverage(execute_leverage_msg)) => {
       execute_leverage(execute_leverage_msg)
     }
-    ExecuteMsg::Supply(supply_params) => execute_lend(supply_params),
+    ExecuteMsg::Supply(supply_params) => StructUmeeMsg::supply(supply_params),
   }
 }
 
@@ -94,158 +89,32 @@ pub fn try_change_owner(
   Ok(Response::<StructUmeeMsg>::new().add_attribute("method", "change_owner"))
 }
 
-// msg_chain sends any message in the chain native modules
-fn msg_chain(umee_msg: StructUmeeMsg) -> Result<Response<StructUmeeMsg>, ContractError> {
-  if !umee_msg.valid() {
-    return Err(ContractError::CustomError {
-      val: String::from("invalid umee msg"),
-    });
-  }
-
-  let res = Response::new()
-    .add_attribute("method", umee_msg.assigned_str())
-    .add_message(umee_msg);
-
-  Ok(res)
-}
-
 // execute_leverage handles the execution of every msg of leverage umee native modules
 fn execute_leverage(
   execute_leverage_msg: UmeeMsgLeverage,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   match execute_leverage_msg {
-    UmeeMsgLeverage::Supply(supply_params) => execute_lend(supply_params),
-    UmeeMsgLeverage::Withdraw(withdraw_params) => execute_withdraw(withdraw_params),
-    UmeeMsgLeverage::MaxWithdraw(max_withdraw_params) => execute_max_withdraw(max_withdraw_params),
+    UmeeMsgLeverage::Supply(supply_params) => StructUmeeMsg::supply(supply_params),
+    UmeeMsgLeverage::Withdraw(withdraw_params) => StructUmeeMsg::withdraw(withdraw_params),
+    UmeeMsgLeverage::MaxWithdraw(max_withdraw_params) => {
+      StructUmeeMsg::max_withdraw(max_withdraw_params)
+    }
     UmeeMsgLeverage::Collateralize(collateralize_params) => {
-      execute_collateralize(collateralize_params)
+      StructUmeeMsg::collateralize(collateralize_params)
     }
     UmeeMsgLeverage::Decollateralize(decollateralize_params) => {
-      execute_decollateralize(decollateralize_params)
+      StructUmeeMsg::decollateralize(decollateralize_params)
     }
-    UmeeMsgLeverage::Borrow(borrow_params) => execute_borrow(borrow_params),
-    UmeeMsgLeverage::MaxBorrow(borrow_params) => execute_max_borrow(borrow_params),
-    UmeeMsgLeverage::Repay(repay_params) => execute_repay(repay_params),
-    UmeeMsgLeverage::Liquidate(liquidate_params) => execute_liquidate(liquidate_params),
+    UmeeMsgLeverage::Borrow(borrow_params) => StructUmeeMsg::borrow(borrow_params),
+    UmeeMsgLeverage::MaxBorrow(borrow_params) => StructUmeeMsg::max_borrow(borrow_params),
+    UmeeMsgLeverage::Repay(repay_params) => StructUmeeMsg::repay(repay_params),
+    UmeeMsgLeverage::Liquidate(liquidate_params) => StructUmeeMsg::liquidate(liquidate_params),
     UmeeMsgLeverage::SupplyCollateral(supply_collateralize_params) => {
-      execute_supply_collateralize(supply_collateralize_params)
+      StructUmeeMsg::supply_collateral(supply_collateralize_params)
     }
   }
 }
 
-// execute_lend sends umee leverage module an message of Supply.
-fn execute_lend(supply_params: SupplyParams) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::supply(supply_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_withdraw sends umee leverage module an message of Withdraw.
-fn execute_withdraw(
-  withdraw_params: WithdrawParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::withdraw(withdraw_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_max_withdraw sends umee leverage module an message of MaxWithdraw.
-fn execute_max_withdraw(
-  max_withdraw_params: MsgMaxWithdrawParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::max_withdraw(max_withdraw_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_collateralize sends umee leverage module an message of Collateralize.
-fn execute_collateralize(
-  collateralize_params: CollateralizeParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::collateralize(collateralize_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_decollateralize sends umee leverage module an message of Decollateralize.
-fn execute_decollateralize(
-  decollateralize_params: DecollateralizeParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::decollateralize(decollateralize_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_borrow sends umee leverage module an message of Borrow.
-fn execute_borrow(borrow_params: BorrowParams) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::borrow(borrow_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_max_borrow sends umee leverage module an message of MaxBorrow.
-fn execute_max_borrow(
-  max_borrow_params: MsgMaxBorrowParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::max_borrow(max_borrow_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_repay sends umee leverage module an message of Repay.
-fn execute_repay(repay_params: RepayParams) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::repay(repay_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_liquidate sends umee leverage module an message of Liquidate.
-fn execute_liquidate(
-  liquidate_params: LiquidateParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::liquidate(liquidate_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_supply_collateralize sends umee leverage module an message of Supply Collateralize.
-fn execute_supply_collateralize(
-  supply_collateral_params: SupplyCollateralParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::supply_collateral(supply_collateral_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
 // queries doesn't change the state, but it open the state with read permissions
 // it can also query from native modules "bank, stake, custom..."
 // returns an json wrapped data, like:
