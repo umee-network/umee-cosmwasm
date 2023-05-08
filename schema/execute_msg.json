@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ExecuteMsg",
-  "anyOf": [
+  "oneOf": [
     {
       "type": "object",
       "required": [
@@ -18,18 +18,6 @@
               "$ref": "#/definitions/Addr"
             }
           }
-        }
-      },
-      "additionalProperties": false
-    },
-    {
-      "type": "object",
-      "required": [
-        "chain"
-      ],
-      "properties": {
-        "chain": {
-          "$ref": "#/definitions/StructUmeeMsg"
         }
       },
       "additionalProperties": false
@@ -67,15 +55,11 @@
     "BorrowParams": {
       "type": "object",
       "required": [
-        "asset",
-        "borrower"
+        "asset"
       ],
       "properties": {
         "asset": {
           "$ref": "#/definitions/Coin"
-        },
-        "borrower": {
-          "$ref": "#/definitions/Addr"
         }
       }
     },
@@ -97,14 +81,10 @@
     "CollateralizeParams": {
       "type": "object",
       "required": [
-        "borrower",
-        "coin"
+        "asset"
       ],
       "properties": {
-        "borrower": {
-          "$ref": "#/definitions/Addr"
-        },
-        "coin": {
+        "asset": {
           "$ref": "#/definitions/Coin"
         }
       }
@@ -112,14 +92,10 @@
     "DecollateralizeParams": {
       "type": "object",
       "required": [
-        "borrower",
-        "coin"
+        "asset"
       ],
       "properties": {
-        "borrower": {
-          "$ref": "#/definitions/Addr"
-        },
-        "coin": {
+        "asset": {
           "$ref": "#/definitions/Coin"
         }
       }
@@ -128,15 +104,11 @@
       "type": "object",
       "required": [
         "borrower",
-        "liquidator",
         "repayment",
         "reward"
       ],
       "properties": {
         "borrower": {
-          "$ref": "#/definitions/Addr"
-        },
-        "liquidator": {
           "$ref": "#/definitions/Addr"
         },
         "repayment": {
@@ -147,116 +119,58 @@
         }
       }
     },
+    "MsgMaxBorrowParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "$ref": "#/definitions/Coin"
+        }
+      }
+    },
+    "MsgMaxWithdrawParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "RepayParams": {
       "type": "object",
       "required": [
-        "asset",
-        "borrower"
+        "asset"
       ],
       "properties": {
         "asset": {
           "$ref": "#/definitions/Coin"
-        },
-        "borrower": {
-          "$ref": "#/definitions/Addr"
         }
       }
     },
-    "StructUmeeMsg": {
+    "SupplyCollateralParams": {
       "type": "object",
       "required": [
-        "assigned_msg"
+        "asset"
       ],
       "properties": {
-        "assigned_msg": {
-          "type": "integer",
-          "format": "uint16",
-          "minimum": 0.0
-        },
-        "borrow": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BorrowParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "collateralize": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CollateralizeParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "decollateralize": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DecollateralizeParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "liquidate": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/LiquidateParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "repay": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/RepayParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "supply": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/SupplyParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "withdraw": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/WithdrawParams"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "asset": {
+          "$ref": "#/definitions/Coin"
         }
       }
     },
     "SupplyParams": {
       "type": "object",
       "required": [
-        "amount",
-        "supplier"
+        "asset"
       ],
       "properties": {
-        "amount": {
+        "asset": {
           "$ref": "#/definitions/Coin"
-        },
-        "supplier": {
-          "$ref": "#/definitions/Addr"
         }
       }
     },
@@ -265,7 +179,7 @@
       "type": "string"
     },
     "UmeeMsg": {
-      "anyOf": [
+      "oneOf": [
         {
           "type": "object",
           "required": [
@@ -281,7 +195,7 @@
       ]
     },
     "UmeeMsgLeverage": {
-      "anyOf": [
+      "oneOf": [
         {
           "type": "object",
           "required": [
@@ -302,6 +216,18 @@
           "properties": {
             "withdraw": {
               "$ref": "#/definitions/WithdrawParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "max_withdraw"
+          ],
+          "properties": {
+            "max_withdraw": {
+              "$ref": "#/definitions/MsgMaxWithdrawParams"
             }
           },
           "additionalProperties": false
@@ -345,6 +271,18 @@
         {
           "type": "object",
           "required": [
+            "max_borrow"
+          ],
+          "properties": {
+            "max_borrow": {
+              "$ref": "#/definitions/MsgMaxBorrowParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
             "repay"
           ],
           "properties": {
@@ -365,21 +303,29 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "supply_collateral"
+          ],
+          "properties": {
+            "supply_collateral": {
+              "$ref": "#/definitions/SupplyCollateralParams"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
     "WithdrawParams": {
       "type": "object",
       "required": [
-        "amount",
-        "supplier"
+        "asset"
       ],
       "properties": {
-        "amount": {
+        "asset": {
           "$ref": "#/definitions/Coin"
-        },
-        "supplier": {
-          "$ref": "#/definitions/Addr"
         }
       }
     }

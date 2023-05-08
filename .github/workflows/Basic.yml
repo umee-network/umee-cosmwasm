@@ -17,7 +17,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: 1.58.1
+          toolchain: stable
           target: wasm32-unknown-unknown
           override: true
 
@@ -48,7 +48,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: 1.58.1
+          toolchain: stable
           override: true
           components: rustfmt, clippy
 
@@ -65,11 +65,12 @@ jobs:
           args: -- -D warnings
 
       - name: Run cargo publish dry run
-        uses: katyo/publish-crates@v1
+        uses: katyo/publish-crates@v2
         with:
           path: './packages/cw-umee-types'
           registry-token: ${{ secrets.CARGO_REGISTRIES_UMEE_TOKEN }}
           dry-run: true
+          ignore-unpublished-changes: true
 
       - name: Generate Schema
         uses: actions-rs/cargo@v1

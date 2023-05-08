@@ -6,16 +6,24 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query
-pub const ASSIGNED_QUERY_EXCHANGE_RATES: u16 = 1;
-pub const ASSIGNED_QUERY_ACTIVE_EXCHANGE_RATES: u16 = 8;
-pub const ASSIGNED_QUERY_FEEDER_DELEGATION: u16 = 9;
-pub const ASSIGNED_QUERY_MISS_COUNTER: u16 = 10;
-pub const ASSIGNED_QUERY_SLASH_WINDOW: u16 = 11;
-pub const ASSIGNED_QUERY_AGGREGATE_PREVOTE: u16 = 12;
-pub const ASSIGNED_QUERY_AGGREGATE_PREVOTES: u16 = 13;
-pub const ASSIGNED_QUERY_AGGREGATE_VOTE: u16 = 14;
-pub const ASSIGNED_QUERY_AGGREGATE_VOTES: u16 = 15;
-pub const ASSIGNED_QUERY_ORACLE_PARAMS: u16 = 16;
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub enum OracleQueries {
+  // NOTE: First leverage query types then oracle module query types
+  // Please don't change the order, If you change the order please update the respective query type value in Umee wasm
+  // query enum values also
+  AssignedQueryFeederDelegation = 9,
+  AssignedQueryMissCounter,
+  AssignedQuerySlashWindow,
+  AssignedQueryAggregatePrevote,
+  AssignedQueryAggregatePrevotes,
+  AssignedQueryAggregateVote,
+  AssignedQueryAggregateVotes,
+  AssignedQueryOracleParams,
+  AssignedQueryExchangeRates,
+  AssignedQueryActiveExchangeRates,
+  AssignedQueryMedians,
+  AssignedQueryMedianDeviations,
+}
 
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
@@ -52,6 +60,12 @@ pub enum UmeeQueryOracle {
   // OracleParameters returns all oracle module parameters.
   // Expect to returns OracleParametersParams.
   OracleParameters(OracleParametersParams),
+  // Medians returns medians of all denoms,
+  // or, if specified, returns a single median
+  Medians(MediansParams),
+  // MedianDeviations returns median deviations of all denoms,
+  // or, if specified, returns a single median deviation
+  MedianDeviations(MedianDeviationsParams),
 }
 
 // ExchangeRatesParams params to query ExchangeRates
@@ -172,4 +186,23 @@ pub struct OracleParametersParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct OracleParametersResponse {
   pub params: OracleParameters,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MediansParams {
+  pub denom: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MediansParamsResponse {
+  pub medians: Vec<DecCoin>,
+}
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MedianDeviationsParams {
+  pub denom: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MedianDeviationsParamsResponse {
+  pub median_deviations: Vec<DecCoin>,
 }

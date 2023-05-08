@@ -4,21 +4,27 @@ use cosmwasm_std::{
   MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
 };
 use cw2::set_contract_version;
+use cw_umee_types::error::ContractError;
+use cw_umee_types::query_leverage::{
+  BadDebtsParams, BadDebtsResponse, MaxBorrowParams, MaxBorrowResponse, MaxWithdrawParams,
+  MaxWithdrawResponse,
+};
+use cw_umee_types::query_oracle::{
+  MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
+};
 use cw_umee_types::{
   AccountBalancesParams, AccountBalancesResponse, AccountSummaryParams, ActiveExchangeRatesParams,
   ActiveExchangeRatesResponse, AggregatePrevoteParams, AggregatePrevoteResponse,
   AggregatePrevotesParams, AggregatePrevotesResponse, AggregateVoteParams, AggregateVoteResponse,
-  AggregateVotesParams, AggregateVotesResponse, BorrowParams, CollateralizeParams,
-  DecollateralizeParams, ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams,
-  FeederDelegationResponse, LeverageParametersParams, LeverageParametersResponse, LiquidateParams,
-  LiquidationTargetsParams, LiquidationTargetsResponse, MarketSummaryParams, MarketSummaryResponse,
-  MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, RepayParams, SlashWindowParams,
-  SlashWindowResponse, StructUmeeMsg, StructUmeeQuery, SupplyParams, UmeeMsg, UmeeMsgLeverage,
-  UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle, WithdrawParams,
+  AggregateVotesParams, AggregateVotesResponse, ExchangeRatesParams, ExchangeRatesResponse,
+  FeederDelegationParams, FeederDelegationResponse, LeverageParametersParams,
+  LeverageParametersResponse, LiquidationTargetsParams, LiquidationTargetsResponse,
+  MarketSummaryParams, MarketSummaryResponse, MissCounterParams, MissCounterResponse,
+  OracleParametersParams, OracleParametersResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, SlashWindowParams, SlashWindowResponse, StructUmeeMsg, StructUmeeQuery,
+  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
-use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, OwnerResponse, QueryMsg};
 use crate::state::{State, STATE};
 
@@ -60,11 +66,10 @@ pub fn execute(
   match msg {
     // receives the new owner and tries to change it in the contract state
     ExecuteMsg::ChangeOwner { new_owner } => try_change_owner(deps, info, new_owner),
-    ExecuteMsg::Chain(cosmos_umee_msg) => msg_chain(*cosmos_umee_msg),
     ExecuteMsg::Umee(UmeeMsg::Leverage(execute_leverage_msg)) => {
       execute_leverage(execute_leverage_msg)
     }
-    ExecuteMsg::Supply(supply_params) => execute_lend(supply_params),
+    ExecuteMsg::Supply(supply_params) => StructUmeeMsg::supply(supply_params),
   }
 }
 
@@ -84,116 +89,30 @@ pub fn try_change_owner(
   Ok(Response::<StructUmeeMsg>::new().add_attribute("method", "change_owner"))
 }
 
-// msg_chain sends any message in the chain native modules
-fn msg_chain(umee_msg: StructUmeeMsg) -> Result<Response<StructUmeeMsg>, ContractError> {
-  if !umee_msg.valid() {
-    return Err(ContractError::CustomError {
-      val: String::from("invalid umee msg"),
-    });
-  }
-
-  let res = Response::new()
-    .add_attribute("method", umee_msg.assigned_str())
-    .add_message(umee_msg);
-
-  Ok(res)
-}
-
 // execute_leverage handles the execution of every msg of leverage umee native modules
 fn execute_leverage(
   execute_leverage_msg: UmeeMsgLeverage,
 ) -> Result<Response<StructUmeeMsg>, ContractError> {
   match execute_leverage_msg {
-    UmeeMsgLeverage::Supply(supply_params) => execute_lend(supply_params),
-    UmeeMsgLeverage::Withdraw(withdraw_params) => execute_withdraw(withdraw_params),
+    UmeeMsgLeverage::Supply(supply_params) => StructUmeeMsg::supply(supply_params),
+    UmeeMsgLeverage::Withdraw(withdraw_params) => StructUmeeMsg::withdraw(withdraw_params),
+    UmeeMsgLeverage::MaxWithdraw(max_withdraw_params) => {
+      StructUmeeMsg::max_withdraw(max_withdraw_params)
+    }
     UmeeMsgLeverage::Collateralize(collateralize_params) => {
-      execute_collateralize(collateralize_params)
+      StructUmeeMsg::collateralize(collateralize_params)
     }
     UmeeMsgLeverage::Decollateralize(decollateralize_params) => {
-      execute_decollateralize(decollateralize_params)
+      StructUmeeMsg::decollateralize(decollateralize_params)
     }
-    UmeeMsgLeverage::Borrow(borrow_params) => execute_borrow(borrow_params),
-    UmeeMsgLeverage::Repay(repay_params) => execute_repay(repay_params),
-    UmeeMsgLeverage::Liquidate(liquidate_params) => execute_liquidate(liquidate_params),
+    UmeeMsgLeverage::Borrow(borrow_params) => StructUmeeMsg::borrow(borrow_params),
+    UmeeMsgLeverage::MaxBorrow(borrow_params) => StructUmeeMsg::max_borrow(borrow_params),
+    UmeeMsgLeverage::Repay(repay_params) => StructUmeeMsg::repay(repay_params),
+    UmeeMsgLeverage::Liquidate(liquidate_params) => StructUmeeMsg::liquidate(liquidate_params),
+    UmeeMsgLeverage::SupplyCollateral(supply_collateralize_params) => {
+      StructUmeeMsg::supply_collateral(supply_collateralize_params)
+    }
   }
-}
-
-// execute_lend sends umee leverage module an message of Supply.
-fn execute_lend(supply_params: SupplyParams) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::supply(supply_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_withdraw sends umee leverage module an message of Withdraw.
-fn execute_withdraw(
-  withdraw_params: WithdrawParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::withdraw(withdraw_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_collateralize sends umee leverage module an message of Collateralize.
-fn execute_collateralize(
-  collateralize_params: CollateralizeParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::collateralize(collateralize_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_decollateralize sends umee leverage module an message of Decollateralize.
-fn execute_decollateralize(
-  decollateralize_params: DecollateralizeParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::decollateralize(decollateralize_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_borrow sends umee leverage module an message of Borrow.
-fn execute_borrow(borrow_params: BorrowParams) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::borrow(borrow_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_repay sends umee leverage module an message of Repay.
-fn execute_repay(repay_params: RepayParams) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::repay(repay_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
-}
-
-// execute_liquidate sends umee leverage module an message of Liquidate.
-fn execute_liquidate(
-  liquidate_params: LiquidateParams,
-) -> Result<Response<StructUmeeMsg>, ContractError> {
-  let msg = StructUmeeMsg::liquidate(liquidate_params);
-  Ok(
-    Response::new()
-      .add_attribute("method", msg.assigned_str())
-      .add_message(msg),
-  )
 }
 
 // queries doesn't change the state, but it open the state with read permissions
@@ -362,6 +281,15 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
     UmeeQueryLeverage::LiquidationTargets(liquidation_targets_params) => to_binary(
       &query_liquidation_targets(deps, liquidation_targets_params)?,
     ),
+    UmeeQueryLeverage::BadDebts(bad_debts_params) => {
+      to_binary(&query_bad_debts(deps, bad_debts_params)?)
+    }
+    UmeeQueryLeverage::MaxWithdraw(max_withdraw_params) => {
+      to_binary(&query_max_withdraw(deps, max_withdraw_params)?)
+    }
+    UmeeQueryLeverage::MaxBorrow(max_borrow_params) => {
+      to_binary(&query_max_borrow(deps, max_borrow_params)?)
+    }
   }
 }
 
@@ -415,6 +343,10 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     }
     UmeeQueryOracle::OracleParameters(oracle_parameters_params) => {
       to_binary(&query_oracle_parameters(deps, oracle_parameters_params)?)
+    }
+    UmeeQueryOracle::Medians(median_params) => to_binary(&query_medians(deps, median_params)?),
+    UmeeQueryOracle::MedianDeviations(median_deviations_params) => {
+      to_binary(&query_median_deviations(deps, median_deviations_params)?)
     }
   }
 }
@@ -557,6 +489,77 @@ fn query_liquidation_targets(
   }
 
   Ok(liquidation_targets_response)
+}
+
+fn query_bad_debts(deps: Deps, bad_debts_params: BadDebtsParams) -> StdResult<BadDebtsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::bad_debts_parameters(bad_debts_params));
+
+  let bad_debts_response: BadDebtsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<BadDebtsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => bad_debts_response = response,
+      };
+    }
+  }
+
+  Ok(bad_debts_response)
+}
+
+// query_max_withdraw
+fn query_max_withdraw(
+  deps: Deps,
+  max_withdraw_params: MaxWithdrawParams,
+) -> StdResult<MaxWithdrawResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::max_withdraw_params(max_withdraw_params));
+
+  let max_withdraw_response: MaxWithdrawResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MaxWithdrawResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => max_withdraw_response = response,
+      };
+    }
+  }
+
+  Ok(max_withdraw_response)
+}
+
+// query_max_borrow
+fn query_max_borrow(
+  deps: Deps,
+  max_borrow_params: MaxBorrowParams,
+) -> StdResult<MaxBorrowResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::max_borrow_params(max_borrow_params));
+
+  let max_borrow_response: MaxBorrowResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MaxBorrowResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => max_borrow_response = response,
+      };
+    }
+  }
+
+  Ok(max_borrow_response)
 }
 
 // query_market_summary creates an query request to the native modules
@@ -868,6 +871,53 @@ fn query_oracle_parameters(
   }
 
   Ok(oracle_parameters_resp)
+}
+
+fn query_medians(deps: Deps, medians_params: MediansParams) -> StdResult<MediansParamsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::medians_params(medians_params));
+
+  let medians_response: MediansParamsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MediansParamsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => medians_response = response,
+      };
+    }
+  }
+
+  Ok(medians_response)
+}
+
+fn query_median_deviations(
+  deps: Deps,
+  medians_deviations_params: MedianDeviationsParams,
+) -> StdResult<MedianDeviationsParamsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::median_deviations_params(
+    medians_deviations_params,
+  ));
+
+  let median_deviations_response: MedianDeviationsParamsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MedianDeviationsParamsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => median_deviations_response = response,
+      };
+    }
+  }
+
+  Ok(median_deviations_response)
 }
 
 // -----------------------------------TESTS---------------------------------------

@@ -13,6 +13,10 @@ pub struct OracleParameters {
   slash_fraction: Decimal256,
   slash_window: u64,
   min_valid_per_window: Decimal256,
+  stamp_period: u64,
+  prune_period: u64,
+  median_period: u64,
+  historic_accept_list: Vec<Denom>,
 }
 
 // Denom object to hold configurations of each denom.

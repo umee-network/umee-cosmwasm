@@ -20,4 +20,9 @@ pub struct LeverageParameters {
   // considered small enough to be liquidated in a single transaction, bypassing
   // dynamic close factor.
   small_liquidation_size: Decimal256,
+  // Direct Liquidation Fee is a reduction factor in liquidation incentive
+  // experienced by liquidators who choose to receive base assets instead of
+  // uTokens as liquidation rewards.
+  // Valid values: 0-1.
+  direct_liquidation_fee: Decimal256,
 }

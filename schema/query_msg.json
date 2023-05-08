@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "QueryMsg",
-  "anyOf": [
+  "oneOf": [
     {
       "type": "object",
       "required": [
@@ -133,8 +133,11 @@
     "AggregateVotesParams": {
       "type": "object"
     },
+    "BadDebtsParams": {
+      "type": "object"
+    },
     "BankQuery": {
-      "anyOf": [
+      "oneOf": [
         {
           "description": "This calls into the native bank module for one denomination Return value is BalanceResponse",
           "type": "object",
@@ -184,7 +187,7 @@
       ]
     },
     "Binary": {
-      "description": "Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>",
+      "description": "Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>. See also <https://github.com/CosmWasm/cosmwasm/blob/main/docs/MESSAGE_TYPES.md>.",
       "type": "string"
     },
     "ExchangeRatesParams": {
@@ -226,6 +229,58 @@
         }
       }
     },
+    "MaxBorrowParams": {
+      "type": "object",
+      "required": [
+        "address",
+        "denom"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MaxWithdrawParams": {
+      "type": "object",
+      "required": [
+        "address",
+        "denom"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Addr"
+        },
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MedianDeviationsParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MediansParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
     "MissCounterParams": {
       "type": "object",
       "required": [
@@ -241,7 +296,7 @@
       "type": "object"
     },
     "QueryRequest_for_StructUmeeQuery": {
-      "anyOf": [
+      "oneOf": [
         {
           "type": "object",
           "required": [
@@ -299,7 +354,7 @@
       "type": "object"
     },
     "StakingQuery": {
-      "anyOf": [
+      "oneOf": [
         {
           "description": "Returns the denomination that can be bonded (if there are multiple native tokens on the chain)",
           "type": "object",
@@ -474,8 +529,17 @@
         },
         "assigned_query": {
           "type": "integer",
-          "format": "uint16",
-          "minimum": 0.0
+          "format": "int32"
+        },
+        "bad_debts_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BadDebtsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "exchange_rates": {
           "anyOf": [
@@ -527,6 +591,46 @@
             }
           ]
         },
+        "max_borrow_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MaxBorrowParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_withdraw_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MaxWithdrawParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "median_deviations_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MedianDeviationsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "medians_params": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MediansParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "miss_counter": {
           "anyOf": [
             {
@@ -570,7 +674,7 @@
       }
     },
     "UmeeQuery": {
-      "anyOf": [
+      "oneOf": [
         {
           "type": "object",
           "required": [
@@ -598,7 +702,7 @@
       ]
     },
     "UmeeQueryLeverage": {
-      "anyOf": [
+      "oneOf": [
         {
           "type": "object",
           "required": [
@@ -670,11 +774,47 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "bad_debts"
+          ],
+          "properties": {
+            "bad_debts": {
+              "$ref": "#/definitions/BadDebtsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "max_withdraw"
+          ],
+          "properties": {
+            "max_withdraw": {
+              "$ref": "#/definitions/MaxWithdrawParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "max_borrow"
+          ],
+          "properties": {
+            "max_borrow": {
+              "$ref": "#/definitions/MaxBorrowParams"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
     "UmeeQueryOracle": {
-      "anyOf": [
+      "oneOf": [
         {
           "type": "object",
           "required": [
@@ -794,11 +934,35 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "medians"
+          ],
+          "properties": {
+            "medians": {
+              "$ref": "#/definitions/MediansParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "median_deviations"
+          ],
+          "properties": {
+            "median_deviations": {
+              "$ref": "#/definitions/MedianDeviationsParams"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
     "WasmQuery": {
-      "anyOf": [
+      "oneOf": [
         {
           "description": "this queries the public API of another contract at a known address (with known ABI) Return value is whatever the contract returns (caller should know), wrapped in a ContractResult that is JSON encoded.",
           "type": "object",
@@ -860,7 +1024,7 @@
           "additionalProperties": false
         },
         {
-          "description": "returns a ContractInfoResponse with metadata on the contract from the runtime",
+          "description": "Returns a [`ContractInfoResponse`] with metadata on the contract from the runtime",
           "type": "object",
           "required": [
             "contract_info"

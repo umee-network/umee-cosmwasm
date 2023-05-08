@@ -1,3 +1,4 @@
+use crate::bad_debt::BadDebt;
 use crate::leverage_parameters::LeverageParameters;
 use crate::token::Token;
 use cosmwasm_std::{Addr, Coin, Decimal256};
@@ -5,13 +6,22 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 // All the queries must have an assigned query.
-pub const ASSIGNED_QUERY_LEVERAGE_PARAMS: u16 = 2;
-pub const ASSIGNED_QUERY_REGISTERED_TOKENS: u16 = 3;
-pub const ASSIGNED_QUERY_MARKET_SUMMARY: u16 = 4;
-pub const ASSIGNED_QUERY_ACCOUNT_BALANCES: u16 = 5;
-pub const ASSIGNED_QUERY_ACCOUNT_SUMMARY: u16 = 6;
-pub const ASSIGNED_QUERY_LIQUIDATION_TARGETS: u16 = 7;
-
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub enum LeverageQueries {
+  // NOTE: First leverage query types then oracle module query types
+  // If you add any new query, Please increase the OracleQueryTypes first enum value
+  // Please don't change the order, If you change the order please update the respective query type value in Umee wasm
+  // query enum values also
+  AssignedQueryLeverageParams = 0,
+  AssignedQueryRegisteredTokens,
+  AssignedQueryMarketSummary,
+  AssignedQueryAccountBalances,
+  AssignedQueryAccountSummary,
+  AssignedQueryLiquidationTargets,
+  AssignedQueryBadDebts,
+  AssignedQueryMaxWithdraw,
+  AssignedQueryMaxBorrow,
+}
 // UmeeQueryLeverage defines all the available queries
 // for the umee leverage native module.
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
@@ -36,6 +46,12 @@ pub enum UmeeQueryLeverage {
   // for liquidation.
   // Expect to returns LiquidationTargetsResponse.
   LiquidationTargets(LiquidationTargetsParams),
+  // BadDebts returns a list of borrow positions that have been marked for bad debt repayment.
+  BadDebts(BadDebtsParams),
+  // MaxWithdraw returns the maximum amount of a given token an address can withdraw.
+  MaxWithdraw(MaxWithdrawParams),
+  // MaxBorrow queries the maximum amount of a given token an address can borrow.
+  MaxBorrow(MaxBorrowParams),
 }
 
 // LeverageParametersParams params to query LeverageParameters.
@@ -125,4 +141,35 @@ pub struct LiquidationTargetsParams {}
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct LiquidationTargetsResponse {
   pub targets: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct BadDebtsParams {}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct BadDebtsResponse {
+  pub targets: Vec<BadDebt>,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MaxWithdrawParams {
+  pub address: Addr,
+  pub denom: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MaxWithdrawResponse {
+  pub u_tokens: Coin,
+  pub tokens: Coin,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MaxBorrowParams {
+  pub address: Addr,
+  pub denom: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct MaxBorrowResponse {
+  pub tokens: Vec<Coin>,
 }
