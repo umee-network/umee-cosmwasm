@@ -1,6 +1,6 @@
 [package]
 name = "cw-umee-types"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 description = "Types for CustomMsg and CustomQuery for the Umee blockchain"
 license = "Apache-2.0"

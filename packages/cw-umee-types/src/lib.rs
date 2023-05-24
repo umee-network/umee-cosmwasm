@@ -23,9 +23,9 @@ pub use query::{StructUmeeQuery, UmeeQuery};
 pub use query_leverage::{
   AccountBalancesParams, AccountBalancesResponse, AccountSummaryParams, AccountSummaryResponse,
   BadDebtsParams, BadDebtsResponse, LeverageParametersParams, LeverageParametersResponse,
-  LeverageQueries, LiquidationTargetsParams, LiquidationTargetsResponse, MarketSummaryParams,
-  MarketSummaryResponse, MaxBorrowParams, MaxWithdrawParams, MaxWithdrawResponse,
-  RegisteredTokensParams, RegisteredTokensResponse, UmeeQueryLeverage,
+  LiquidationTargetsParams, LiquidationTargetsResponse, MarketSummaryParams, MarketSummaryResponse,
+  MaxBorrowParams, MaxWithdrawParams, MaxWithdrawResponse, RegisteredTokensParams,
+  RegisteredTokensResponse, UmeeQueryLeverage,
 };
 
 pub use query_oracle::{
@@ -35,7 +35,7 @@ pub use query_oracle::{
   ExchangeRatesParams, ExchangeRatesResponse, FeederDelegationParams, FeederDelegationResponse,
   MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
   MissCounterParams, MissCounterResponse, OracleParametersParams, OracleParametersResponse,
-  OracleQueries, SlashWindowParams, SlashWindowResponse, UmeeQueryOracle,
+  SlashWindowParams, SlashWindowResponse, UmeeQueryOracle,
 };
 
 pub use msg_leverage::{
