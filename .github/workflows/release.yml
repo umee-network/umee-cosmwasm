@@ -11,8 +11,12 @@ on:
     types: [opened, synchronize]
 
 jobs:
+  basic:
+    uses: ./.github.com/workflows/basic.yml
+  
   release:
     runs-on: ubuntu-latest
+    needs: basic
     steps:
     - uses: actions/checkout@v2
     - uses: actions-rs/toolchain@v1

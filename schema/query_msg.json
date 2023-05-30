@@ -453,9 +453,6 @@
     },
     "StructUmeeQuery": {
       "type": "object",
-      "required": [
-        "assigned_query"
-      ],
       "properties": {
         "account_balances": {
           "anyOf": [
@@ -526,10 +523,6 @@
               "type": "null"
             }
           ]
-        },
-        "assigned_query": {
-          "type": "integer",
-          "format": "int32"
         },
         "bad_debts_params": {
           "anyOf": [

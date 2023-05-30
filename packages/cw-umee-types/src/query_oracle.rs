@@ -5,26 +5,6 @@ use cosmwasm_std::{Addr, Decimal256};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-// All the queries must have an assigned query
-#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub enum OracleQueries {
-  // NOTE: First leverage query types then oracle module query types
-  // Please don't change the order, If you change the order please update the respective query type value in Umee wasm
-  // query enum values also
-  AssignedQueryFeederDelegation = 9,
-  AssignedQueryMissCounter,
-  AssignedQuerySlashWindow,
-  AssignedQueryAggregatePrevote,
-  AssignedQueryAggregatePrevotes,
-  AssignedQueryAggregateVote,
-  AssignedQueryAggregateVotes,
-  AssignedQueryOracleParams,
-  AssignedQueryExchangeRates,
-  AssignedQueryActiveExchangeRates,
-  AssignedQueryMedians,
-  AssignedQueryMedianDeviations,
-}
-
 // UmeeQueryOracle defines  all the available queries
 // for the umee Oracle native module
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
