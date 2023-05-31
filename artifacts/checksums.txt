@@ -1,1 +1,1 @@
-fb9c87e26f4a4438cd30b20b149bddf3d4fd93985538e7190066c3c52cde87a1  umee_cosmwasm-aarch64.wasm
+0f30fa024fb5ce20c5534b493925b7d9ba75ca59f1c6f6d72df3395734a1e18a  umee_cosmwasm-aarch64.wasm
