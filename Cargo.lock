@@ -237,7 +237,7 @@ dependencies = [
 
 [[package]]
 name = "cw-umee-types"
-version = "0.1.9"
+version = "0.1.10"
 dependencies = [
  "cosmwasm-std",
  "cosmwasm-storage",
@@ -789,7 +789,7 @@ dependencies = [
 
 [[package]]
 name = "umee-cosmwasm"
-version = "0.1.4"
+version = "0.1.10"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",

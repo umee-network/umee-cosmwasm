@@ -5,6 +5,15 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use cw_umee_types::error::ContractError;
+use cw_umee_types::query_incentive::{
+  AccountBondsParams, AccountBondsResponse, ActualRatesParams, ActualRatesResponse,
+  CompletedIncentiveProgramsParams, CompletedIncentiveProgramsResponse, CurrentRatesParams,
+  CurrentRatesResponse, IncentiveParametersParams, IncentiveParametersResponse,
+  IncentiveProgramParams, IncentiveProgramResponse, LastRewardTimeParams, LastRewardTimeResponse,
+  OngoingIncentiveProgramsParams, OngoingIncentiveProgramsResponse, PendingRewardsParams,
+  PendingRewardsResponse, TotalBondedParams, TotalBondedResponse, TotalUnbondingParams,
+  TotalUnbondingResponse, UpcomingIncentiveProgramsParams, UpcomingIncentiveProgramsResponse,
+};
 use cw_umee_types::query_leverage::{
   BadDebtsParams, BadDebtsResponse, MaxBorrowParams, MaxBorrowResponse, MaxWithdrawParams,
   MaxWithdrawResponse,
@@ -22,7 +31,7 @@ use cw_umee_types::{
   MarketSummaryParams, MarketSummaryResponse, MissCounterParams, MissCounterResponse,
   OracleParametersParams, OracleParametersResponse, RegisteredTokensParams,
   RegisteredTokensResponse, SlashWindowParams, SlashWindowResponse, StructUmeeMsg, StructUmeeQuery,
-  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryLeverage, UmeeQueryOracle,
+  UmeeMsg, UmeeMsgLeverage, UmeeQuery, UmeeQueryIncentive, UmeeQueryLeverage, UmeeQueryOracle,
 };
 
 use crate::msg::{ExecuteMsg, InstantiateMsg, OwnerResponse, QueryMsg};
@@ -233,6 +242,8 @@ fn query_umee(deps: Deps, _env: Env, umee_msg: UmeeQuery) -> StdResult<Binary> {
     //   }
     // }
     UmeeQuery::Oracle(oracle) => query_oracle(deps, _env, oracle),
+    // incentive
+    UmeeQuery::Incentive(incentive) => query_incentive(deps, _env, incentive),
   }
 }
 
@@ -291,6 +302,322 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
       to_binary(&query_max_borrow(deps, max_borrow_params)?)
     }
   }
+}
+
+// query_incentive
+fn query_incentive(deps: Deps, _env: Env, msg: UmeeQueryIncentive) -> StdResult<Binary> {
+  match msg {
+    UmeeQueryIncentive::IncentiveParameters(incentive_params) => {
+      to_binary(&query_incentive_params(deps, incentive_params)?)
+    }
+    UmeeQueryIncentive::TotalBonded(params) => to_binary(&query_total_bonded(deps, params)?),
+    UmeeQueryIncentive::TotalUnbonding(params) => to_binary(&query_total_unbonding(deps, params)?),
+    UmeeQueryIncentive::AccountBonds(params) => to_binary(&query_account_bonds(deps, params)?),
+    UmeeQueryIncentive::PendingRewards(params) => to_binary(&query_pending_rewards(deps, params)?),
+    UmeeQueryIncentive::CompletedIncentivePrograms(params) => {
+      to_binary(&query_completed_incentive_programs(deps, params)?)
+    }
+    UmeeQueryIncentive::OngoingIncentivePrograms(params) => {
+      to_binary(&query_ongoing_incentive_programs(deps, params)?)
+    }
+    UmeeQueryIncentive::UpcomingIncentivePrograms(params) => {
+      to_binary(&query_upcoming_incentive_programs(deps, params)?)
+    }
+    UmeeQueryIncentive::IncentiveProgram(params) => {
+      to_binary(&query_incentive_program(deps, params)?)
+    }
+    UmeeQueryIncentive::CurrentRates(params) => to_binary(&query_current_rates(deps, params)?),
+    UmeeQueryIncentive::ActualRates(params) => to_binary(&query_actutal_rates(deps, params)?),
+    UmeeQueryIncentive::LastRewardTime(params) => to_binary(&query_last_reward_time(deps, params)?),
+  }
+}
+
+// query_last_reward_time
+fn query_last_reward_time(
+  deps: Deps,
+  params: LastRewardTimeParams,
+) -> StdResult<LastRewardTimeResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::last_reward_time(params));
+
+  let response: LastRewardTimeResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<LastRewardTimeResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_actutal_rates
+fn query_actutal_rates(deps: Deps, params: ActualRatesParams) -> StdResult<ActualRatesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::actual_rates(params));
+
+  let response: ActualRatesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<ActualRatesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_current_rates
+fn query_current_rates(deps: Deps, params: CurrentRatesParams) -> StdResult<CurrentRatesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::current_rates(params));
+
+  let response: CurrentRatesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<CurrentRatesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_incentive_program
+fn query_incentive_program(
+  deps: Deps,
+  params: IncentiveProgramParams,
+) -> StdResult<IncentiveProgramResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::incentive_program(params));
+
+  let response: IncentiveProgramResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<IncentiveProgramResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_upcoming_incentive_programs
+fn query_upcoming_incentive_programs(
+  deps: Deps,
+  params: UpcomingIncentiveProgramsParams,
+) -> StdResult<UpcomingIncentiveProgramsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::upcoming_incentive_programs(params));
+
+  let response: UpcomingIncentiveProgramsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<UpcomingIncentiveProgramsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_ongoing_incentive_programs
+fn query_ongoing_incentive_programs(
+  deps: Deps,
+  params: OngoingIncentiveProgramsParams,
+) -> StdResult<OngoingIncentiveProgramsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::ongoing_incentive_programs(params));
+
+  let response: OngoingIncentiveProgramsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<OngoingIncentiveProgramsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_completed_incentive_programs
+fn query_completed_incentive_programs(
+  deps: Deps,
+  params: CompletedIncentiveProgramsParams,
+) -> StdResult<CompletedIncentiveProgramsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::completed_incentive_programs(params));
+
+  let response: CompletedIncentiveProgramsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<CompletedIncentiveProgramsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_account_bonds
+fn query_pending_rewards(
+  deps: Deps,
+  params: PendingRewardsParams,
+) -> StdResult<PendingRewardsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::pending_rewards(params));
+
+  let response: PendingRewardsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<PendingRewardsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_account_bonds
+fn query_account_bonds(deps: Deps, params: AccountBondsParams) -> StdResult<AccountBondsResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::account_bonds(params));
+
+  let response: AccountBondsResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<AccountBondsResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_total_unbonding
+fn query_total_unbonding(
+  deps: Deps,
+  params: TotalUnbondingParams,
+) -> StdResult<TotalUnbondingResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::total_unbonding(params));
+
+  let response: TotalUnbondingResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<TotalUnbondingResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_total_bonded
+fn query_total_bonded(deps: Deps, params: TotalBondedParams) -> StdResult<TotalBondedResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::total_bonded(params));
+
+  let response: TotalBondedResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<TotalBondedResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_incentive_params
+fn query_incentive_params(
+  deps: Deps,
+  incentive_params: IncentiveParametersParams,
+) -> StdResult<IncentiveParametersResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::incentive_params(incentive_params));
+
+  let incentive_params_response: IncentiveParametersResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<IncentiveParametersResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(response) => incentive_params_response = response,
+      };
+    }
+  }
+
+  Ok(incentive_params_response)
 }
 
 // query_oracle contains the umee oracle available queries
