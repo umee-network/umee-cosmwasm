@@ -87,6 +87,17 @@
         }
       }
     },
+    "AccountBondsParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string"
+        }
+      }
+    },
     "AccountSummaryParams": {
       "type": "object",
       "required": [
@@ -100,6 +111,17 @@
     },
     "ActiveExchangeRatesParams": {
       "type": "object"
+    },
+    "ActualRatesParams": {
+      "type": "object",
+      "required": [
+        "u_token"
+      ],
+      "properties": {
+        "u_token": {
+          "type": "string"
+        }
+      }
     },
     "Addr": {
       "description": "A human readable address.\n\nIn Cosmos, this is typically bech32 encoded. But for multi-chain smart contracts no assumptions should be made other than being UTF-8 encoded and of reasonable length.\n\nThis type represents a validated address. It can be created in the following ways 1. Use `Addr::unchecked(input)` 2. Use `let checked: Addr = deps.api.addr_validate(input)?` 3. Use `let checked: Addr = deps.api.addr_humanize(canonical_addr)?` 4. Deserialize from JSON. This must only be done from JSON that was validated before such as a contract's state. `Addr` must not be used in messages sent by the user because this would result in unvalidated instances.\n\nThis type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.",
@@ -190,6 +212,20 @@
       "description": "Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>. See also <https://github.com/CosmWasm/cosmwasm/blob/main/docs/MESSAGE_TYPES.md>.",
       "type": "string"
     },
+    "CompletedIncentiveProgramsParams": {
+      "type": "object"
+    },
+    "CurrentRatesParams": {
+      "type": "object",
+      "required": [
+        "u_token"
+      ],
+      "properties": {
+        "u_token": {
+          "type": "string"
+        }
+      }
+    },
     "ExchangeRatesParams": {
       "type": "object",
       "required": [
@@ -278,6 +314,25 @@
         }
       ]
     },
+    "IncentiveParametersParams": {
+      "type": "object"
+    },
+    "IncentiveProgramParams": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "LastRewardTimeParams": {
+      "type": "object"
+    },
     "LeverageParametersParams": {
       "type": "object"
     },
@@ -358,8 +413,22 @@
         }
       }
     },
+    "OngoingIncentiveProgramsParams": {
+      "type": "object"
+    },
     "OracleParametersParams": {
       "type": "object"
+    },
+    "PendingRewardsParams": {
+      "type": "object",
+      "required": [
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string"
+        }
+      }
     },
     "QueryRequest_for_StructUmeeQuery": {
       "oneOf": [
@@ -573,6 +642,16 @@
             }
           ]
         },
+        "account_bonds": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AccountBondsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "account_summary": {
           "anyOf": [
             {
@@ -587,6 +666,16 @@
           "anyOf": [
             {
               "$ref": "#/definitions/ActiveExchangeRatesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actual_rates": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ActualRatesParams"
             },
             {
               "type": "null"
@@ -643,6 +732,26 @@
             }
           ]
         },
+        "completed_incentive_programs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CompletedIncentiveProgramsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "current_rates": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CurrentRatesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "exchange_rates": {
           "anyOf": [
             {
@@ -657,6 +766,36 @@
           "anyOf": [
             {
               "$ref": "#/definitions/FeederDelegationParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "incentive_parameters": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncentiveParametersParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "incentive_program": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncentiveProgramParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_reward_time": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LastRewardTimeParams"
             },
             {
               "type": "null"
@@ -743,10 +882,30 @@
             }
           ]
         },
+        "ongoing_incentive_programs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OngoingIncentiveProgramsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "oracle_params": {
           "anyOf": [
             {
               "$ref": "#/definitions/OracleParametersParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pending_rewards": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PendingRewardsParams"
             },
             {
               "type": "null"
@@ -772,6 +931,58 @@
               "type": "null"
             }
           ]
+        },
+        "total_bonded": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TotalBondedParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "total_unbonding": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TotalUnbondingParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "upcoming_incentive_programs": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UpcomingIncentiveProgramsParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "TotalBondedParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "TotalUnbondingParams": {
+      "type": "object",
+      "required": [
+        "denom"
+      ],
+      "properties": {
+        "denom": {
+          "type": "string"
         }
       }
     },
@@ -797,6 +1008,166 @@
           "properties": {
             "oracle": {
               "$ref": "#/definitions/UmeeQueryOracle"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "incentive"
+          ],
+          "properties": {
+            "incentive": {
+              "$ref": "#/definitions/UmeeQueryIncentive"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "UmeeQueryIncentive": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "incentive_parameters"
+          ],
+          "properties": {
+            "incentive_parameters": {
+              "$ref": "#/definitions/IncentiveParametersParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "total_bonded"
+          ],
+          "properties": {
+            "total_bonded": {
+              "$ref": "#/definitions/TotalBondedParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "total_unbonding"
+          ],
+          "properties": {
+            "total_unbonding": {
+              "$ref": "#/definitions/TotalUnbondingParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "account_bonds"
+          ],
+          "properties": {
+            "account_bonds": {
+              "$ref": "#/definitions/AccountBondsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "pending_rewards"
+          ],
+          "properties": {
+            "pending_rewards": {
+              "$ref": "#/definitions/PendingRewardsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "completed_incentive_programs"
+          ],
+          "properties": {
+            "completed_incentive_programs": {
+              "$ref": "#/definitions/CompletedIncentiveProgramsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "ongoing_incentive_programs"
+          ],
+          "properties": {
+            "ongoing_incentive_programs": {
+              "$ref": "#/definitions/OngoingIncentiveProgramsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "upcoming_incentive_programs"
+          ],
+          "properties": {
+            "upcoming_incentive_programs": {
+              "$ref": "#/definitions/UpcomingIncentiveProgramsParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "incentive_program"
+          ],
+          "properties": {
+            "incentive_program": {
+              "$ref": "#/definitions/IncentiveProgramParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "current_rates"
+          ],
+          "properties": {
+            "current_rates": {
+              "$ref": "#/definitions/CurrentRatesParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "actual_rates"
+          ],
+          "properties": {
+            "actual_rates": {
+              "$ref": "#/definitions/ActualRatesParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "last_reward_time"
+          ],
+          "properties": {
+            "last_reward_time": {
+              "$ref": "#/definitions/LastRewardTimeParams"
             }
           },
           "additionalProperties": false
@@ -1062,6 +1433,9 @@
           "additionalProperties": false
         }
       ]
+    },
+    "UpcomingIncentiveProgramsParams": {
+      "type": "object"
     },
     "WasmQuery": {
       "oneOf": [
