@@ -1,3 +1,9 @@
+use crate::query_incentive::{
+  AccountBondsParams, ActualRatesParams, CompletedIncentiveProgramsParams, CurrentRatesParams,
+  IncentiveParametersParams, IncentiveProgramParams, LastRewardTimeParams,
+  OngoingIncentiveProgramsParams, PendingRewardsParams, TotalBondedParams, TotalUnbondingParams,
+  UmeeQueryIncentive, UpcomingIncentiveProgramsParams,
+};
 use crate::query_leverage::{
   AccountBalancesParams, AccountSummaryParams, BadDebtsParams, LeverageParametersParams,
   LiquidationTargetsParams, MarketSummaryParams, MaxWithdrawParams, RegisteredTokensParams,
@@ -25,6 +31,8 @@ pub enum UmeeQuery {
   Leverage(UmeeQueryLeverage),
   // Oracle wraps all the query enums from the oracle module
   Oracle(UmeeQueryOracle),
+  // Incentive wraps all the query enums from the incentive module
+  Incentive(UmeeQueryIncentive),
 }
 
 // StructUmeeQuery expected structure to query umee native modules
@@ -52,6 +60,19 @@ pub struct StructUmeeQuery {
   max_borrow_params: Option<MaxBorrowParams>,
   medians_params: Option<MediansParams>,
   median_deviations_params: Option<MedianDeviationsParams>,
+  // incentive
+  incentive_parameters: Option<IncentiveParametersParams>,
+  total_bonded: Option<TotalBondedParams>,
+  total_unbonding: Option<TotalUnbondingParams>,
+  account_bonds: Option<AccountBondsParams>,
+  pending_rewards: Option<PendingRewardsParams>,
+  completed_incentive_programs: Option<CompletedIncentiveProgramsParams>,
+  ongoing_incentive_programs: Option<OngoingIncentiveProgramsParams>,
+  upcoming_incentive_programs: Option<UpcomingIncentiveProgramsParams>,
+  incentive_program: Option<IncentiveProgramParams>,
+  current_rates: Option<CurrentRatesParams>,
+  actual_rates: Option<ActualRatesParams>,
+  last_reward_time: Option<LastRewardTimeParams>,
 }
 
 fn default_struct_umee_query() -> StructUmeeQuery {
@@ -77,6 +98,18 @@ fn default_struct_umee_query() -> StructUmeeQuery {
     max_borrow_params: None,
     medians_params: None,
     median_deviations_params: None,
+    incentive_parameters: None,
+    total_bonded: None,
+    total_unbonding: None,
+    account_bonds: None,
+    pending_rewards: None,
+    completed_incentive_programs: None,
+    ongoing_incentive_programs: None,
+    upcoming_incentive_programs: None,
+    incentive_program: None,
+    current_rates: None,
+    actual_rates: None,
+    last_reward_time: None,
   }
 }
 
@@ -85,6 +118,85 @@ fn default_struct_umee_query() -> StructUmeeQuery {
 // the fields inside the struct are private, to avoid missmatching
 // the query property with the assigned_query field
 impl StructUmeeQuery {
+  pub fn incentive_params(
+    incentive_parameter_params: IncentiveParametersParams,
+  ) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.incentive_parameters = Some(incentive_parameter_params);
+    return q;
+  }
+  pub fn total_bonded(total_bonded_params: TotalBondedParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.total_bonded = Some(total_bonded_params);
+    return q;
+  }
+
+  pub fn total_unbonding(total_unbonding_params: TotalUnbondingParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.total_unbonding = Some(total_unbonding_params);
+    return q;
+  }
+
+  pub fn account_bonds(account_bonds_params: AccountBondsParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.account_bonds = Some(account_bonds_params);
+    return q;
+  }
+
+  pub fn pending_rewards(pending_rewards_params: PendingRewardsParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.pending_rewards = Some(pending_rewards_params);
+    return q;
+  }
+
+  pub fn completed_incentive_programs(
+    completed_incentive_programs_params: CompletedIncentiveProgramsParams,
+  ) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.completed_incentive_programs = Some(completed_incentive_programs_params);
+    return q;
+  }
+
+  pub fn ongoing_incentive_programs(
+    ongoing_incentive_programs_params: OngoingIncentiveProgramsParams,
+  ) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.ongoing_incentive_programs = Some(ongoing_incentive_programs_params);
+    return q;
+  }
+
+  pub fn upcoming_incentive_programs(
+    upcoming_incentive_programs_params: UpcomingIncentiveProgramsParams,
+  ) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.upcoming_incentive_programs = Some(upcoming_incentive_programs_params);
+    return q;
+  }
+
+  pub fn incentive_program(incentive_program_params: IncentiveProgramParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.incentive_program = Some(incentive_program_params);
+    return q;
+  }
+
+  pub fn current_rates(current_rates_params: CurrentRatesParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.current_rates = Some(current_rates_params);
+    return q;
+  }
+
+  pub fn actual_rates(actual_rates_params: ActualRatesParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.actual_rates = Some(actual_rates_params);
+    return q;
+  }
+
+  pub fn last_reward_time(last_reward_time_params: LastRewardTimeParams) -> StructUmeeQuery {
+    let mut q = default_struct_umee_query();
+    q.last_reward_time = Some(last_reward_time_params);
+    return q;
+  }
+
   // creates a new exchange_rates query.
   pub fn exchange_rates(exchange_rates_params: ExchangeRatesParams) -> StructUmeeQuery {
     let mut q = default_struct_umee_query();

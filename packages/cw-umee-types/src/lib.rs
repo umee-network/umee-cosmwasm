@@ -7,6 +7,7 @@ pub mod msg;
 pub mod msg_leverage;
 pub mod oracle_parameters;
 pub mod query;
+pub mod query_incentive;
 pub mod query_leverage;
 pub mod query_oracle;
 pub mod token;
@@ -43,6 +44,7 @@ pub use msg_leverage::{
   MsgMaxWithdrawParams, MsgTypes, RepayParams, SupplyCollateralParams, SupplyParams,
   UmeeMsgLeverage, WithdrawParams,
 };
+pub use query_incentive::UmeeQueryIncentive;
 
 pub use msg::{StructUmeeMsg, UmeeMsg};
 
