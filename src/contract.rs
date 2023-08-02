@@ -19,7 +19,10 @@ use cw_umee_types::query_leverage::{
   MaxWithdrawResponse,
 };
 use cw_umee_types::query_metoken::{
-  MetokenParametersParams, MetokenParametersResponse, UmeeQueryMeToken, MetokenIndexesParams, MetokenIndexesResponse, MetokenSwapfeeParams, MetokenSwapfeeResponse, MetokenRedeemfeeParams, MetokenRedeemfeeResponse, MetokenIndexbalancesParams, MetokenIndexbalancesResponse, MetokenIndexPriceParams, MetokenIndexPriceResponse,
+  MetokenIndexPriceParams, MetokenIndexPriceResponse, MetokenIndexbalancesParams,
+  MetokenIndexbalancesResponse, MetokenIndexesParams, MetokenIndexesResponse,
+  MetokenParametersParams, MetokenParametersResponse, MetokenRedeemfeeParams,
+  MetokenRedeemfeeResponse, MetokenSwapfeeParams, MetokenSwapfeeResponse, UmeeQueryMeToken,
 };
 use cw_umee_types::query_oracle::{
   MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
@@ -342,12 +345,17 @@ fn query_metoken(deps: Deps, _env: Env, msg: UmeeQueryMeToken) -> StdResult<Bina
     UmeeQueryMeToken::MetokenParameters(params) => to_binary(&query_metoken_params(deps, params)?),
     UmeeQueryMeToken::MetokenIndexes(params) => to_binary(&query_metoken_indexes(deps, params)?),
     UmeeQueryMeToken::MetokenSwapfee(params) => to_binary(&query_metoken_swapfee(deps, params)?),
-    UmeeQueryMeToken::MetokenRedeemfee(params) => to_binary(&query_metoken_redeemfee(deps, params)?),
-    UmeeQueryMeToken::MetokenIndexbalances(params) => to_binary(&query_metoken_indexbalances(deps, params)?),
-    UmeeQueryMeToken::MetokenIndexPrice(params) => to_binary(&query_metoken_indexprice(deps, params)?),
+    UmeeQueryMeToken::MetokenRedeemfee(params) => {
+      to_binary(&query_metoken_redeemfee(deps, params)?)
+    }
+    UmeeQueryMeToken::MetokenIndexbalances(params) => {
+      to_binary(&query_metoken_indexbalances(deps, params)?)
+    }
+    UmeeQueryMeToken::MetokenIndexPrice(params) => {
+      to_binary(&query_metoken_indexprice(deps, params)?)
+    }
   }
 }
-
 
 // query_metoken_indexprice
 fn query_metoken_indexprice(
@@ -372,7 +380,6 @@ fn query_metoken_indexprice(
 
   Ok(response)
 }
-
 
 // query_metoken_indexbalances
 fn query_metoken_indexbalances(
@@ -469,7 +476,6 @@ fn query_metoken_indexes(
 
   Ok(response)
 }
-
 
 // query_metoken_params
 fn query_metoken_params(
