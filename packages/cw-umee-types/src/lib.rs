@@ -9,9 +9,9 @@ pub mod oracle_parameters;
 pub mod query;
 pub mod query_incentive;
 pub mod query_leverage;
+pub mod query_metoken;
 pub mod query_oracle;
 pub mod token;
-pub mod query_metoken;
 
 pub use aggregate_exchange_rate_prevote::AggregateExchangeRatePrevote;
 pub use aggregate_exchange_rate_vote::{AggregateExchangeRateVote, ExchangeRateTuple};

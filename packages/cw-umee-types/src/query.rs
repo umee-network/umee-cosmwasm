@@ -9,7 +9,10 @@ use crate::query_leverage::{
   LiquidationTargetsParams, MarketSummaryParams, MaxWithdrawParams, RegisteredTokensParams,
   UmeeQueryLeverage,
 };
-use crate::query_metoken::{MetokenIndexPriceParams, MetokenSwapfeeParams, MetokenRedeemfeeParams, MetokenIndexbalancesParams, MetokenParametersParams, MetokenIndexesParams, UmeeQueryMeToken};
+use crate::query_metoken::{
+  MetokenIndexPriceParams, MetokenIndexbalancesParams, MetokenIndexesParams,
+  MetokenParametersParams, MetokenRedeemfeeParams, MetokenSwapfeeParams, UmeeQueryMeToken,
+};
 use crate::query_oracle::{
   ActiveExchangeRatesParams, AggregatePrevoteParams, AggregatePrevotesParams, AggregateVoteParams,
   AggregateVotesParams, ExchangeRatesParams, FeederDelegationParams, MedianDeviationsParams,
@@ -34,8 +37,8 @@ pub enum UmeeQuery {
   Oracle(UmeeQueryOracle),
   // Incentive wraps all the query enums from the incentive module
   Incentive(UmeeQueryIncentive),
-  // Metoken wraps all metoken queries 
-  Metoken(UmeeQueryMeToken)
+  // Metoken wraps all metoken queries
+  Metoken(UmeeQueryMeToken),
 }
 
 // StructUmeeQuery expected structure to query umee native modules
@@ -77,12 +80,12 @@ pub struct StructUmeeQuery {
   actual_rates: Option<ActualRatesParams>,
   last_reward_time: Option<LastRewardTimeParams>,
   // metoken
-  metoken_parameters : Option<MetokenParametersParams>,
-  metoken_indexes : Option<MetokenIndexesParams>,
-  metoken_swapfee : Option<MetokenSwapfeeParams>,
-  metoken_redeemfee : Option<MetokenRedeemfeeParams>,
-  metoken_indexbalances : Option<MetokenIndexbalancesParams>,
-  metoken_indexprice : Option<MetokenIndexPriceParams>,
+  metoken_parameters: Option<MetokenParametersParams>,
+  metoken_indexes: Option<MetokenIndexesParams>,
+  metoken_swapfee: Option<MetokenSwapfeeParams>,
+  metoken_redeemfee: Option<MetokenRedeemfeeParams>,
+  metoken_indexbalances: Option<MetokenIndexbalancesParams>,
+  metoken_indexprice: Option<MetokenIndexPriceParams>,
 }
 
 fn default_struct_umee_query() -> StructUmeeQuery {
@@ -349,38 +352,38 @@ impl StructUmeeQuery {
     return q;
   }
 
-  // metoken 
-  pub fn metoken_parameters(metoken_parameter_params:MetokenParametersParams) -> StructUmeeQuery{
+  // metoken
+  pub fn metoken_parameters(metoken_parameter_params: MetokenParametersParams) -> StructUmeeQuery {
     let mut q: StructUmeeQuery = default_struct_umee_query();
     q.metoken_parameters = Some(metoken_parameter_params);
     return q;
   }
 
-  pub fn metoken_indexes(p:MetokenIndexesParams) -> StructUmeeQuery{
+  pub fn metoken_indexes(p: MetokenIndexesParams) -> StructUmeeQuery {
     let mut q: StructUmeeQuery = default_struct_umee_query();
     q.metoken_indexes = Some(p);
     return q;
   }
 
-  pub fn metoken_swapfee(p:MetokenSwapfeeParams) -> StructUmeeQuery{
+  pub fn metoken_swapfee(p: MetokenSwapfeeParams) -> StructUmeeQuery {
     let mut q: StructUmeeQuery = default_struct_umee_query();
     q.metoken_swapfee = Some(p);
     return q;
   }
 
-  pub fn metoken_redeemfee(p:MetokenRedeemfeeParams) -> StructUmeeQuery{
+  pub fn metoken_redeemfee(p: MetokenRedeemfeeParams) -> StructUmeeQuery {
     let mut q: StructUmeeQuery = default_struct_umee_query();
     q.metoken_redeemfee = Some(p);
     return q;
   }
 
-  pub fn metoken_indexbalances(p:MetokenIndexbalancesParams) -> StructUmeeQuery{
+  pub fn metoken_indexbalances(p: MetokenIndexbalancesParams) -> StructUmeeQuery {
     let mut q: StructUmeeQuery = default_struct_umee_query();
     q.metoken_indexbalances = Some(p);
     return q;
   }
 
-  pub fn metoken_indexprice(p:MetokenIndexPriceParams) -> StructUmeeQuery{
+  pub fn metoken_indexprice(p: MetokenIndexPriceParams) -> StructUmeeQuery {
     let mut q: StructUmeeQuery = default_struct_umee_query();
     q.metoken_indexprice = Some(p);
     return q;
