@@ -18,6 +18,9 @@ use cw_umee_types::query_leverage::{
   BadDebtsParams, BadDebtsResponse, MaxBorrowParams, MaxBorrowResponse, MaxWithdrawParams,
   MaxWithdrawResponse,
 };
+use cw_umee_types::query_metoken::{
+  MetokenParametersParams, MetokenParametersResponse, UmeeQueryMeToken, MetokenIndexesParams, MetokenIndexesResponse, MetokenSwapfeeParams, MetokenSwapfeeResponse, MetokenRedeemfeeParams, MetokenRedeemfeeResponse, MetokenIndexbalancesParams, MetokenIndexbalancesResponse, MetokenIndexPriceParams, MetokenIndexPriceResponse,
+};
 use cw_umee_types::query_oracle::{
   MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
 };
@@ -244,6 +247,7 @@ fn query_umee(deps: Deps, _env: Env, umee_msg: UmeeQuery) -> StdResult<Binary> {
     UmeeQuery::Oracle(oracle) => query_oracle(deps, _env, oracle),
     // incentive
     UmeeQuery::Incentive(incentive) => query_incentive(deps, _env, incentive),
+    UmeeQuery::Metoken(metoken) => query_metoken(deps, _env, metoken),
   }
 }
 
@@ -330,6 +334,165 @@ fn query_incentive(deps: Deps, _env: Env, msg: UmeeQueryIncentive) -> StdResult<
     UmeeQueryIncentive::ActualRates(params) => to_binary(&query_actutal_rates(deps, params)?),
     UmeeQueryIncentive::LastRewardTime(params) => to_binary(&query_last_reward_time(deps, params)?),
   }
+}
+
+// query_metoken
+fn query_metoken(deps: Deps, _env: Env, msg: UmeeQueryMeToken) -> StdResult<Binary> {
+  match msg {
+    UmeeQueryMeToken::MetokenParameters(params) => to_binary(&query_metoken_params(deps, params)?),
+    UmeeQueryMeToken::MetokenIndexes(params) => to_binary(&query_metoken_indexes(deps, params)?),
+    UmeeQueryMeToken::MetokenSwapfee(params) => to_binary(&query_metoken_swapfee(deps, params)?),
+    UmeeQueryMeToken::MetokenRedeemfee(params) => to_binary(&query_metoken_redeemfee(deps, params)?),
+    UmeeQueryMeToken::MetokenIndexbalances(params) => to_binary(&query_metoken_indexbalances(deps, params)?),
+    UmeeQueryMeToken::MetokenIndexPrice(params) => to_binary(&query_metoken_indexprice(deps, params)?),
+  }
+}
+
+
+// query_metoken_indexprice
+fn query_metoken_indexprice(
+  deps: Deps,
+  params: MetokenIndexPriceParams,
+) -> StdResult<MetokenIndexPriceResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_indexprice(params));
+  let response: MetokenIndexPriceResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MetokenIndexPriceResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+
+// query_metoken_indexbalances
+fn query_metoken_indexbalances(
+  deps: Deps,
+  params: MetokenIndexbalancesParams,
+) -> StdResult<MetokenIndexbalancesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_indexbalances(params));
+  let response: MetokenIndexbalancesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MetokenIndexbalancesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_redeemfee
+fn query_metoken_redeemfee(
+  deps: Deps,
+  params: MetokenRedeemfeeParams,
+) -> StdResult<MetokenRedeemfeeResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_redeemfee(params));
+  let response: MetokenRedeemfeeResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MetokenRedeemfeeResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_swapfee
+fn query_metoken_swapfee(
+  deps: Deps,
+  params: MetokenSwapfeeParams,
+) -> StdResult<MetokenSwapfeeResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_swapfee(params));
+  let response: MetokenSwapfeeResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MetokenSwapfeeResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_indexes
+fn query_metoken_indexes(
+  deps: Deps,
+  params: MetokenIndexesParams,
+) -> StdResult<MetokenIndexesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_indexes(params));
+  let response: MetokenIndexesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MetokenIndexesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+
+// query_metoken_params
+fn query_metoken_params(
+  deps: Deps,
+  params: MetokenParametersParams,
+) -> StdResult<MetokenParametersResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_parameters(params));
+  let response: MetokenParametersResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_binary::<MetokenParametersResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
 }
 
 // query_last_reward_time
