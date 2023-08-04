@@ -63,6 +63,7 @@ pub struct AcceptedAsset {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MetokenSwapfeeParams {
   pub metoken_denom: String,
+  pub asset: Coin,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
