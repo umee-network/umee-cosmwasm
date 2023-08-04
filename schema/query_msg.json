@@ -471,9 +471,13 @@
     "MetokenSwapfeeParams": {
       "type": "object",
       "required": [
+        "asset",
         "metoken_denom"
       ],
       "properties": {
+        "asset": {
+          "$ref": "#/definitions/Coin"
+        },
         "metoken_denom": {
           "type": "string"
         }
