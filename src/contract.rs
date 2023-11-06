@@ -1,7 +1,7 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::{
-  entry_point, Addr, Binary, ContractResult, Deps, DepsMut, Env,
-  MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
+  entry_point, Addr, Binary, ContractResult, Deps, DepsMut, Env, MessageInfo, QueryRequest,
+  Response, StdError, StdResult, SystemResult,
 };
 use cosmwasm_std::{from_json, to_json_binary, to_json_vec};
 use cw2::set_contract_version;
