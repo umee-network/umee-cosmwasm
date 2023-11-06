@@ -4,7 +4,7 @@ set -eo pipefail
 
 CWD="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 BASENAME="$(basename $CWD)"
-OPTIMIZER_VERSION="0.12.8"
+OPTIMIZER_VERSION="0.14.0"
 architecture=$(uname -m)
 
 if [[ "$architecture" == "arm64" ]];then

@@ -10,7 +10,7 @@ pub enum UmeeQueryMeToken {
   MetokenSwapfee(MetokenSwapfeeParams),
   MetokenRedeemfee(MetokenRedeemfeeParams),
   MetokenIndexbalances(MetokenIndexbalancesParams),
-  MetokenIndexPrice(MetokenIndexPriceParams),
+  MetokenIndexPrices(MetokenIndexPricesParams),
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
@@ -63,7 +63,7 @@ pub struct AcceptedAsset {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MetokenSwapfeeParams {
   pub metoken_denom: String,
-  pub asset: Coin,
+  pub asset: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
@@ -73,7 +73,7 @@ pub struct MetokenSwapfeeResponse {
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MetokenRedeemfeeParams {
-  pub metoken: Coin,
+  pub metoken: String,
   pub asset_denom: String,
 }
 
@@ -90,12 +90,31 @@ pub struct MetokenIndexbalancesParams {
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct MetokenIndexbalancesResponse {
   pub index_balances: Vec<IndexBalances>,
+  pub index_prices: Vec<IndexPrices>,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 pub struct IndexBalances {
   pub metoken_supply: Coin,
   pub asset_balances: Vec<AssetBalance>,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct IndexPrices {
+  pub denom: String,
+  pub price: String,
+  pub exponent: u32,
+  pub assets: Vec<AssetPrice>,
+}
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AssetPrice {
+  pub base_denom: String,
+  pub symbol_denom: String,
+  pub price: String,
+  pub exponent: u32,
+  pub swap_rate: String,
+  pub redeem_rate: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
@@ -108,18 +127,11 @@ pub struct AssetBalance {
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MetokenIndexPriceParams {
+pub struct MetokenIndexPricesParams {
   pub metoken_denom: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct MetokenIndexPriceResponse {
-  pub price: Vec<Price>,
-}
-
-#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
-pub struct Price {
-  pub denom: String,
-  pub price: Decimal,
-  pub exponent: u32,
+pub struct MetokenIndexPricesResponse {
+  pub prices: Vec<IndexPrices>,
 }

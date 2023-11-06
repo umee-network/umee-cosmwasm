@@ -10,7 +10,7 @@ use crate::query_leverage::{
   UmeeQueryLeverage,
 };
 use crate::query_metoken::{
-  MetokenIndexPriceParams, MetokenIndexbalancesParams, MetokenIndexesParams,
+  MetokenIndexPricesParams, MetokenIndexbalancesParams, MetokenIndexesParams,
   MetokenParametersParams, MetokenRedeemfeeParams, MetokenSwapfeeParams, UmeeQueryMeToken,
 };
 use crate::query_oracle::{
@@ -85,7 +85,7 @@ pub struct StructUmeeQuery {
   metoken_swapfee: Option<MetokenSwapfeeParams>,
   metoken_redeemfee: Option<MetokenRedeemfeeParams>,
   metoken_indexbalances: Option<MetokenIndexbalancesParams>,
-  metoken_indexprice: Option<MetokenIndexPriceParams>,
+  metoken_indexprice: Option<MetokenIndexPricesParams>,
 }
 
 fn default_struct_umee_query() -> StructUmeeQuery {
@@ -383,7 +383,7 @@ impl StructUmeeQuery {
     return q;
   }
 
-  pub fn metoken_indexprice(p: MetokenIndexPriceParams) -> StructUmeeQuery {
+  pub fn metoken_indexprice(p: MetokenIndexPricesParams) -> StructUmeeQuery {
     let mut q: StructUmeeQuery = default_struct_umee_query();
     q.metoken_indexprice = Some(p);
     return q;
