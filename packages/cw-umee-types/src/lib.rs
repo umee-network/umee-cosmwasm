@@ -9,6 +9,7 @@ pub mod oracle_parameters;
 pub mod query;
 pub mod query_incentive;
 pub mod query_leverage;
+pub mod query_metoken;
 pub mod query_oracle;
 pub mod token;
 

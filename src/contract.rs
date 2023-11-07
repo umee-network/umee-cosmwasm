@@ -1,8 +1,9 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::{
-  entry_point, from_binary, to_binary, to_vec, Addr, Binary, ContractResult, Deps, DepsMut, Env,
-  MessageInfo, QueryRequest, Response, StdError, StdResult, SystemResult,
+  entry_point, Addr, Binary, ContractResult, Deps, DepsMut, Env, MessageInfo, QueryRequest,
+  Response, StdError, StdResult, SystemResult,
 };
+use cosmwasm_std::{from_json, to_json_binary, to_json_vec};
 use cw2::set_contract_version;
 use cw_umee_types::error::ContractError;
 use cw_umee_types::query_incentive::{
@@ -17,6 +18,12 @@ use cw_umee_types::query_incentive::{
 use cw_umee_types::query_leverage::{
   BadDebtsParams, BadDebtsResponse, MaxBorrowParams, MaxBorrowResponse, MaxWithdrawParams,
   MaxWithdrawResponse,
+};
+use cw_umee_types::query_metoken::{
+  MetokenIndexPricesParams, MetokenIndexPricesResponse, MetokenIndexbalancesParams,
+  MetokenIndexbalancesResponse, MetokenIndexesParams, MetokenIndexesResponse,
+  MetokenParametersParams, MetokenParametersResponse, MetokenRedeemfeeParams,
+  MetokenRedeemfeeResponse, MetokenSwapfeeParams, MetokenSwapfeeResponse, UmeeQueryMeToken,
 };
 use cw_umee_types::query_oracle::{
   MedianDeviationsParams, MedianDeviationsParamsResponse, MediansParams, MediansParamsResponse,
@@ -144,7 +151,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     //     "owner": "umee1y6xz2ggfc0pcsmyjlekh0j9pxh6hk87ymc9due"
     //   }
     // }
-    QueryMsg::GetOwner {} => to_binary(&query_owner(deps)?),
+    QueryMsg::GetOwner {} => to_json_binary(&query_owner(deps)?),
 
     // queries for anything availabe from the blockchain native modules
     // "iterator, staking, stargate, custom"
@@ -189,12 +196,12 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     //   }
     // }
     QueryMsg::ExchangeRates(exchange_rates_params) => {
-      to_binary(&query_exchange_rates(deps, exchange_rates_params)?)
+      to_json_binary(&query_exchange_rates(deps, exchange_rates_params)?)
     }
     QueryMsg::RegisteredTokens(registered_tokens_params) => {
-      to_binary(&query_registered_tokens(deps, registered_tokens_params)?)
+      to_json_binary(&query_registered_tokens(deps, registered_tokens_params)?)
     }
-    QueryMsg::LeverageParameters(leverage_parameters_params) => to_binary(
+    QueryMsg::LeverageParameters(leverage_parameters_params) => to_json_binary(
       &query_leverage_parameters(deps, leverage_parameters_params)?,
     ),
   }
@@ -244,6 +251,7 @@ fn query_umee(deps: Deps, _env: Env, umee_msg: UmeeQuery) -> StdResult<Binary> {
     UmeeQuery::Oracle(oracle) => query_oracle(deps, _env, oracle),
     // incentive
     UmeeQuery::Incentive(incentive) => query_incentive(deps, _env, incentive),
+    UmeeQuery::Metoken(metoken) => query_metoken(deps, _env, metoken),
   }
 }
 
@@ -255,7 +263,7 @@ fn query_owner(deps: Deps) -> StdResult<OwnerResponse> {
 
 // query_chain queries for any availabe query in the chain native modules
 fn query_chain(deps: Deps, request: &QueryRequest<StructUmeeQuery>) -> StdResult<Binary> {
-  let raw = to_vec(request).map_err(|serialize_err| {
+  let raw = to_json_vec(request).map_err(|serialize_err| {
     StdError::generic_err(format!("Serializing QueryRequest: {}", serialize_err))
   })?;
   match deps.querier.raw_query(&raw) {
@@ -274,32 +282,32 @@ fn query_chain(deps: Deps, request: &QueryRequest<StructUmeeQuery>) -> StdResult
 // query_leverage contains the umee leverage available queries
 fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Binary> {
   match msg {
-    UmeeQueryLeverage::LeverageParameters(leverage_parameters_params) => to_binary(
+    UmeeQueryLeverage::LeverageParameters(leverage_parameters_params) => to_json_binary(
       &query_leverage_parameters(deps, leverage_parameters_params)?,
     ),
     UmeeQueryLeverage::RegisteredTokens(registered_tokens_params) => {
-      to_binary(&query_registered_tokens(deps, registered_tokens_params)?)
+      to_json_binary(&query_registered_tokens(deps, registered_tokens_params)?)
     }
     UmeeQueryLeverage::MarketSummary(market_summary_params) => {
-      to_binary(&query_market_summary(deps, market_summary_params)?)
+      to_json_binary(&query_market_summary(deps, market_summary_params)?)
     }
     UmeeQueryLeverage::AccountBalances(account_balances_params) => {
-      to_binary(&query_account_balances(deps, account_balances_params)?)
+      to_json_binary(&query_account_balances(deps, account_balances_params)?)
     }
     UmeeQueryLeverage::AccountSummary(account_summary_params) => {
-      to_binary(&query_account_summary(deps, account_summary_params)?)
+      to_json_binary(&query_account_summary(deps, account_summary_params)?)
     }
-    UmeeQueryLeverage::LiquidationTargets(liquidation_targets_params) => to_binary(
+    UmeeQueryLeverage::LiquidationTargets(liquidation_targets_params) => to_json_binary(
       &query_liquidation_targets(deps, liquidation_targets_params)?,
     ),
     UmeeQueryLeverage::BadDebts(bad_debts_params) => {
-      to_binary(&query_bad_debts(deps, bad_debts_params)?)
+      to_json_binary(&query_bad_debts(deps, bad_debts_params)?)
     }
     UmeeQueryLeverage::MaxWithdraw(max_withdraw_params) => {
-      to_binary(&query_max_withdraw(deps, max_withdraw_params)?)
+      to_json_binary(&query_max_withdraw(deps, max_withdraw_params)?)
     }
     UmeeQueryLeverage::MaxBorrow(max_borrow_params) => {
-      to_binary(&query_max_borrow(deps, max_borrow_params)?)
+      to_json_binary(&query_max_borrow(deps, max_borrow_params)?)
     }
   }
 }
@@ -308,28 +316,202 @@ fn query_leverage(deps: Deps, _env: Env, msg: UmeeQueryLeverage) -> StdResult<Bi
 fn query_incentive(deps: Deps, _env: Env, msg: UmeeQueryIncentive) -> StdResult<Binary> {
   match msg {
     UmeeQueryIncentive::IncentiveParameters(incentive_params) => {
-      to_binary(&query_incentive_params(deps, incentive_params)?)
+      to_json_binary(&query_incentive_params(deps, incentive_params)?)
     }
-    UmeeQueryIncentive::TotalBonded(params) => to_binary(&query_total_bonded(deps, params)?),
-    UmeeQueryIncentive::TotalUnbonding(params) => to_binary(&query_total_unbonding(deps, params)?),
-    UmeeQueryIncentive::AccountBonds(params) => to_binary(&query_account_bonds(deps, params)?),
-    UmeeQueryIncentive::PendingRewards(params) => to_binary(&query_pending_rewards(deps, params)?),
+    UmeeQueryIncentive::TotalBonded(params) => to_json_binary(&query_total_bonded(deps, params)?),
+    UmeeQueryIncentive::TotalUnbonding(params) => {
+      to_json_binary(&query_total_unbonding(deps, params)?)
+    }
+    UmeeQueryIncentive::AccountBonds(params) => to_json_binary(&query_account_bonds(deps, params)?),
+    UmeeQueryIncentive::PendingRewards(params) => {
+      to_json_binary(&query_pending_rewards(deps, params)?)
+    }
     UmeeQueryIncentive::CompletedIncentivePrograms(params) => {
-      to_binary(&query_completed_incentive_programs(deps, params)?)
+      to_json_binary(&query_completed_incentive_programs(deps, params)?)
     }
     UmeeQueryIncentive::OngoingIncentivePrograms(params) => {
-      to_binary(&query_ongoing_incentive_programs(deps, params)?)
+      to_json_binary(&query_ongoing_incentive_programs(deps, params)?)
     }
     UmeeQueryIncentive::UpcomingIncentivePrograms(params) => {
-      to_binary(&query_upcoming_incentive_programs(deps, params)?)
+      to_json_binary(&query_upcoming_incentive_programs(deps, params)?)
     }
     UmeeQueryIncentive::IncentiveProgram(params) => {
-      to_binary(&query_incentive_program(deps, params)?)
+      to_json_binary(&query_incentive_program(deps, params)?)
     }
-    UmeeQueryIncentive::CurrentRates(params) => to_binary(&query_current_rates(deps, params)?),
-    UmeeQueryIncentive::ActualRates(params) => to_binary(&query_actutal_rates(deps, params)?),
-    UmeeQueryIncentive::LastRewardTime(params) => to_binary(&query_last_reward_time(deps, params)?),
+    UmeeQueryIncentive::CurrentRates(params) => to_json_binary(&query_current_rates(deps, params)?),
+    UmeeQueryIncentive::ActualRates(params) => to_json_binary(&query_actutal_rates(deps, params)?),
+    UmeeQueryIncentive::LastRewardTime(params) => {
+      to_json_binary(&query_last_reward_time(deps, params)?)
+    }
   }
+}
+
+// query_metoken
+fn query_metoken(deps: Deps, _env: Env, msg: UmeeQueryMeToken) -> StdResult<Binary> {
+  match msg {
+    UmeeQueryMeToken::MetokenParameters(params) => {
+      to_json_binary(&query_metoken_params(deps, params)?)
+    }
+    UmeeQueryMeToken::MetokenIndexes(params) => {
+      to_json_binary(&query_metoken_indexes(deps, params)?)
+    }
+    UmeeQueryMeToken::MetokenSwapfee(params) => {
+      to_json_binary(&query_metoken_swapfee(deps, params)?)
+    }
+    UmeeQueryMeToken::MetokenRedeemfee(params) => {
+      to_json_binary(&query_metoken_redeemfee(deps, params)?)
+    }
+    UmeeQueryMeToken::MetokenIndexbalances(params) => {
+      to_json_binary(&query_metoken_indexbalances(deps, params)?)
+    }
+    UmeeQueryMeToken::MetokenIndexPrices(params) => {
+      to_json_binary(&query_metoken_indexprice(deps, params)?)
+    }
+  }
+}
+
+// query_metoken_indexprice
+fn query_metoken_indexprice(
+  deps: Deps,
+  params: MetokenIndexPricesParams,
+) -> StdResult<MetokenIndexPricesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_indexprice(params));
+  let response: MetokenIndexPricesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_json::<MetokenIndexPricesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_indexbalances
+fn query_metoken_indexbalances(
+  deps: Deps,
+  params: MetokenIndexbalancesParams,
+) -> StdResult<MetokenIndexbalancesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_indexbalances(params));
+  let response: MetokenIndexbalancesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_json::<MetokenIndexbalancesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_redeemfee
+fn query_metoken_redeemfee(
+  deps: Deps,
+  params: MetokenRedeemfeeParams,
+) -> StdResult<MetokenRedeemfeeResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_redeemfee(params));
+  let response: MetokenRedeemfeeResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_json::<MetokenRedeemfeeResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_swapfee
+fn query_metoken_swapfee(
+  deps: Deps,
+  params: MetokenSwapfeeParams,
+) -> StdResult<MetokenSwapfeeResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_swapfee(params));
+  let response: MetokenSwapfeeResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_json::<MetokenSwapfeeResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_indexes
+fn query_metoken_indexes(
+  deps: Deps,
+  params: MetokenIndexesParams,
+) -> StdResult<MetokenIndexesResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_indexes(params));
+  let response: MetokenIndexesResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_json::<MetokenIndexesResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
+}
+
+// query_metoken_params
+fn query_metoken_params(
+  deps: Deps,
+  params: MetokenParametersParams,
+) -> StdResult<MetokenParametersResponse> {
+  let request = QueryRequest::Custom(StructUmeeQuery::metoken_parameters(params));
+  let response: MetokenParametersResponse;
+  match query_chain(deps, &request) {
+    Err(err) => {
+      return Err(err);
+    }
+    Ok(binary) => {
+      match from_json::<MetokenParametersResponse>(&binary) {
+        Err(err) => {
+          return Err(err);
+        }
+        Ok(resp) => response = resp,
+      };
+    }
+  }
+
+  Ok(response)
 }
 
 // query_last_reward_time
@@ -345,7 +527,7 @@ fn query_last_reward_time(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<LastRewardTimeResponse>(&binary) {
+      match from_json::<LastRewardTimeResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -367,7 +549,7 @@ fn query_actutal_rates(deps: Deps, params: ActualRatesParams) -> StdResult<Actua
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<ActualRatesResponse>(&binary) {
+      match from_json::<ActualRatesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -389,7 +571,7 @@ fn query_current_rates(deps: Deps, params: CurrentRatesParams) -> StdResult<Curr
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<CurrentRatesResponse>(&binary) {
+      match from_json::<CurrentRatesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -414,7 +596,7 @@ fn query_incentive_program(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<IncentiveProgramResponse>(&binary) {
+      match from_json::<IncentiveProgramResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -439,7 +621,7 @@ fn query_upcoming_incentive_programs(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<UpcomingIncentiveProgramsResponse>(&binary) {
+      match from_json::<UpcomingIncentiveProgramsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -464,7 +646,7 @@ fn query_ongoing_incentive_programs(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<OngoingIncentiveProgramsResponse>(&binary) {
+      match from_json::<OngoingIncentiveProgramsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -489,7 +671,7 @@ fn query_completed_incentive_programs(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<CompletedIncentiveProgramsResponse>(&binary) {
+      match from_json::<CompletedIncentiveProgramsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -514,7 +696,7 @@ fn query_pending_rewards(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<PendingRewardsResponse>(&binary) {
+      match from_json::<PendingRewardsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -536,7 +718,7 @@ fn query_account_bonds(deps: Deps, params: AccountBondsParams) -> StdResult<Acco
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<AccountBondsResponse>(&binary) {
+      match from_json::<AccountBondsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -561,7 +743,7 @@ fn query_total_unbonding(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<TotalUnbondingResponse>(&binary) {
+      match from_json::<TotalUnbondingResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -583,7 +765,7 @@ fn query_total_bonded(deps: Deps, params: TotalBondedParams) -> StdResult<TotalB
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<TotalBondedResponse>(&binary) {
+      match from_json::<TotalBondedResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -608,7 +790,7 @@ fn query_incentive_params(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<IncentiveParametersResponse>(&binary) {
+      match from_json::<IncentiveParametersResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -642,38 +824,38 @@ fn query_oracle(deps: Deps, _env: Env, msg: UmeeQueryOracle) -> StdResult<Binary
     //   }
     // }
     UmeeQueryOracle::ExchangeRates(exchange_rates_params) => {
-      to_binary(&query_exchange_rates(deps, exchange_rates_params)?)
+      to_json_binary(&query_exchange_rates(deps, exchange_rates_params)?)
     }
-    UmeeQueryOracle::ActiveExchangeRates(active_exchange_rates_params) => to_binary(
+    UmeeQueryOracle::ActiveExchangeRates(active_exchange_rates_params) => to_json_binary(
       &query_active_exchange_rates(deps, active_exchange_rates_params)?,
     ),
     UmeeQueryOracle::FeederDelegation(feeder_delegation_params) => {
-      to_binary(&query_feeder_delegation(deps, feeder_delegation_params)?)
+      to_json_binary(&query_feeder_delegation(deps, feeder_delegation_params)?)
     }
     UmeeQueryOracle::MissCounter(miss_counter_params) => {
-      to_binary(&query_miss_counter(deps, miss_counter_params)?)
+      to_json_binary(&query_miss_counter(deps, miss_counter_params)?)
     }
     UmeeQueryOracle::SlashWindow(slash_window_params) => {
-      to_binary(&query_slash_window(deps, slash_window_params)?)
+      to_json_binary(&query_slash_window(deps, slash_window_params)?)
     }
     UmeeQueryOracle::AggregatePrevote(aggregate_prevote_params) => {
-      to_binary(&query_aggregate_prevote(deps, aggregate_prevote_params)?)
+      to_json_binary(&query_aggregate_prevote(deps, aggregate_prevote_params)?)
     }
     UmeeQueryOracle::AggregatePrevotes(aggregate_prevotes_params) => {
-      to_binary(&query_aggregate_prevotes(deps, aggregate_prevotes_params)?)
+      to_json_binary(&query_aggregate_prevotes(deps, aggregate_prevotes_params)?)
     }
     UmeeQueryOracle::AggregateVote(aggregate_vote_params) => {
-      to_binary(&query_aggregate_vote(deps, aggregate_vote_params)?)
+      to_json_binary(&query_aggregate_vote(deps, aggregate_vote_params)?)
     }
     UmeeQueryOracle::AggregateVotes(aggregate_votes_params) => {
-      to_binary(&query_aggregate_votes(deps, aggregate_votes_params)?)
+      to_json_binary(&query_aggregate_votes(deps, aggregate_votes_params)?)
     }
     UmeeQueryOracle::OracleParameters(oracle_parameters_params) => {
-      to_binary(&query_oracle_parameters(deps, oracle_parameters_params)?)
+      to_json_binary(&query_oracle_parameters(deps, oracle_parameters_params)?)
     }
-    UmeeQueryOracle::Medians(median_params) => to_binary(&query_medians(deps, median_params)?),
+    UmeeQueryOracle::Medians(median_params) => to_json_binary(&query_medians(deps, median_params)?),
     UmeeQueryOracle::MedianDeviations(median_deviations_params) => {
-      to_binary(&query_median_deviations(deps, median_deviations_params)?)
+      to_json_binary(&query_median_deviations(deps, median_deviations_params)?)
     }
   }
 }
@@ -694,7 +876,7 @@ fn query_registered_tokens(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<RegisteredTokensResponse>(&binary) {
+      match from_json::<RegisteredTokensResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -723,7 +905,7 @@ fn query_leverage_parameters(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<LeverageParametersResponse>(&binary) {
+      match from_json::<LeverageParametersResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -750,7 +932,7 @@ fn query_account_balances(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<AccountBalancesResponse>(&binary) {
+      match from_json::<AccountBalancesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -777,7 +959,7 @@ fn query_account_summary(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<AccountSummaryParams>(&binary) {
+      match from_json::<AccountSummaryParams>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -806,7 +988,7 @@ fn query_liquidation_targets(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<LiquidationTargetsResponse>(&binary) {
+      match from_json::<LiquidationTargetsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -827,7 +1009,7 @@ fn query_bad_debts(deps: Deps, bad_debts_params: BadDebtsParams) -> StdResult<Ba
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<BadDebtsResponse>(&binary) {
+      match from_json::<BadDebtsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -852,7 +1034,7 @@ fn query_max_withdraw(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<MaxWithdrawResponse>(&binary) {
+      match from_json::<MaxWithdrawResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -877,7 +1059,7 @@ fn query_max_borrow(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<MaxBorrowResponse>(&binary) {
+      match from_json::<MaxBorrowResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -904,7 +1086,7 @@ fn query_market_summary(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<MarketSummaryResponse>(&binary) {
+      match from_json::<MarketSummaryResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -932,7 +1114,7 @@ fn query_exchange_rates(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<ExchangeRatesResponse>(&binary) {
+      match from_json::<ExchangeRatesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -962,7 +1144,7 @@ fn query_active_exchange_rates(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<ActiveExchangeRatesResponse>(&binary) {
+      match from_json::<ActiveExchangeRatesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -990,7 +1172,7 @@ fn query_feeder_delegation(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<FeederDelegationResponse>(&binary) {
+      match from_json::<FeederDelegationResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1018,7 +1200,7 @@ fn query_miss_counter(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<MissCounterResponse>(&binary) {
+      match from_json::<MissCounterResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1046,7 +1228,7 @@ fn query_slash_window(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<SlashWindowResponse>(&binary) {
+      match from_json::<SlashWindowResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1074,7 +1256,7 @@ fn query_aggregate_prevote(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<AggregatePrevoteResponse>(&binary) {
+      match from_json::<AggregatePrevoteResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1104,7 +1286,7 @@ fn query_aggregate_prevotes(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<AggregatePrevotesResponse>(&binary) {
+      match from_json::<AggregatePrevotesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1132,7 +1314,7 @@ fn query_aggregate_vote(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<AggregateVoteResponse>(&binary) {
+      match from_json::<AggregateVoteResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1160,7 +1342,7 @@ fn query_aggregate_votes(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<AggregateVotesResponse>(&binary) {
+      match from_json::<AggregateVotesResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1188,7 +1370,7 @@ fn query_oracle_parameters(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<OracleParametersResponse>(&binary) {
+      match from_json::<OracleParametersResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1209,7 +1391,7 @@ fn query_medians(deps: Deps, medians_params: MediansParams) -> StdResult<Medians
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<MediansParamsResponse>(&binary) {
+      match from_json::<MediansParamsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }
@@ -1235,7 +1417,7 @@ fn query_median_deviations(
       return Err(err);
     }
     Ok(binary) => {
-      match from_binary::<MedianDeviationsParamsResponse>(&binary) {
+      match from_json::<MedianDeviationsParamsResponse>(&binary) {
         Err(err) => {
           return Err(err);
         }

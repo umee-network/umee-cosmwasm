@@ -161,6 +161,27 @@
     "BankQuery": {
       "oneOf": [
         {
+          "description": "This calls into the native bank module for querying the total supply of one denomination. It does the same as the SupplyOf call in Cosmos SDK's RPC API. Return value is of type SupplyResponse.",
+          "type": "object",
+          "required": [
+            "supply"
+          ],
+          "properties": {
+            "supply": {
+              "type": "object",
+              "required": [
+                "denom"
+              ],
+              "properties": {
+                "denom": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
           "description": "This calls into the native bank module for one denomination Return value is BalanceResponse",
           "type": "object",
           "required": [
@@ -398,6 +419,72 @@
       ],
       "properties": {
         "denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MetokenIndexPricesParams": {
+      "type": "object",
+      "required": [
+        "metoken_denom"
+      ],
+      "properties": {
+        "metoken_denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MetokenIndexbalancesParams": {
+      "type": "object",
+      "required": [
+        "metoken_denom"
+      ],
+      "properties": {
+        "metoken_denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MetokenIndexesParams": {
+      "type": "object",
+      "required": [
+        "metoken_denom"
+      ],
+      "properties": {
+        "metoken_denom": {
+          "type": "string"
+        }
+      }
+    },
+    "MetokenParametersParams": {
+      "type": "object"
+    },
+    "MetokenRedeemfeeParams": {
+      "type": "object",
+      "required": [
+        "asset_denom",
+        "metoken"
+      ],
+      "properties": {
+        "asset_denom": {
+          "type": "string"
+        },
+        "metoken": {
+          "type": "string"
+        }
+      }
+    },
+    "MetokenSwapfeeParams": {
+      "type": "object",
+      "required": [
+        "asset",
+        "metoken_denom"
+      ],
+      "properties": {
+        "asset": {
+          "type": "string"
+        },
+        "metoken_denom": {
           "type": "string"
         }
       }
@@ -872,6 +959,66 @@
             }
           ]
         },
+        "metoken_indexbalances": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MetokenIndexbalancesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metoken_indexes": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MetokenIndexesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metoken_indexprice": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MetokenIndexPricesParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metoken_parameters": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MetokenParametersParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metoken_redeemfee": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MetokenRedeemfeeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metoken_swapfee": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MetokenSwapfeeParams"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "miss_counter": {
           "anyOf": [
             {
@@ -1020,6 +1167,18 @@
           "properties": {
             "incentive": {
               "$ref": "#/definitions/UmeeQueryIncentive"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "metoken"
+          ],
+          "properties": {
+            "metoken": {
+              "$ref": "#/definitions/UmeeQueryMeToken"
             }
           },
           "additionalProperties": false
@@ -1286,6 +1445,82 @@
         }
       ]
     },
+    "UmeeQueryMeToken": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "metoken_parameters"
+          ],
+          "properties": {
+            "metoken_parameters": {
+              "$ref": "#/definitions/MetokenParametersParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "metoken_indexes"
+          ],
+          "properties": {
+            "metoken_indexes": {
+              "$ref": "#/definitions/MetokenIndexesParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "metoken_swapfee"
+          ],
+          "properties": {
+            "metoken_swapfee": {
+              "$ref": "#/definitions/MetokenSwapfeeParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "metoken_redeemfee"
+          ],
+          "properties": {
+            "metoken_redeemfee": {
+              "$ref": "#/definitions/MetokenRedeemfeeParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "metoken_indexbalances"
+          ],
+          "properties": {
+            "metoken_indexbalances": {
+              "$ref": "#/definitions/MetokenIndexbalancesParams"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "metoken_index_prices"
+          ],
+          "properties": {
+            "metoken_index_prices": {
+              "$ref": "#/definitions/MetokenIndexPricesParams"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
     "UmeeQueryOracle": {
       "oneOf": [
         {
@@ -1514,6 +1749,29 @@
               "properties": {
                 "contract_addr": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Returns a [`CodeInfoResponse`] with metadata of the code",
+          "type": "object",
+          "required": [
+            "code_info"
+          ],
+          "properties": {
+            "code_info": {
+              "type": "object",
+              "required": [
+                "code_id"
+              ],
+              "properties": {
+                "code_id": {
+                  "type": "integer",
+                  "format": "uint64",
+                  "minimum": 0.0
                 }
               }
             }
